@@ -1,0 +1,14 @@
+include LICENSE
+include NOTICE
+include README.md
+include CHANGELOG.md
+include KNOWN_LIMITS.md
+include docs/MCP.md
+include docs/CONFIG.md
+include docs/TRUST.md
+include docs/GRANTS.md
+include docs/GATES.md
+include docs/CHEST.md
+include docs/ROOM.md
+include docs/RUN.md
+include docs/GUARD.md

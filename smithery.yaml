@@ -1,0 +1,23 @@
+# Smithery listing — https://smithery.ai/docs/config
+# Local stdio server. Runs from the Dockerfile at the repo root; no network at runtime.
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required: [vault]
+    properties:
+      vault:
+        type: string
+        title: Vault folder
+        description: Absolute path to the vault (plain markdown files you own). Create one with `magnemo init ./vault`.
+      agent:
+        type: string
+        title: Agent name
+        description: The name this agent signs its entries with.
+        default: agent
+  commandFunction: |-
+    (config) => ({
+      command: "magnemo-mcp",
+      args: [],
+      env: { MAGNEMO_VAULT: config.vault, MAGNEMO_AGENT: config.agent || "agent" }
+    })

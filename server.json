@@ -1,0 +1,42 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.magnemo-ai/magnemo",
+  "title": "Magnemo",
+  "description": "Governed memory for AI agents. Memory with receipts. Local, plain files, zero network calls.",
+  "version": "0.6.3",
+  "websiteUrl": "https://magnemo.ai",
+  "repository": {
+    "url": "https://github.com/magnemo-ai/magnemo",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "magnemo-mcp",
+      "version": "0.6.3",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "MAGNEMO_VAULT",
+          "description": "Absolute path to the vault folder (create one with: magnemo init ./vault). Plain markdown files you own.",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "filepath",
+          "placeholder": "/absolute/path/to/vault"
+        },
+        {
+          "name": "MAGNEMO_AGENT",
+          "description": "The name this agent signs its entries with. Default: agent.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string",
+          "default": "agent"
+        }
+      ]
+    }
+  ]
+}
