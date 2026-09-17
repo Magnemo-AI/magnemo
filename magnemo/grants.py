@@ -1,7 +1,7 @@
 """magnemo.grants — permission as data (P-02 B2). P-01 becomes code.
 
 A GRANT is a structured, append-only ledger record by which a keyholder
-(a human in `trust.humans`) permits an actor to operate at a LEVEL in one
+(a name in `trust.humans`) permits an actor to operate at a LEVEL in one
 or more ACTION CLASSES, under stated conditions, within a stated scope.
 Standing orders and one-time grants are the same record with a different
 `kind`. Revocation is a second record that names the first. Nothing is
@@ -14,9 +14,9 @@ grants covering the class). A grant is active at `as_of` when it was issued
 at or before `as_of`, has not expired, has not been revoked, and — for
 one-time grants — has not been CONSUMED by a trust event that cites it.
 
-What no grant can do — ever: lift a non-human above L1 in
+What no grant can do — ever: lift a non-keyholder above L1 in
 `promote-canon` or `publish`, or lift anyone to L4 who is not a declared
-human. Both are refused at issue time AND clamped at compute time, so a
+keyholder. Both are refused at issue time AND clamped at compute time, so a
 hand-edited ledger line cannot smuggle a key either.
 """
 from __future__ import annotations
@@ -54,7 +54,7 @@ def issue(vault: Vault, grantee: str, classes: list, level: int, by: str,
     """Keyholder-only. Appends one `trust.grant / issued` record."""
     cfg = cfg or load_config(vault.root)
     if not trust.is_human(cfg, by):
-        raise PermissionError(f"REFUSED: '{by}' is not a keyholder (config trust.humans); only humans grant")
+        raise PermissionError(f"REFUSED: '{by}' is not a keyholder (config trust.humans); only keyholders grant")
     grantee = (grantee or "").strip()
     if not grantee:
         raise ValueError("grantee is required")
@@ -71,13 +71,13 @@ def issue(vault: Vault, grantee: str, classes: list, level: int, by: str,
         raise ValueError(f"kind must be one of {', '.join(KINDS)}")
     human_grantee = trust.is_human(cfg, grantee)
     if level >= 4 and not human_grantee:
-        raise PermissionError(f"REFUSED: L4 KEYHOLDER is held by declared humans only; '{grantee}' is not one")
+        raise PermissionError(f"REFUSED: L4 KEYHOLDER is held by declared keyholders only; '{grantee}' is not one")
     if not human_grantee and level > trust.HUMAN_ONLY_CAP:
         blocked = [c for c in classes if c in trust.HUMAN_ONLY]
         if blocked:
             raise PermissionError(
                 f"REFUSED: {', '.join(blocked)} cannot be granted above L{trust.HUMAN_ONLY_CAP} "
-                f"to a non-human — human-only forever")
+                f"to a non-keyholder — keyholder-only forever")
     ts = when.strip() or now_iso()
     grant = {
         "grant_id": _next_id(vault),
@@ -98,7 +98,7 @@ def revoke(vault: Vault, grant_id: str, by: str, reason: str, when: str = "",
     """Keyholder-only. Appends one `trust.grant / revoked` record naming the grant."""
     cfg = cfg or load_config(vault.root)
     if not trust.is_human(cfg, by):
-        raise PermissionError(f"REFUSED: '{by}' is not a keyholder; only humans revoke")
+        raise PermissionError(f"REFUSED: '{by}' is not a keyholder; only keyholders revoke")
     if not (reason or "").strip():
         raise ValueError("a reason is required — revocations teach")
     target = None
@@ -171,7 +171,7 @@ def active(vault: Vault, actor: str | None = None, klass: str | None = None,
 
 def granted_level(vault: Vault, actor: str, klass: str, as_of: str | None = None,
                   cfg: dict | None = None, entries=None) -> dict:
-    """max(class default, active grants) — clamped by the human-only cap
+    """max(class default, active grants) — clamped by the keyholder-only cap
     at compute time too, so a hand-edited ledger line cannot smuggle a key."""
     cfg = cfg or load_config(vault.root)
     base = int(trust.class_cfg(cfg, klass)["default_grant"])

@@ -1,7 +1,7 @@
 # TRUST — the arithmetic of earned trust
 
 The trust ledger is math. Every identity that acts on the vault — an agent, a
-session, a human — is an **actor**. For each **action class** an actor holds an
+session, a person — is an **actor**. For each **action class** an actor holds an
 **autonomy level**, computed from append-only ledger events and nothing else.
 No model, no judgment call, no hidden state: every number on a scorecard can be
 re-derived by hand from `_ledger/trust_ledger.jsonl` and `_config/magnemo.json`.
@@ -14,7 +14,7 @@ magnemo trust events [--actor A] [--class C]   # the raw events, ledger order
 
 ## Action classes (five, fixed)
 
-| class | what it governs | human-only? |
+| class | what it governs | keyholder-only? |
 |---|---|---|
 | `read` | retrieve / bootpack (walled by `MAGNEMO_SCOPE`) | no |
 | `stage` | writing memory candidates to `_staging/` | no |
@@ -27,12 +27,12 @@ magnemo trust events [--actor A] [--class C]   # the raw events, ledger order
 | level | name | meaning |
 |---|---|---|
 | L0 | FROZEN | may not act in this class; only a keyholder reinstates |
-| L1 | PROPOSE | may prepare the action and hand it to a human (open the PR, stage the note, request the publish) |
-| L2 | SUPERVISED | may perform the action, logging one line per action; a human reviews after |
+| L1 | PROPOSE | may prepare the action and hand it to a keyholder (open the PR, stage the note, request the publish) |
+| L2 | SUPERVISED | may perform the action, logging one line per action; a keyholder reviews after |
 | L3 | AUTONOMOUS | may perform the action without per-action review; the ledger still records |
-| L4 | KEYHOLDER | a human holding the key: performs, grants, revokes, reinstates. **Never computed — held.** |
+| L4 | KEYHOLDER | a person holding the key: performs, grants, revokes, reinstates. **Never computed — held.** |
 
-`promote-canon` and `publish` cap at **L1 for every non-human actor**. Not a
+`promote-canon` and `publish` cap at **L1 for every actor who is not a keyholder**. Not a
 config key, not a grant, not a score lifts it — the cap is in code.
 
 ## Events (what the ledger records)
@@ -40,7 +40,7 @@ config key, not a grant, not a score lifts it — the cap is in code.
 | kind | weight (default) | meaning |
 |---|---|---|
 | `success` | +1.0 | an action in the class completed and was accepted (a merged PR, a promoted candidate) |
-| `verified` | +2.0 | a human verified the outcome after the fact |
+| `verified` | +2.0 | a keyholder verified the outcome after the fact |
 | `halt` | +1.0 | the actor stopped at a ceiling and waited — a halt honored |
 | `failure` | −1.0 | rejected / reverted (a rejected candidate) |
 | `denied` | −0.5 | tried an action a wall refused (a partition wall hit via MCP) |
@@ -56,7 +56,7 @@ truth is already known:
 - MCP `stage` into a partition outside `MAGNEMO_PARTITIONS` → `denied` in `stage`
 
 Everything else (merges, halts, surprises, violations, reinstatements) is a
-human observation, recorded with `magnemo trust record … --by NAME`. `--when`
+keyholder's observation, recorded with `magnemo trust record … --by NAME`. `--when`
 backdates a *known* historical event; the entry keeps `recorded_at` with the
 real clock so backfills are never silent.
 
@@ -89,8 +89,8 @@ Trust not exercised fades; decay alone never makes a score negative.
 and partition walls, not by trust; a fresh agent can read in scope and stage for
 review on day one. `merge-code` has no floor: a net-negative record is L0 there.
 
-**Humans.** Actors listed in `trust.humans` are keyholders: L4 in every class,
-not scored. Declaring a human is a config edit — the founder's file.
+**Keyholders.** Actors listed in `trust.humans` are keyholders: L4 in every class,
+not scored. Declaring one is a config edit — the founder's file.
 
 ## Reading a scorecard
 
@@ -100,12 +100,12 @@ class          effective      computed       granted        score
 read           L2 SUPERVISED  L2 SUPERVISED  L3 AUTONOMOUS  0.0000
 stage          L2 SUPERVISED  L2 SUPERVISED  L2 SUPERVISED  0.0000
 merge-code     L1 PROPOSE     L1 PROPOSE     L1 PROPOSE     0.0000
-promote-canon  L1 PROPOSE     L1 PROPOSE     L1 PROPOSE     0.0000  human-only cap
-publish        L1 PROPOSE     L1 PROPOSE     L1 PROPOSE     0.0000  human-only cap
+promote-canon  L1 PROPOSE     L1 PROPOSE     L1 PROPOSE     0.0000  keyholder-only cap
+publish        L1 PROPOSE     L1 PROPOSE     L1 PROPOSE     0.0000  keyholder-only cap
 ```
 
 - **computed** is what the actor has *earned* (the ledger).
-- **granted** is what a human has *permitted* (grants, or the class default).
+- **granted** is what a keyholder has *permitted* (grants, or the class default).
 - **effective** is the smaller of the two. Permission without a record is still
   L1; a record without permission is still L1. Both must exist to act.
 

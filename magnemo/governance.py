@@ -1,6 +1,6 @@
 """magnemo.governance — Layer 3: the Magnemo spine (Phase 1 surface).
 
-The governed write: agents stage; humans promote. Every review action is
+The governed write: agents stage; keyholders promote. Every review action is
 recorded to the Trust Ledger. Supersession is explicit and never silent.
 """
 from __future__ import annotations
@@ -32,7 +32,7 @@ class TrustLedger:
             "ts": ts or now_iso(),
             "action_class": action_class,   # e.g. "memory.promote" | "trust.event" | "trust.grant"
             "verdict": verdict,             # approved | rejected | <event kind> | issued | revoked
-            "actor": actor,                 # who decided / recorded (human or subsystem)
+            "actor": actor,                 # who decided / recorded (a person or a subsystem)
             "subject": subject,             # note id | scored actor | grantee
             "detail": detail,
         }
@@ -80,7 +80,7 @@ class Governance:
         so the review queue can present what matters most, first.
 
         TAINT IS HEREDITARY: if this note supersedes (derives from) a tainted
-        note, it inherits the taint automatically — only a human clears a
+        note, it inherits the taint automatically — only a keyholder clears a
         lineage (cli: cleartaint). Injection cannot launder itself through
         derivation."""
         self.vault._canonical_dir(partition, store)  # validate target early
@@ -186,7 +186,7 @@ class Governance:
         return touched
 
     def clear_taint(self, note_id: str, reviewer: str, reason: str) -> Note:
-        """Human-only: clear taint on a note after verification."""
+        """Keyholder-only: clear taint on a note after verification."""
         n = self.vault.read(note_id)
         old = n.taint
         n.taint = ""
@@ -195,9 +195,9 @@ class Governance:
         self.ledger.record("memory.cleartaint", "approved", reviewer, note_id, reason)
         return n
 
-    # ---------------- human-facing (CLI only; never an MCP tool) ----------------
+    # ---------------- keyholder-facing (CLI only; never an MCP tool) ----------------
     def promote(self, note_id: str, reviewer: str, reason: str = "", ran_by: str | None = None) -> Note:
-        """`ran_by` (P-54, the two-yes law): the yes is the human's (`reviewer`); the hand
+        """`ran_by` (P-54, the two-yes law): the yes is the keyholder's (`reviewer`); the hand
         that ran the command is on the record too, as an appended ledger field."""
         note = self.vault.read(note_id)
         if note.status != "staged":

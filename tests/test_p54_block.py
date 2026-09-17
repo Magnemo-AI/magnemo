@@ -1,4 +1,4 @@
-"""P-54 · THE BLOCK, TRUE TO ITS OWN LAW — the door refuses a seat signing as a human,
+"""P-54 · THE BLOCK, TRUE TO ITS OWN LAW — the door refuses a seat signing as a keyholder,
 the gate lift is a word, the record tells the truth about itself, the operator flag is
 deterministic. Provenance enforced; promotion still never an MCP tool."""
 import os, sys, io, json, shutil, tempfile, unittest, subprocess, contextlib
@@ -21,7 +21,7 @@ class TestTheDoor(unittest.TestCase):
     def test_a_seat_cannot_sign_as_a_human(self):
         text, err = call(self.s, "stage", note={"title": "t", "body": "b", "partition": "dev", "store": "knowledge"},
                          provenance={"source": "drill-D1", "author": "founder"})
-        self.assertTrue(err); self.assertIn("cannot sign as a human", text)
+        self.assertTrue(err); self.assertIn("cannot sign as a keyholder", text)
         self.assertEqual([n for n in Vault(self.tmp).staged() if n.status == "staged"], [])
         led = Governance(Vault(self.tmp)).ledger.entries()
         denied = [e for e in led if e.get("verdict") == "denied" and e.get("subject") == "agent"]
@@ -116,7 +116,7 @@ class TestTheCount(unittest.TestCase):
 
 
 class TestTheOperatorFlag(unittest.TestCase):
-    """Item 4: a note staged by a human hand carries the operator tag; an agent's does not."""
+    """Item 4: a note staged by a keyholder's own hand carries the operator tag; an agent's does not."""
     def test_human_hand_gets_the_tag(self):
         tmp = tempfile.mkdtemp(); Vault(tmp).init()
         try:
@@ -129,6 +129,13 @@ class TestTheOperatorFlag(unittest.TestCase):
             self.assertNotIn("founder-flag", notes["by an agent"].tags.split(","))
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
+
+
+class TestTheVersionFlag(unittest.TestCase):
+    def test_version_prints_the_one_version(self):
+        import magnemo
+        rc, out = run_cli(["--version"])
+        self.assertEqual((rc, out.strip()), (0, "magnemo " + magnemo.__version__))
 
 
 if __name__ == "__main__":

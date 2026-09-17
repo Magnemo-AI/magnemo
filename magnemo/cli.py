@@ -1,4 +1,4 @@
-"""magnemo.cli — the human's door into Magnemo.
+"""magnemo.cli — your door into Magnemo.
 
 Agents get MCP tools; the founder gets this. Promotion lives HERE and only
 here — the asymmetry is the protocol.
@@ -133,7 +133,7 @@ def _pick(g, fragment):
     return hits[0]
 
 def _by_default(g, by):
-    """`--by` defaults to the first keyholder in trust.humans: the yes is the human's."""
+    """`--by` defaults to the first keyholder in trust.humans: the yes is the keyholder's."""
     if by:
         return by
     humans = (load_config(g.vault.root).get("trust") or {}).get("humans") or []
@@ -237,7 +237,7 @@ def cmd_stage(a):
         print("stage: a body is required (--body TEXT, --file PATH, or stdin)")
         sys.exit(2)
     author = a.author or env("AGENT") or "founder"
-    # P-54 · THE OPERATOR FLAG, deterministic: a note staged by a human hand (the author is a
+    # P-54 · THE OPERATOR FLAG, deterministic: a note staged by a keyholder's own hand (the author is a
     # keyholder in trust.humans) carries the operator tag. No text sniffing.
     tags = a.tags
     from . import trust as _trust
@@ -330,7 +330,7 @@ def cmd_inbox(a):
                              written=now_iso(), source=f"inbox:{fn} sha256:{sha} by {a.tag}", status="staged",
                              partition=route["partition"], store=route["store"], impact="security", taint=taint,
                              body=(f"The drop `{fn}` was staged TAINTED: it contains text shaped like an instruction to an agent "
-                                   f"(pattern **{ipat}**). Nothing acts on it; taint travels with anything derived from it; a human clears it.")))
+                                   f"(pattern **{ipat}**). Nothing acts on it; taint travels with anything derived from it; a keyholder clears it.")))
         except UnicodeDecodeError:
             body = f"BINARY RECEIPT\n\n- file: {fn}\n- size: {len(raw)} bytes\n- sha256: {sha}\n\n(binary content lives beside the vault; this memory is its provenance pointer)"
         render = route.get("render", "").replace("{name}", fn)
@@ -388,7 +388,7 @@ def cmd_guard(a):
         print(f"GUARD ON — {st['files']} files immutable ({st['mode']}). Directories stay open so the engine can add canon and renders.")
         print(f"  agents write in: {st['work_dir']}")
         print(f"  body deny rules: {st['deny_rules']} written to {st['settings'] or '(no git repo above the vault — none written)'}")
-        print("  The agent can't delete what it was never allowed to write. Lower it: magnemo guard --off --by <human>")
+        print("  The agent can't delete what it was never allowed to write. Lower it: magnemo guard --off --by <keyholder>")
     except guard.GuardError as e:
         print(str(e)); sys.exit(1)
 
@@ -423,8 +423,8 @@ def cmd_room(a):
     try:
         if a.sub == "open":
             e = room.open_room(v, a.room, [s for s in a.seats.split(",") if s.strip()], by)
-            print(f"Room '{a.room}' is open — seats: {', '.join(e['seats'])} (human seat: {', '.join(e['human_seats'])}, always present).")
-            print(f"Talk is staging; canon is human. Say something: magnemo room say {a.room} \"...\" --class report")
+            print(f"Room '{a.room}' is open — seats: {', '.join(e['seats'])} (keyholder seat: {', '.join(e['human_seats'])}, always present).")
+            print(f"Talk is staging; canon is yours. Say something: magnemo room say {a.room} \"...\" --class report")
         elif a.sub == "say":
             r = room.say(v, a.room, a.body, a.cls, by, to=a.to or "room", reply_to=a.reply_to or "", about=a.about or "")
             n = r["note"]
@@ -432,7 +432,7 @@ def cmd_room(a):
         elif a.sub == "connect":
             room.connect(v, a.room, a.seat, by); print(f"{a.seat} is in the room '{a.room}'.")
         elif a.sub == "separate":
-            room.separate(v, a.room, a.seat, by, a.reason or ""); print(f"{a.seat} was separated from '{a.room}' — its later messages will be refused; a human seat can bring it back.")
+            room.separate(v, a.room, a.seat, by, a.reason or ""); print(f"{a.seat} was separated from '{a.room}' — its later messages will be refused; a keyholder can bring it back.")
         elif a.sub == "watch":
             import time
             seen = 0
@@ -470,7 +470,7 @@ def cmd_run(a):
             out = _run.schedule(a.vault, a.task, a.schedule, engine=a.engine, cap_turns=a.cap_turns, cap_usd=a.cap_usd)
             print(f"Scheduled: {out['plain']} — RAIL entry written to {out['rail']}")
             print(f"  {out['kind']} job '{out['label']}' " + ("installed." if out["installed"] else "written but NOT installed" + (": " + out.get("install_note", "") if out.get("install_note") else "") + "."))
-            print(f"  Every scheduled run stages; a human promotes. Remove it: magnemo run --unschedule {out['label']}")
+            print(f"  Every scheduled run stages; you promote. Remove it: magnemo run --unschedule {out['label']}")
             return
         r = _run.run(a.vault, a.task, engine=a.engine, cap_turns=a.cap_turns, cap_usd=a.cap_usd, trigger=a.trigger)
         print(f"RUN {r['run_id']} · agent {r['agent']} · {r['engine_actions']} engine actions · staged {len(r['staged_notes'])} note(s): {', '.join(r['staged_notes']) or '—'}")
@@ -498,7 +498,7 @@ def cmd_chest(a):
         elif a.sub == "push":
             if a.no_sweep:
                 if not a.by:
-                    print("--no-sweep is a human decision: add --by <your name>. It is written to the ledger.")
+                    print("--no-sweep is a keyholder's decision: add --by <your name>. It is written to the ledger.")
                     sys.exit(2)
                 print("SWEEP DISABLED for this push by " + a.by + " — recorded in the ledger.")
             res = chest.push(a.vault, label=a.label, trigger=a.reason, by=a.by, no_sweep=a.no_sweep)
@@ -716,6 +716,8 @@ def cmd_ledger(a):
 
 def main():
     p = argparse.ArgumentParser(prog="magnemo")
+    from . import __version__
+    p.add_argument("--version", action="version", version=f"magnemo {__version__}")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("init");    s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_init)
@@ -744,13 +746,13 @@ def main():
     s = sub.add_parser("costs");   s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_costs)
     s = sub.add_parser("stage");   s.add_argument("title"); s.add_argument("--body", default=None, help="note body (or --file, or pipe via stdin)"); s.add_argument("--file", default=None, help="read the body from this file"); s.add_argument("--partition", required=True, help="a partition this vault declares"); s.add_argument("--store", required=True); s.add_argument("--source", required=True, help="provenance: run id / audit id / where this came from (mandatory)"); s.add_argument("--author", default="", help="default: $MAGNEMO_AGENT, else 'founder'"); s.add_argument("--tags", default=""); s.add_argument("--impact", choices=["security", "money", "correctness", "process", "info"], default="info"); s.add_argument("--supersedes", default=""); s.add_argument("--taint", default="", help="REQUIRED labelling when content came from an untrusted source"); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_stage)
     s = sub.add_parser("inbox");   s.add_argument("--dir", default="", help="the drop folder (default: config inbox.dir)"); s.add_argument("--as", dest="tag", default=None, help="author tag: boardroom-session | founder | cc (default: $MAGNEMO_AGENT)"); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_inbox)
-    s = sub.add_parser("guard");   s.add_argument("--off", action="store_true", help="lower the wall (human verb, ledgered)"); s.add_argument("--status", action="store_true"); s.add_argument("--reason", default=""); s.add_argument("--by", default=""); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_guard)
+    s = sub.add_parser("guard");   s.add_argument("--off", action="store_true", help="lower the wall (keyholder verb, ledgered)"); s.add_argument("--status", action="store_true"); s.add_argument("--reason", default=""); s.add_argument("--by", default=""); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_guard)
     s = sub.add_parser("restore"); s.add_argument("target", help="a render path (relative to the render root) or a note id"); s.add_argument("--to", default="latest", help="archived version (ts prefix or sha12); default latest"); s.add_argument("--versions", action="store_true", help="list archived versions"); s.add_argument("--by", default=""); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_restore)
     s = sub.add_parser("room");    rs_ = s.add_subparsers(dest="sub", required=True)
     for verb, extra in (("open", ("room", "--seats")), ("say", ("room", "body", "--class", "--to", "--reply-to", "--about")), ("connect", ("room", "seat")), ("separate", ("room", "seat", "--reason")), ("watch", ("room", "--follow")), ("close", ("room",)), ("replay", ("room",)), ("list", ())):
         r_ = rs_.add_parser(verb)
         for arg in extra:
-            if arg == "--seats": r_.add_argument("--seats", required=True, help="comma list of agent seats; the human seat is added if absent and can never be removed")
+            if arg == "--seats": r_.add_argument("--seats", required=True, help="comma list of agent seats; the keyholder seat is added if absent and can never be removed")
             elif arg == "--class": r_.add_argument("--class", dest="cls", choices=["report", "proposal", "question", "alert"], default="report")
             elif arg == "--to": r_.add_argument("--to", default="")
             elif arg == "--reply-to": r_.add_argument("--reply-to", dest="reply_to", default="", help="note id this replies to (taint is inherited)")
@@ -764,13 +766,21 @@ def main():
     s = sub.add_parser("chest");   cs = s.add_subparsers(dest="sub", required=True)
     c = cs.add_parser("add");      c.add_argument("kind", choices=["git", "path"], help="git = a git remote you own · path = a folder you own"); c.add_argument("target"); c.add_argument("--branch", default="main"); c.add_argument("--label", default=""); c.add_argument("vault", nargs="?", default=DEF)
     c = cs.add_parser("status");   c.add_argument("vault", nargs="?", default=DEF)
-    c = cs.add_parser("push");     c.add_argument("--reason", default="manual"); c.add_argument("--label", default=None, help="one destination only (default: all)"); c.add_argument("--no-sweep", dest="no_sweep", action="store_true", help="HUMAN ONLY, per push, ledgered: skip the secret sweep"); c.add_argument("--by", default="", help="who is disabling the sweep"); c.add_argument("vault", nargs="?", default=DEF)
+    c = cs.add_parser("push");     c.add_argument("--reason", default="manual"); c.add_argument("--label", default=None, help="one destination only (default: all)"); c.add_argument("--no-sweep", dest="no_sweep", action="store_true", help="KEYHOLDER ONLY, per push, ledgered: skip the secret sweep"); c.add_argument("--by", default="", help="who is disabling the sweep"); c.add_argument("vault", nargs="?", default=DEF)
     c = cs.add_parser("tick");     c.add_argument("vault", nargs="?", default=DEF)
     s.set_defaults(f=cmd_chest)
     s = sub.add_parser("mount");   s.add_argument("--from", dest="src", default="", help="restore a vault from a copy (git URL or folder) into an EMPTY vault path first"); s.add_argument("--file", default=".mcp.json", help="MCP config to write (default: .mcp.json)"); s.add_argument("--agent", default="", help="agent name recorded on this mount (default: server default)"); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_mount)
     s = sub.add_parser("doctor");  s.add_argument("--mount", action="append", help="repeatable: a .mcp.json (or its folder) to validate"); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_doctor)
 
-    a = p.parse_args()
+    # Python 3.11's argparse gives a trailing optional positional (the vault) away too early when flags sit
+    # between it and the first positional: `magnemo promote ID --by NAME VAULT` came back "unrecognized
+    # arguments". 3.12+ parses it; this keeps 3.11 honest: one leftover word is the vault.
+    a, extra = p.parse_known_args()
+    if extra:
+        if len(extra) == 1 and not extra[0].startswith("-") and getattr(a, "vault", None) == DEF:
+            a.vault = extra[0]
+        else:
+            p.error("unrecognized arguments: " + " ".join(extra))
     a.f(a)
 
 

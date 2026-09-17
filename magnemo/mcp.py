@@ -8,7 +8,7 @@ bound to existing magnemo code (nothing reimplemented here):
   bootpack(scope?, class?)           → bootpack.generate   the v0.3 boot pack (worker | partner)
   handoff(usage, trigger, cut?)      → handoff.record      boundary telemetry + staged handoff note
 
-Promotion is NOT a tool — it is a human act, always: it stays human, via the CLI. There is
+Promotion is NOT a tool — it is the keyholder's act, always: it stays theirs, via the CLI. There is
 no shell, no eval, no file tool — least privilege is the surface itself.
 
 Configuration (env):
@@ -48,7 +48,7 @@ def tools_spec(vault=None) -> list:
             "annotations": {"title": "Look something up in memory", "readOnlyHint": True,
                             "destructiveHint": False, "idempotentHint": True, "openWorldHint": False},
             "description": (
-                "Retrieve canonical (human-reviewed) memory relevant to a query. Returns a "
+                "Retrieve canonical (keyholder-approved) memory relevant to a query. Returns a "
                 "scored, BUDGETED payload: mn:// pointers plus snippet renditions, never raw "
                 "dumps. Scope is partition-walled; payload size is logged to the Foresight "
                 "counters. Cite the returned rid when the action resolves."),
@@ -68,7 +68,7 @@ def tools_spec(vault=None) -> list:
             "annotations": {"title": "Draft an entry for a person to review", "readOnlyHint": False,
                             "destructiveHint": False, "idempotentHint": False, "openWorldHint": False},
             "description": (
-                "Stage a memory candidate for HUMAN review. This is the only write verb: "
+                "Stage a memory candidate for KEYHOLDER review. This is the only write verb: "
                 "the note lands in _staging/ with mandatory provenance and never touches "
                 "canon. Returns the staged id, its salience, and a duplicate flag. "
                 "Malformed or paperless (no provenance) notes are refused."),
@@ -207,7 +207,7 @@ class MemoryServer(Server):
             "candidates": len(out["results"]), "served": len(rendered)})
         if not rendered:
             payload["note"] = ("No canonical memory matches in scope. Staged notes are "
-                               "excluded until a human promotes them.")
+                               "excluded until a keyholder promotes them.")
         return json.dumps(payload, indent=1)
 
     # ---------------- stage ----------------
@@ -223,7 +223,7 @@ class MemoryServer(Server):
             raise ValueError("REFUSED: paperless note — provenance.source is mandatory "
                              "(run id / gate id / audit id)")
         # P-54 · PROVENANCE ENFORCED AT THE DOOR: the author of an MCP stage is the seat
-        # (MAGNEMO_AGENT), always. A seat may not sign as a human; a different non-human
+        # (MAGNEMO_AGENT), always. A seat may not sign as a keyholder; a different non-keyholder
         # name is kept as `claimed_author` (an appended provenance field), never as the author.
         claimed = (prov.get("author") or "").strip()
         author = self.agent
@@ -233,11 +233,11 @@ class MemoryServer(Server):
             if _trust.is_human(_lc(self.vault.root), claimed):
                 try:
                     _trust.record(self.vault, self.agent, "stage", "denied", by="magnemo.mcp",
-                                  reason=f"an agent seat cannot sign as a human: claimed author {claimed!r}")
+                                  reason=f"an agent seat cannot sign as a keyholder: claimed author {claimed!r}")
                 except Exception:
                     pass
                 raise PermissionError(
-                    f"REFUSED: an agent seat cannot sign as a human ({claimed!r}); "
+                    f"REFUSED: an agent seat cannot sign as a keyholder ({claimed!r}); "
                     "say who directed it in `source`")
         title = (note.get("title") or "").strip()
         body = (note.get("body") or "").strip()
@@ -298,7 +298,7 @@ class MemoryServer(Server):
             "duplicate_similarity": round(dup["sim"], 4) if dup else None,
             "taint": n.taint or None,
             "bytes": nbytes,
-            "note": "Awaits HUMAN review: magnemo yes (or magnemo review). "
+            "note": "Awaits KEYHOLDER review: magnemo yes (or magnemo review). "
                     "Not canonical; will not appear in retrieve until promoted.",
         }, indent=1)
 

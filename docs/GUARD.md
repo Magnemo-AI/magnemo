@@ -7,7 +7,7 @@ the hand and every file it can reach.
 ```bash
 magnemo guard ./vault                 # raise the wall
 magnemo guard --status ./vault
-magnemo guard --off --by founder ./vault      # human verb, ledgered
+magnemo guard --off --by founder ./vault      # keyholder verb, ledgered
 magnemo restore claude/THE_DOCKET.md --versions
 magnemo restore claude/THE_DOCKET.md --to 20260905T0812   # or a sha12 prefix; default latest
 ```
@@ -28,7 +28,7 @@ magnemo restore claude/THE_DOCKET.md --to 20260905T0812   # or a sha12 prefix; d
   the prior bytes under `_index/archive/<relpath>/`; the ledger keeps the prior
   hash. A deleted render is re-rendered from canon by `doctor`. `restore` writes a
   version back through the guard and stages it as a founder note superseding the
-  current canonical — canon stays human.
+  current canonical — canon stays yours.
 - A re-rendered file is reported by `doctor` as a note, not ledgered: canon didn't change, so a restored copy's boot pack stays byte-identical.
 - **Straight**: the engine cannot see a shell's failed `rm` — the OS refusal and
   the body's deny rule are that record. If the folder is gone anyway,
@@ -41,6 +41,6 @@ Git cannot replace an immutable file. On the machine where the guard is ON:
 - after merging your own branch: `git fetch origin && git checkout -B main origin/main`
   (identical trees → git writes nothing);
 - to pull changes that touch guarded files, lower the wall first — `magnemo guard --off
-  --by <human>` — pull, then raise it again. The ledger keeps both moves.
+  --by <keyholder>` — pull, then raise it again. The ledger keeps both moves.
 - A restored copy inherits the guard's state and relocks its files on its first
   `doctor` pass; a throwaway restore needs `chflags -R nouchg,nouappnd` before `rm`.

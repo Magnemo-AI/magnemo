@@ -34,7 +34,7 @@ class TestBootPackScorecard(Base):
         self.assertLess(pack.index("## YOUR AUTONOMY — bot"), pack.index("## CANON DIGEST"))
         own = pack.split("## YOUR AUTONOMY — bot")[1].split("## CANON DIGEST")[0]
         self.assertIn("| merge-code | **L2 SUPERVISED** | L2 SUPERVISED | L2 SUPERVISED | 5.0000 |", own)
-        self.assertIn("| promote-canon | **L1 PROPOSE** (human-only cap)", own)
+        self.assertIn("| promote-canon | **L1 PROPOSE** (keyholder-only cap)", own)
         self.assertIn("grant G0001 → L2 in merge-code (P-01) — repo", own)
         self.assertIn(f"ledger time {day(1)}", own)
 

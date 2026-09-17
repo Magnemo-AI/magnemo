@@ -1,6 +1,6 @@
 # GRANTS — permission as data (P-02 B2)
 
-A **grant** is how a human permits an actor to operate at a level in one or
+A **grant** is how a keyholder permits an actor to operate at a level in one or
 more action classes. It is a structured, append-only ledger record — not a
 paragraph in a chat, not a memory file. Standing orders and one-time grants are
 the same record with a different `kind`. Revocation is a second record naming
@@ -60,10 +60,10 @@ freezes the class at L0 regardless of any grant.
 
 ## What no grant can do
 
-- Lift a non-human above **L1 in `promote-canon` or `publish`** — refused at
+- Lift a non-keyholder above **L1 in `promote-canon` or `publish`** — refused at
   issue time, and clamped again at compute time so a hand-edited ledger line
   cannot smuggle a key (there is a test that forges one).
-- Lift anyone who is not a declared human to **L4 KEYHOLDER**.
+- Lift anyone who is not a declared keyholder to **L4 KEYHOLDER**.
 
 ## The genesis grant
 

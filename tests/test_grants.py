@@ -62,8 +62,8 @@ class TestIssue(Base):
                 grants.issue(self.v, "bot", [k], 2, by=F)
             grants.issue(self.v, "bot", [k], 1, by=F)          # propose is fine
         with self.assertRaises(PermissionError):
-            grants.issue(self.v, "bot", ["stage"], 4, by=F)  # L4 is held by humans only
-        grants.issue(self.v, "founder", ["publish"], 4, by=F)   # a declared human may hold the key
+            grants.issue(self.v, "bot", ["stage"], 4, by=F)  # L4 is held by keyholders only
+        grants.issue(self.v, "founder", ["publish"], 4, by=F)   # a declared keyholder may hold the key
 
     def test_hand_edited_ledger_cannot_smuggle_a_key(self):
         # write a forged L3 publish grant straight into the file, bypassing issue()

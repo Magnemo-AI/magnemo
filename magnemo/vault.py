@@ -1,7 +1,7 @@
 """magnemo.vault — Layer 1: the vault substrate.
 
 Plain markdown notes with provenance frontmatter, arranged in the six-store
-partitioned tree from the SVTech Orchestration Blueprint. Human-editable in any editor (the files are yours); machine-accessed
+partitioned tree from the SVTech Orchestration Blueprint. Editable by hand in any editor (the files are yours); machine-accessed
 through this module only.
 
 Zero dependencies. The frontmatter format is a strict, tiny YAML subset that
@@ -222,7 +222,7 @@ class Vault:
     # -------- write (ALWAYS to staging) --------
     def stage(self, note: Note) -> str:
         """Agent-facing write. Notes land in _staging/ only. Promotion to a
-        canonical store is a separate, human-gated act (governance.promote)."""
+        canonical store is a separate, keyholder-gated act (governance.promote)."""
         self._canonical_dir(note.partition, note.store)  # validate target early
         note.status = "staged"
         path = self._safe(os.path.join(self._staging_dir(), f"{note.id}.md"))
@@ -266,7 +266,7 @@ class Vault:
     def ghosts(self) -> list:
         """Ids present in _staging that ALSO exist in a canonical store. A
         ghost is never an active candidate; it is a stale copy to be removed
-        by a human (or VCS). Reported, never silently deleted."""
+        by a person (or VCS). Reported, never silently deleted."""
         canon = self._canonical_ids()
         d = self._staging_dir()
         return sorted(f[:-3] for f in os.listdir(d) if f.endswith(".md") and f[:-3] in canon)
@@ -336,12 +336,12 @@ class Vault:
 
 VAULT_README = """# Magnemo Vault
 
-This folder is a Magnemo memory vault — the canonical, human-owned memory of an
+This folder is a Magnemo memory vault — the canonical memory, owned by you, of an
 agentic operation, governed by the Magnemo Protocol.
 
 - Everything is plain markdown. View it in any editor; you own the files.
 - `dev/ ops/ shared/` are the partitions; folders inside are the stores.
-- `_staging/` holds agent writes awaiting human review. Review with:
+- `_staging/` holds agent writes awaiting your review. Review with:
       python -m magnemo.cli review
 - Never hand-edit `_index/` or `_ledger/` (machine-managed).
 - Every note's frontmatter is its provenance. Provenance is the file format.

@@ -7,7 +7,7 @@ So each handoff records two artifacts:
   1. a structured telemetry entry appended to `_ledger/handoffs.jsonl` —
      append-only, machine-readable: usage %, trigger, what was cut, actor;
   2. a provenance-complete handoff note staged for review like any other
-     memory candidate — the human-readable baton.
+     memory candidate — the plain-language baton.
 
 `cli handoff --usage 91 --trigger planned --cut "deferred X" --by NAME`
 `cli handoff --report` renders every boundary ever recorded as a table.

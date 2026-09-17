@@ -41,7 +41,7 @@ upgrades never break an edited config.
 }
 ```
 
-## `kairos` — deterministic salience at stage time — so a human reads what mattered first
+## `kairos` — deterministic salience at stage time — so you read what mattered first
 
 Every staged note gets `salience = Σ weight × component`, components each
 in [0, 1], computed at stage time with **no model calls** — pure functions
@@ -103,10 +103,10 @@ met, clamped to the class floor/ceiling. Full operator guide: `docs/TRUST.md`.
 | `weights` | Per event kind. Positive: `success`, `verified`, `halt`. Negative: `failure`, `denied`, `surprise`. `violation` and `reinstate` have no weight — they reset and unfreeze. |
 | `half_life_days` | Every contribution halves after this many days. Trust not exercised fades. |
 | `thresholds` | Score needed for L1/L2/L3. L4 (keyholder) is never computed. |
-| `classes.<class>.floor` / `.ceiling` | Clamp on the *computed* level. `promote-canon` and `publish` are capped at L1 in code for non-humans regardless of what is written here. |
+| `classes.<class>.floor` / `.ceiling` | Clamp on the *computed* level. `promote-canon` and `publish` are capped at L1 in code for non-keyholders regardless of what is written here. |
 | `classes.<class>.default_grant` | Permission an actor holds with no grant on file. Effective level = min(computed, granted). |
 | `humans` | Keyholders. L4 everywhere, not scored. Declaring one is a founder edit of this file. |
-| `gates` | The Gate Map (docs/GATES.md): list of `{name, class, state, keyholder, note, paths}`. `state`: `locked` · `open` · `computed` (delegated while an active grant covers the class for a non-human, else locked). Human-only classes always read locked. |
+| `gates` | The Gate Map (docs/GATES.md): list of `{name, class, state, keyholder, note, paths}`. `state`: `locked` · `open` · `computed` (delegated while an active grant covers the class for a non-keyholder, else locked). Keyholder-only classes always read locked. |
 
 ## `partitions` · `scopes` — the vault declares its own shape
 A vault is born with `dev · ops · shared`. It may declare its own partitions and

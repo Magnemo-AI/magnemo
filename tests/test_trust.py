@@ -210,7 +210,7 @@ class TestRender(TrustBase):
         out = trust.render_scorecard(trust.scorecard(self.v, "bot", as_of=day(2)))
         for k in trust.CLASSES:
             self.assertIn(k, out)
-        self.assertIn("human-only cap", out); self.assertIn("halt", out)
+        self.assertIn("keyholder-only cap", out); self.assertIn("halt", out)
         self.assertIn("L1 PROPOSE", out); self.assertIn("stopped at ceiling 4", out)
 
 

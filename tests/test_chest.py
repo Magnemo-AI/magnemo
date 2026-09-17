@@ -156,7 +156,7 @@ class TestGauntlet(unittest.TestCase):
         # nothing left the machine: the remote has no commits
         r = subprocess.run(["git", "--git-dir", self.remote, "rev-parse", "main"], capture_output=True, text=True)
         self.assertNotEqual(r.returncode, 0)
-        os.remove(os.path.join(self.A, "_staging", f"{bad.id}.md"))   # the human moves the secret out
+        os.remove(os.path.join(self.A, "_staging", f"{bad.id}.md"))   # the keyholder moves the secret out
         res = chest.push(self.A, trigger="manual")
         self.assertEqual(res[0]["status"], "ok", res[0])
         self.assertIn("✅", chest.gauge(self.A).split("·")[1])

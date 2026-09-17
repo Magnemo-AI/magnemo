@@ -114,7 +114,7 @@ class TestStdioTransport(unittest.TestCase):
 
 
 def promote(vault, title, body, partition, store, tags="", impact="info", source="seed"):
-    """Test fixture: the HUMAN path to canon (governance.promote) — never an MCP tool."""
+    """Test fixture: the KEYHOLDER's path to canon (governance.promote) — never an MCP tool."""
     g = Governance(vault)
     n = g.agent_write(title=title, body=body, partition=partition, store=store,
                       author="seed", source=source, tags=tags, impact=impact)
@@ -465,7 +465,7 @@ class TestCascades(unittest.TestCase):
 
     # bootpack() → Charter + digest + KAIROS-ranked staged (+ inherited handoff)
     def test_bootpack_cascade(self):
-        charter = promote(self.v, "The Charter", "Agents stage; humans promote. Canon is read-only.",
+        charter = promote(self.v, "The Charter", "Agents stage; keyholders promote. Canon is read-only.",
                           "shared", "changelog", tags="charter")
         promote(self.v, "Ops fact", "Acme pays per tonne.", "ops", "clients")
         # three staged notes of ascending consequence: the pack must rank them by KAIROS, not by time
@@ -480,7 +480,7 @@ class TestCascades(unittest.TestCase):
         sections = [l for l in pack.splitlines() if l.startswith("## ")]
         self.assertEqual(sections, ["## THE CHARTER", "## GATES", "## YOUR AUTONOMY — cascade-agent", "## CANON DIGEST", "## OPEN THREADS & REVIEW QUEUE",
                                     "## LAST HANDOFF", "## LEDGER TAIL (last 4 of 4)"])  # 2 promotes + 2 derived trust.events (P-02)
-        self.assertLess(pack.index("Agents stage; humans promote"), pack.index("## CANON DIGEST"))  # charter verbatim, first
+        self.assertLess(pack.index("Agents stage; keyholders promote"), pack.index("## CANON DIGEST"))  # charter verbatim, first
         self.assertIn("**Ops fact** — Acme pays per tonne.", pack)                                      # digest
         queue = pack.split("Top 3 by salience:")[1].split("## LAST HANDOFF")[0]
         order = [l.split("] ", 1)[1].split(" (")[0] for l in queue.strip().splitlines()]

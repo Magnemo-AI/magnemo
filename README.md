@@ -22,7 +22,7 @@ If anything fails, show me what went wrong and fix it if you can.
 You'll know it worked — your AI will tell you who it is now.
 
 **For builders.** Magnemo is an MCP server with four tools — `retrieve`, `stage`,
-`bootpack`, `handoff` — and a CLI for the human side: review, promote, reject.
+`bootpack`, `handoff` — and a CLI for your side: review, promote, reject.
 It runs on your machine, in plain markdown files you own, with zero network calls
 (the `doctor` line proves it). Every promotion is a person's click, recorded with
 who wrote the entry, when, and through which gate — memory with a witness. Trust is
@@ -44,7 +44,7 @@ Agents get four MCP tools. Promotion is not one of them.
 | Actor  | Door                | Can do |
 |--------|---------------------|--------|
 | Agents | MCP server (stdio)  | `retrieve` canonical memory · `stage` → **staging only, the one write tool** · `bootpack` on wake · `handoff` at the boundary |
-| Human  | CLI + git (any editor)| review the queue · **promote / reject** · edit anything · own everything |
+| You    | CLI + git (any editor)| review the queue · **promote / reject** · edit anything · own everything |
 
 ## Quick start (open beta)
 Five minutes from install to a governed, booted agent. Python 3.11+, zero dependencies.
@@ -102,14 +102,14 @@ status, reviewed_by, supersedes, strength). **Provenance is the file format.**
   `yield_w / yield_l` — an earned track record — and **ranking multiplies by
   proven yield**. Memory that pays ranks up; memory that misleads sinks.
 - **Taint propagation**: writes from untrusted sources carry `taint:` in
-  frontmatter; taint is **hereditary** through supersession and only a human
+  frontmatter; taint is **hereditary** through supersession and only a keyholder
   clears it (`magnemo cleartaint`). Injection cannot launder itself through
   derivation, and tainted notes are rank-penalized and excludable.
 - **Char budgets**: `retrieve(budget=…)` bounds every payload; payload
   size is measured and logged on every retrieval — the instrumentation for the
   token-efficiency benchmark is on by default from day one.
 
-## New in v0.3 — salience-sorted review — so a human reads what mattered first
+## New in v0.3 — salience-sorted review — so you read what mattered first
 The founder's attention is the scarcest resource in the loop. Every staged
 note now gets a **deterministic salience score at stage time** — no model
 calls, no embeddings — stored in frontmatter (`salience` +
@@ -187,10 +187,10 @@ it was measuring.
 
 Every actor holds a computed autonomy level per action class (read · stage · merge-code ·
 promote-canon · publish), derived only from append-only ledger events: `score = Σ weight ×
-0.5^(age/half-life)`, thresholds → L0 frozen … L3 autonomous; L4 keyholder is held by humans,
+0.5^(age/half-life)`, thresholds → L0 frozen … L3 autonomous; L4 keyholder is held by people,
 never computed. Grants are ledger records (`magnemo grant`) — a standing order becomes a grant id, so permission is data with a receipt — and the Gate Map
 (`magnemo gates`) plus your own scorecard ride every boot pack. `promote-canon` and `publish`
-stay human-only forever. Read `docs/TRUST.md`, `docs/GRANTS.md`, `docs/GATES.md`.
+stay keyholder-only forever. Read `docs/TRUST.md`, `docs/GRANTS.md`, `docs/GATES.md`.
 
 ## v0.4.0 "First Name" — the product is Magnemo
 Ratified 2026-08-20 after the naming gauntlet. Package `magnemo`; CLI `python -m magnemo.cli`
@@ -200,7 +200,7 @@ Full notes: [CHANGELOG.md](CHANGELOG.md).
 ## New in v0.4 — the four-tool MCP server — the whole agent surface, nothing more
 `python -m magnemo.mcp` (or `magnemo-mcp`) exposes **exactly four tools**, each
 bound to existing code — `retrieve` · `stage` · `bootpack` · `handoff`. Promotion is not
-a tool — promotion is a human act, always. Zero deps, stdio, stdlib only.
+a tool — promotion is your act, always. Zero deps, stdio, stdlib only.
 
 ```
 retrieve ─▶ scope gate ─▶ walled BM25 ─▶ budget/rendition (snippet→pointer) ─▶ cost event
@@ -226,7 +226,7 @@ contract: [docs/CHEST.md](docs/CHEST.md).
 
 ## Guarantees (Phase 1 — Governed Recall)
 - Agent writes NEVER reach canonical stores directly — staging only, always.
-- Search returns canonical (human-reviewed) notes only. Staged claims are invisible.
+- Search returns canonical (keyholder-approved) notes only. Staged claims are invisible.
 - Partition walls enforced per agent (`MAGNEMO_PARTITIONS`); cross-partition = DENIED.
 - Supersession is explicit: old notes archive with a forward link. Nothing deletes.
 - Rejections are kept and recorded — rejections teach.

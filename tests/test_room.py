@@ -1,4 +1,4 @@
-"""THE ROOM v0 (P-21) — the drills as tests: talk is staging, canon is human."""
+"""THE ROOM v0 (P-21) — the drills as tests: talk is staging, canon is the keyholder's."""
 import os, sys, json, shutil, tempfile, unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from magnemo.vault import Vault
@@ -34,7 +34,7 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(self.v.read(draft.id).status, "staged")
         led = TrustLedger(self.v).entries()
         self.assertFalse(any(e["action_class"] in ("memory.promote", "trust.grant") for e in led))
-        g.promote(draft.id, "founder", "the human's Yes")                          # only this promotes
+        g.promote(draft.id, "founder", "the keyholder's Yes")                          # only this promotes
         self.assertEqual(self.v.read(draft.id).status, "canonical")
         ev = room.events(self.v, "lab"); m = [e for e in ev if e["kind"] == "MESSAGE"][0]
         self.assertEqual((m["from_seat"], m["class"], m["about"]), ("cc", "proposal", draft.id)); self.assertIn("salience", m)
@@ -59,7 +59,7 @@ class TestRoom(unittest.TestCase):
         room.say(self.v, "lab", "first", "report", frm="cc")
         with self.assertRaises(room.RoomError):                                       # agents cannot separate agents
             room.separate(self.v, "lab", "cc", by="boardroom")
-        with self.assertRaises(room.RoomError):                                       # the human seat is never removable
+        with self.assertRaises(room.RoomError):                                       # the keyholder seat is never removable
             room.separate(self.v, "lab", "founder", by="founder")
         room.separate(self.v, "lab", "cc", by="founder", reason="done for today")
         with self.assertRaises(room.RoomError) as cm:
@@ -76,7 +76,7 @@ class TestRoom(unittest.TestCase):
         a = room.say(self.v, "lab", "proposal one", "proposal", frm="cc")
         room.say(self.v, "lab", "question?", "question", frm="boardroom", to="cc")
         with self.assertRaises(room.RoomError):
-            room.close(self.v, "lab", by="cc")                                         # close is a human verb
+            room.close(self.v, "lab", by="cc")                                         # close is a keyholder verb
         room.close(self.v, "lab", by="founder")
         with self.assertRaises(room.RoomError):
             room.say(self.v, "lab", "too late", "report", frm="cc")

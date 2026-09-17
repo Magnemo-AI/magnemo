@@ -89,7 +89,7 @@ class TestDerivedState(Base):
         grants.issue(self.v, "bot", ["merge-code"], 2, by=F, ref="P-01", when=day(2))
         gm = gates.gate_map(self.v, day(2))
         out = gates.render(gm, day(2))
-        self.assertIn("delegated", out); self.assertIn("P-01", out); self.assertIn("human-only", out)
+        self.assertIn("delegated", out); self.assertIn("P-01", out); self.assertIn("keyholder-only", out)
         for k in ("name", "class", "state", "keyholder", "last_change", "delegations", "grant_history"):
             self.assertIn(k, gm[0])
         json.dumps(gm)
@@ -102,7 +102,7 @@ class TestBootPackGates(Base):
         self.assertLess(pack.index("## GATES"), pack.index("## CANON DIGEST"))
         for name in ("retrieve", "staging", "main", "gate-code", "canon", "publish"):
             self.assertIn(f"**{name}**", pack)
-        self.assertIn("human-only forever (#81)", pack)
+        self.assertIn("keyholder-only forever (#81)", pack)
 
     def test_gates_section_reads_the_ledger_at_ledger_time_and_stays_pure(self):
         grants.issue(self.v, "bot", ["merge-code"], 2, by=F, ref="P-01", scope="repo", when=day(2))

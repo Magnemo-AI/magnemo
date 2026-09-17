@@ -21,7 +21,7 @@ class TestGovernance(unittest.TestCase):
         self.assertEqual(n.status, "staged")
         idx = Index(self.v)
         self.assertEqual(idx.search("month-end spike")["results"], [])  # staged excluded
-        # human promotes -> canonical, searchable, ledgered
+        # the keyholder promotes -> canonical, searchable, ledgered
         self.g.promote(n.id, reviewer="founder", reason="pattern confirmed")
         hits = idx.search("month-end spike")["results"]
         self.assertEqual(len(hits), 1)

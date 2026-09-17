@@ -3,7 +3,7 @@
   "name": "io.github.magnemo-ai/magnemo",
   "title": "Magnemo",
   "description": "Governed memory for AI agents. Memory with receipts. Local, plain files, zero network calls.",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "websiteUrl": "https://magnemo.ai",
   "repository": {
     "url": "https://github.com/magnemo-ai/magnemo",
@@ -14,7 +14,7 @@
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "magnemo-mcp",
-      "version": "0.6.3",
+      "version": "0.6.4",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"

@@ -159,7 +159,7 @@ class TestShape(unittest.TestCase):
         self.assertIn("aws-access-key", sent.body); self.assertNotIn("AKIA" + "Q" * 16, sent.body); self.assertTrue(sent.taint.startswith("sentinel:"))
         res = chest.push(self.v.root, trigger="manual")[0]
         self.assertEqual(res["status"], "blocked"); self.assertIn("🔴", chest.gauge(self.v.root))
-        os.remove(os.path.join(inbox, "blocked", "creds.md"))                           # the human clears it
+        os.remove(os.path.join(inbox, "blocked", "creds.md"))                           # the keyholder clears it
         self.assertEqual(chest.push(self.v.root, trigger="manual")[0]["status"], "ok")
         # promote the drop: rendered to disk, and the boot pack lifts the REV BLOCK from CANON
         Governance(self.v).promote(baton.id, "founder")

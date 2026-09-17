@@ -1,11 +1,11 @@
-"""magnemo.room — THE ROOM v0: agents that talk to each other, with the human in the room.
+"""magnemo.room — THE ROOM v0: agents that talk to each other, with a person in the room.
 
-"Talk is staging. Canon is human." A room is a SEAT SET sharing ONE ledger for as
-long as a human keeps it open. Every message is a STAGED note with provenance
+"Talk is staging. Canon is yours." A room is a SEAT SET sharing ONE ledger for as
+long as a keyholder keeps it open. Every message is a STAGED note with provenance
 {from_seat, to, class, salience}; Sentinel sweeps every message on stage (secret
 formats + injection patterns); taint is hereditary through replies. A message may
 PROPOSE; it can never PROMOTE — no room verb writes canon, trust, or grants.
-Connect / separate / close are HUMAN verbs. A human seat is always present and
+Connect / separate / close are KEYHOLDER verbs. A keyholder seat is always present and
 never removable. A closed room is a ledger you can replay.
 
 Files: rooms/transcript/ (messages, as staged notes) · _ledger/rooms/<room>.jsonl
@@ -123,14 +123,14 @@ def open_room(v: Vault, room: str, seats, by: str) -> dict:
         founder = next((h for h in ("founder", "The Founder") if h.lower() in humans(v)), humans(v)[0])
         seats.insert(0, founder); hum = [founder]
     if not [s for s in seats if not is_human(v, s)]:
-        raise RoomError("A room needs at least one agent seat alongside the human seat (--seats boardroom,cc).")
+        raise RoomError("A room needs at least one agent seat alongside the keyholder seat (--seats boardroom,cc).")
     return _append(v, room, {"kind": "ROOM_OPEN", "by": by, "seats": seats, "human_seats": hum})
 
 
 def _require_human(v: Vault, by: str, verb: str):
     if not is_human(v, by):
-        raise RoomError(f"'{verb}' is a human verb — '{by}' is not a keyholder (config trust.humans: {', '.join(humans(v))}). "
-                        "Agents cannot invite or remove agents; the human seat decides who is in the room.")
+        raise RoomError(f"'{verb}' is a keyholder verb — '{by}' is not a keyholder (config trust.humans: {', '.join(humans(v))}). "
+                        "Agents cannot invite or remove agents; the keyholder seat decides who is in the room.")
 
 
 def connect(v: Vault, room: str, seat: str, by: str) -> dict:
@@ -178,8 +178,8 @@ def say(v: Vault, room: str, body: str, cls: str, frm: str, to: str = "room", re
         sep = st["separated"].get(frm)
         if sep:
             raise RoomError(f"'{frm}' was separated from '{room}' at {sep['at']} by {sep['by']}"
-                            + (f" ({sep['reason']})" if sep["reason"] else "") + " — later messages are refused. Only a human seat can connect it again.")
-        raise RoomError(f"'{frm}' is not seated in '{room}' (seats: {', '.join(st['seats'])}). Ask the human seat to connect it.")
+                            + (f" ({sep['reason']})" if sep["reason"] else "") + " — later messages are refused. Only a keyholder can connect it again.")
+        raise RoomError(f"'{frm}' is not seated in '{room}' (seats: {', '.join(st['seats'])}). Ask the keyholder to connect it.")
     if to != "room" and to not in st["seats"]:
         raise RoomError(f"'{to}' is not seated in '{room}'.")
     taint = ""
@@ -219,7 +219,7 @@ def say(v: Vault, room: str, body: str, cls: str, frm: str, to: str = "room", re
 def _sentence(v: Vault, e: dict) -> str:
     k = e["kind"]
     if k == "ROOM_OPEN":
-        return f"{e['by']} opened the room with seats {', '.join(e['seats'])} (human: {', '.join(e['human_seats'])})."
+        return f"{e['by']} opened the room with seats {', '.join(e['seats'])} (keyholder: {', '.join(e['human_seats'])})."
     if k == "SEAT_CONNECT":
         return f"{e['by']} brought {e['seat']} into the room."
     if k == "SEAT_SEPARATE":

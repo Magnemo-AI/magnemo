@@ -1,7 +1,7 @@
 """magnemo.trust — the arithmetic of earned trust.
 
 The trust ledger becomes math. Every identity that acts on the vault — an
-agent, a session, a human — is an ACTOR. For each ACTION CLASS an actor
+agent, a session, a person — is an ACTOR. For each ACTION CLASS an actor
 holds an autonomy LEVEL, computed ONLY from append-only ledger events.
 Nothing here is inferred, estimated, or modelled: zero-LLM law holds, the
 formula is fixed, the weights live in the vault config, and every number on
@@ -12,10 +12,10 @@ ACTION CLASSES (fixed, five):
 
 LEVELS (fixed, five):
   L0 FROZEN      may not act in this class; only a keyholder reinstates
-  L1 PROPOSE     may prepare the action and hand it to a human
-  L2 SUPERVISED  may perform the action; logs one line; a human reviews after
+  L1 PROPOSE     may prepare the action and hand it to a keyholder
+  L2 SUPERVISED  may perform the action; logs one line; a keyholder reviews after
   L3 AUTONOMOUS  may perform the action without per-action review
-  L4 KEYHOLDER   a human holding the key: performs, grants, revokes, reinstates
+  L4 KEYHOLDER   a person holding the key: performs, grants, revokes, reinstates
 
 THE MATH (all in this file; see docs/TRUST.md for the operator version):
 
@@ -38,7 +38,7 @@ THE MATH (all in this file; see docs/TRUST.md for the operator version):
   freezes the class at L0 until a keyholder records `reinstate`.
 
 Grants (P-02 B2) cap the computed level from above; ceiling classes
-(promote-canon, publish) are hard-capped at L1 for every non-human actor,
+(promote-canon, publish) are hard-capped at L1 for every non-keyholder actor,
 forever — no grant, no score, no config lifts that.
 
 Determinism: `as_of` is a parameter. Callers that must be pure functions of
@@ -52,7 +52,7 @@ from .vault import Vault, now_iso
 from .config import load_config
 
 CLASSES = ("read", "stage", "merge-code", "promote-canon", "publish")
-HUMAN_ONLY = ("promote-canon", "publish")     # human-only forever — hard-capped, uncappable
+HUMAN_ONLY = ("promote-canon", "publish")     # keyholder-only forever — hard-capped, uncappable
 LEVEL_NAMES = {0: "FROZEN", 1: "PROPOSE", 2: "SUPERVISED", 3: "AUTONOMOUS", 4: "KEYHOLDER"}
 MAX_COMPUTED = 3                              # L4 is never computed; it is held
 EVENT_KINDS = ("success", "verified", "halt", "failure", "denied", "surprise",
@@ -131,7 +131,7 @@ def events(vault: Vault, actor: str | None = None, klass: str | None = None,
 def record(vault: Vault, actor: str, klass: str, kind: str, by: str,
            reason: str = "", ref: str = "", when: str = "", grant: str = "") -> dict:
     """Append one trust event. `actor` is the identity being scored; `by` is
-    who recorded it (a human, or the subsystem that derived it). `when`
+    who recorded it (a person, or the subsystem that derived it). `when`
     backdates a KNOWN historical event — `recorded_at` keeps the real clock.
     Append-only; nothing here edits or deletes."""
     if klass not in CLASSES:
@@ -225,7 +225,7 @@ def level_from_score(s: float, cfg: dict, klass: str, frozen: bool) -> int:
     lvl = max(lvl, int(cc["floor"]))
     lvl = min(lvl, int(cc["ceiling"]), MAX_COMPUTED)
     if klass in HUMAN_ONLY:
-        lvl = min(lvl, HUMAN_ONLY_CAP)      # human-only forever: uncappable
+        lvl = min(lvl, HUMAN_ONLY_CAP)      # keyholder-only forever: uncappable
     return lvl
 
 
@@ -244,8 +244,8 @@ def computed(vault: Vault, actor: str, klass: str, as_of: str | None = None,
 
 def effective_level(vault: Vault, actor: str, klass: str, as_of: str | None = None,
                     cfg: dict | None = None, entries: list | None = None) -> dict:
-    """Computed level, then the grant cap (B2), then the human-only cap.
-    Humans listed in config are keyholders: L4 everywhere, not scored."""
+    """Computed level, then the grant cap (B2), then the keyholder-only cap.
+    Names listed in config (trust.humans) are keyholders: L4 everywhere, not scored."""
     cfg = cfg or load_config(vault.root)
     entries = entries if entries is not None else ledger_entries(vault)
     as_of = as_of or now_iso()
@@ -300,7 +300,7 @@ def level_label(L: int) -> str:
 def render_scorecard(card: dict) -> str:
     a = card["actor"]
     L = [f"AUTONOMY SCORECARD — {a} · as of {card['as_of']}"
-         + ("  · KEYHOLDER (human, not scored)" if card["human"] else "")]
+         + ("  · KEYHOLDER (held, not scored)" if card["human"] else "")]
     L.append("=" * 72)
     L.append(f"{'class':<14} {'effective':<14} {'computed':<14} {'granted':<14} score")
     L.append("-" * 72)
@@ -311,7 +311,7 @@ def render_scorecard(card: dict) -> str:
                  f"{level_label(r['computed_level']):<14} "
                  f"{level_label(r['granted_level']):<14} {sc}"
                  + ("  FROZEN" if r.get("frozen") else "")
-                 + ("  human-only cap" if k in HUMAN_ONLY and not card["human"] else ""))
+                 + ("  keyholder-only cap" if k in HUMAN_ONLY and not card["human"] else ""))
     if card["human"]:
         L.append("")
         L.append("Keyholders hold every key by declaration (config trust.humans); nothing to compute.")
@@ -337,5 +337,5 @@ def render_scorecard(card: dict) -> str:
                      + (f"  {e['reason']}" if e.get("reason") else ""))
     L.append("")
     L.append("levels: L0 frozen · L1 propose · L2 supervised · L3 autonomous · L4 keyholder (held, never computed)")
-    L.append("promote-canon and publish are human-only forever (#81): agents cap at L1 in both.")
+    L.append("promote-canon and publish are keyholder-only forever (#81): agents cap at L1 in both.")
     return "\n".join(L)

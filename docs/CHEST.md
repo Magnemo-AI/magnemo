@@ -25,7 +25,7 @@ A missing copy shows `—`: a vault with one copy is told it has one copy.
 Every **promote**, every resolved **receipt**, every **handoff**, every **10
 staged notes**, and at most every **24 hours** (the ceiling). Edit
 `_config/chest.json` to change the counts. The sweep cannot be turned off
-there — only per push, by a human, on the record:
+there — only per push, by a keyholder, on the record:
 ```bash
 magnemo chest push --no-sweep --by "your name"    # writes CHEST_SWEEP_DISABLED to the ledger
 ```

@@ -71,7 +71,7 @@ def claude_engine(task: str, opts: dict):
         system_prompt={"type": "preset", "preset": "claude_code", "append":
                        "You are running under Magnemo governance. Your memory is the mounted vault: call mcp__magnemo__bootpack first, "
                        "mcp__magnemo__retrieve before acting, and mcp__magnemo__stage to record findings — staging is your ONLY write. "
-                       "You cannot promote, grant, or change trust; a human reviews what you stage."},
+                       "You cannot promote, grant, or change trust; a keyholder reviews what you stage."},
     )
     events = []
 
@@ -258,9 +258,9 @@ def schedule(root: str, task: str, cron: str, engine: str = "claude", cap_turns=
     slug = re.sub(r"[^a-z0-9]+", "-", task.lower()).strip("-")[:32] or "task"
     label = f"com.magnemo.run.{slug}"
     rp = rail_path(root)
-    header = "# RAIL — scheduled runs (plain speech; every run stages, a human promotes)\n\n| trigger | agent | task | cap | approval grain |\n|---|---|---|---|---|\n"
+    header = "# RAIL — scheduled runs (plain speech; every run stages, a keyholder promotes)\n\n| trigger | agent | task | cap | approval grain |\n|---|---|---|---|---|\n"
     cap = " · ".join(x for x in ((f"{cap_turns} turns" if cap_turns else ""), (f"${cap_usd}" if cap_usd else "")) if x) or "plan limit only"
-    row = f"| {plain_schedule(cron)} (`{cron}`) | run-{slug} · engine {engine} | {task} | {cap} | staged only — a human promotes |\n"
+    row = f"| {plain_schedule(cron)} (`{cron}`) | run-{slug} · engine {engine} | {task} | {cap} | staged only — a keyholder promotes |\n"
     os.makedirs(os.path.dirname(rp), exist_ok=True)
     existing = open(rp, encoding="utf-8").read() if os.path.isfile(rp) else ""
     with open(rp, "w", encoding="utf-8") as f:

@@ -54,7 +54,7 @@ class TestRun(unittest.TestCase):
         agents = os.path.join(self.d, "agents")
         out = R.schedule(self.d, "morning sweep", "0 9 * * 1", cap_turns=5, install=False, agents_dir=agents)
         self.assertEqual(out["plain"], "every Monday at 09:00")
-        rail = open(out["rail"]).read(); self.assertIn("| every Monday at 09:00 (`0 9 * * 1`) | run-morning-sweep · engine claude | morning sweep | 5 turns | staged only — a human promotes |", rail)
+        rail = open(out["rail"]).read(); self.assertIn("| every Monday at 09:00 (`0 9 * * 1`) | run-morning-sweep · engine claude | morning sweep | 5 turns | staged only — a keyholder promotes |", rail)
         if sys.platform == "darwin":
             p = open(out["plist"]).read(); self.assertIn("<key>Hour</key><integer>9</integer>", p); self.assertIn("<key>Weekday</key><integer>1</integer>", p); self.assertIn("--trigger</string>", p); self.assertIn("schedule</string>", p)
         with self.assertRaises(R.RunError):

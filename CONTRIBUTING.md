@@ -23,7 +23,7 @@ under this repository's license.
 > COUNSEL and may be adopted before the first external release candidate.
 
 ## What we will not merge
-- Changes to the gate map's human-only doors (promotion, publish). The
+- Changes to the gate map's keyholder-only doors (promotion, publish). The
   asymmetry IS the protocol (Register #81).
 - Telemetry, phone-home, or network calls of any kind.
 - Anything that writes outside the vault.

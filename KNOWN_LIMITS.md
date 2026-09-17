@@ -18,7 +18,7 @@ of them is a roadmap item, not a surprise we hope you won't find.
   markdown is readable in any editor today.
 - **Trust math is young.** Autonomy levels are computed from a real
   append-only ledger, but the weights, half-lives, and thresholds are v1 and
-  will be tuned. `promote-canon` and `publish` are hard-capped human-only in
+  will be tuned. `promote-canon` and `publish` are hard-capped keyholder-only in
   code — that part is doctrine, not a tunable.
 - **MCP over stdio only.** The server speaks stdio to local MCP clients
   (Claude Code, Claude Desktop, anything that speaks MCP). No HTTP/SSE

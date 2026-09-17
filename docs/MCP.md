@@ -11,7 +11,7 @@ bootpack(scope?, class?)               read   → bootpack.generate
 handoff(usage, trigger, cut?)          write* → handoff.record           (* telemetry + staged note)
 ```
 
-**Promotion is not a tool** — it is a human act, always. Nothing an agent can call moves a
+**Promotion is not a tool** — it is your act, always. Nothing an agent can call moves a
 note into canon. That asymmetry is the protocol. There is no shell, eval, or
 file tool — least privilege is the surface itself.
 
@@ -45,7 +45,7 @@ Diagnostics go to stderr; stdout is pure JSON-RPC.
 ## The tools
 
 ### `retrieve(query, scope?, budget?, k?)`
-Canonical memory only — staged notes are invisible until a human promotes them.
+Canonical memory only — staged notes are invisible until you promote them.
 Returns a JSON payload, never a raw dump:
 
 ```json
@@ -154,7 +154,7 @@ any MCP client.)
 
 **2. Mount-and-govern.** The agent already has its own memory (a framework store,
 a vector DB, a notes folder). Mount this server *alongside* it and route only the
-*governed* moments through the four verbs: candidates worth human review go to
+*governed* moments through the four verbs: candidates worth your review go to
 `stage`; decisions the agent must not make alone are `retrieve`d from canon. The
 existing store keeps scratch; Magnemo keeps truth. Nothing in the agent's own
 memory becomes canon without passing the staging gate.
@@ -167,4 +167,4 @@ handoff telemetry stay attributable per agent. Promotion still happens in one
 place: the founder's CLI.
 
 In every posture the same two things are true: **agents can only stage**, and
-**humans alone promote**.
+**keyholders alone promote**.

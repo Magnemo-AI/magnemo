@@ -116,7 +116,7 @@ class TestGuard(unittest.TestCase):
         line = next(x for x in doctor.run(self.v.root, []) if x["label"] == "guard")
         self.assertIn("deny rules present: " + str(len(st and guard.deny_rules(self.tmp, self.v))), line["detail"]); self.assertIn("guard: ON", line["detail"])
         with self.assertRaises(guard.GuardError):
-            guard.off(self.v, "cc")                                                    # a human verb
+            guard.off(self.v, "cc")                                                    # a keyholder verb
         guard.off(self.v, "founder", "done")
         self.assertEqual(json.load(open(settings))["permissions"]["deny"], [])
         kinds = [e["action_class"] for e in TrustLedger(self.v).entries()]; self.assertIn("guard.on", kinds); self.assertIn("guard.off", kinds)

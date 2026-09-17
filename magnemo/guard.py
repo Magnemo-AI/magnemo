@@ -13,7 +13,7 @@ Beside the vault, agents get a writable `work/` directory. For the body (Claude
 Code) the guard writes deny rules into the repo's `.claude/settings.json`:
 destructive shell patterns, and any Edit/Write under the vault and the render
 root except `inbox/` and `work/`. `guard --off` reverses everything, ledgered,
-and is a human verb.
+and is a keyholder verb.
 
 Supersession everywhere: every engine write to an existing render path archives
 the prior bytes under `_index/archive/<relpath>/<ts>-<sha12>` (the ledger keeps
@@ -288,8 +288,8 @@ def off(v: Vault, by: str, reason: str = "") -> dict:
     from .governance import TrustLedger
     from .room import is_human
     if not is_human(v, by):
-        raise GuardError(f"'guard --off' is a human verb — '{by}' is not a keyholder (config trust.humans). "
-                         "The wall comes down by the human's hand only.")
+        raise GuardError(f"'guard --off' is a keyholder verb — '{by}' is not a keyholder (config trust.humans). "
+                         "The wall comes down by a keyholder's hand only.")
     root = v.root
     st = state(root)
     files = guarded_files(v)
@@ -341,7 +341,7 @@ def restore(v: Vault, target: str, to: str = "latest", by: str = "founder") -> d
     """Bring a version back in one command. `target` = a render path (relative to the
     render root) or a note id. `to` = 'latest' or a sha12/ts prefix from the archive.
     Writes the file through the guard, ledgers memory.restore, and stages the body as a
-    founder note superseding the current canonical — canon stays human."""
+    founder note superseding the current canonical — canon stays the keyholder's."""
     from .governance import Governance, TrustLedger
     from .vault import Note
     g = Governance(v)

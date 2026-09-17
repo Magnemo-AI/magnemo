@@ -5,15 +5,15 @@ There is no hosted destination in this module — KINDS is the whole universe
 ("git" = a git remote the user owns · "path" = a folder the user owns), and a
 destination of any other kind is refused by construction. Nothing secret
 leaves the machine: every push is swept by Sentinel first, and a hit BLOCKS
-the push (no auto-redaction — that is human judgment). Canon is never
+the push (no auto-redaction — that is a person's judgment). Canon is never
 overwritten by a copy: what another copy changed in canon arrives HERE as a
-proposal in _staging, and a human promotes it.
+proposal in _staging, and a keyholder promotes it.
 
 Copies are conducted on EVENTS (promote, receipt, handoff, N staged notes)
 and a ceiling clock — never on percentage thresholds (#112).
 
 Files this module owns inside the vault:
-  _config/chest.json           the human-readable chest config (C1)
+  _config/chest.json           the plain-text chest config (C1)
   _ledger/chest.jsonl          append-only, hash-chained chest ledger (C3)
   _index/chest/<label>.git     git bookkeeping for a git destination (never copied)
   _index/chest/<label>.manifest.json   what that destination last received
@@ -466,7 +466,7 @@ def _reconcile(root: str, dest: dict, gd: str) -> dict:
                 v.stage(prop)
                 proposals.append(new_id)
         else:
-            kept.append(rel)  # config, index, README: the human at this keyboard rules
+            kept.append(rel)  # config, index, README: the person at this keyboard rules
     remote_chest = [l for l in _git(root, gd, "show", f"FETCH_HEAD:{LEDGER_REL}", check=False).stdout.splitlines() if l.strip()]
     marker = {"kind": "CHEST_MERGE", "destination": label, "proposals": len(proposals),
               "ledgers_unioned": unioned, "kept_local": len(kept)}

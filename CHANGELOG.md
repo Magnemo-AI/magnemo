@@ -1,27 +1,40 @@
 # Changelog
 
+## 0.6.4 — THE WORDS
+- The engine tells the truth about Python: `requires-python` is `>=3.11`, as the README, the site and the paste
+  already say. `pip install` on 3.10 now refuses with the standard message.
+- Found by running the suite on 3.11: a vault path given AFTER flags (`magnemo promote <id> --by NAME <vault>`,
+  `magnemo stage … <vault>`) was rejected as an unrecognized argument on Python 3.11 (3.12+ parsed it). The CLI now
+  reads one leftover word as the vault on every supported Python.
+- The words: every sentence a reader meets — the README, the docs, this file, the CLI's help and messages, the MCP
+  door's replies, the boot pack, the vault's own README — now says "you", "a person" or "the keyholder". The door's
+  refusal reads "an agent seat cannot sign as a keyholder"; the stage reply reads "Awaits KEYHOLDER review"; the caps
+  read "keyholder-only". Words only: the config key `trust.humans`, every identifier, ledger field, file format, tool
+  name and the rule itself (promotion and publish are never an agent's) are unchanged.
+- `magnemo --version` prints the version (it was missing; the release drill asked for it).
+
 ## 0.6.3 — THE BLOCK, TRUE TO ITS OWN LAW
 The block does what the record says it does. Found by a second agent on a second
 machine, told only "you are the first user, run the protocol" (credit: cc-2, whose
 patch against the 0.6.1 sdist was the design; re-implemented on main).
 - PROVENANCE ENFORCED AT THE DOOR: the `stage` tool's author is the server's seat
-  (`MAGNEMO_AGENT`), always. A seat that tries to sign as a human (a keyholder in
+  (`MAGNEMO_AGENT`), always. A seat that tries to sign as a keyholder (a name in
   `trust.humans`) is refused with a plain reply and the refusal is ledgered as a
-  `stage` denial; a different non-human name is kept in the new provenance field
+  `stage` denial; a different non-keyholder name is kept in the new provenance field
   `claimed_author` (appended; nothing renamed).
 - THE GATE LIFT IS A WORD: `magnemo yes` promotes the top of the queue (the order
   `review` shows), `yes <id-fragment>` one note (two matches = refuse and list),
   `yes --all` the whole queue with one ledger entry per note; `magnemo no <fragment>
   --reason TXT` rejects one (the reason stays required). `--by` defaults to the first
   keyholder; `--reason` to "approved in chat". Every entry these verbs write carries
-  `ran_by` — the agent seat if `MAGNEMO_AGENT` is set, else `terminal`: the yes is the
-  human's, the hand that ran it is on the record. `promote`/`reject` are unchanged
+  `ran_by` — the agent seat if `MAGNEMO_AGENT` is set, else `terminal`: the yes is
+  yours, the hand that ran it is on the record. `promote`/`reject` are unchanged
   (the long form). Promotion is still never an MCP tool: the four tools stay four.
 - THE RECORD TELLS THE TRUTH ABOUT ITSELF: the MCP boot line reports `queue=<n>` (and
   `held=<n>`), as the docs always said; the `stage` reply and the `review` footer name
   the word (`magnemo yes`); the README's install line carries the uv fallback the site
   paste has (Python 3.11+; `uv tool install magnemo` if pip can't).
-- THE OPERATOR FLAG, deterministic: a note staged by a human hand (the author is a
+- THE OPERATOR FLAG, deterministic: a note staged by a keyholder's own hand (the author is a
   keyholder) carries the operator tag automatically; no text sniffing.
 No change to gates, action classes, the L1 cap, trust weights, half-life, the ledger's
 fields (one appended), the vault layout, config keys, the four tool names, or the boot
@@ -49,16 +62,16 @@ The one-paste install, battle-tested on a machine that never heard of us.
   rendered file owner-immutable at the OS level (macOS chflags uchg; Linux chmod,
   advisory), gives agents a writable work/ beside the vault, and writes the
   body's deny rules into the repo's .claude/settings.json; `guard --off` is a
-  human verb, ledgered. Supersession everywhere: renders archive the prior bytes
+  keyholder's verb, ledgered. Supersession everywhere: renders archive the prior bytes
   (_index/archive), deleted renders are re-rendered by doctor, and
   `magnemo restore <path|id> [--to <version>]` brings a version back in one
   command. Sentinel's injection patterns (S1–S13) are shared by rooms and the
   inbox: an instruction-shaped drop is staged tainted with an alert note.
 - THE ROOM v0: magnemo room open|say|connect|separate|watch|close|replay|list —
-  agents talk in a room a human keeps open; every message is a STAGED note with
+  agents talk in a room a person keeps open; every message is a STAGED note with
   provenance (from_seat, to, class, salience); Sentinel sweeps on stage (secret
   formats + 12 injection patterns); taint is hereditary through replies;
-  connect/separate/close are human verbs; the human seat is never removable; a
+  connect/separate/close are the keyholder's verbs; the keyholder's seat is never removable; a
   closed room replays from its ledger alone. A message may propose, never promote.
 - THE SUBSCRIPTION SOCKET v0: magnemo run "<task>" --engine claude runs an
   Agent SDK session through your own Claude login (the sanctioned door; no token is
@@ -160,7 +173,7 @@ effective L2 SUPERVISED in merge-code under G0001.
   (read · stage · merge-code · promote-canon · publish), five levels (L0 frozen → L4
   keyholder). Score = Σ weight × 0.5^(age/half-life) over append-only ledger events after
   the latest violation; thresholds → level; class floors/ceilings; `promote-canon` and
-  `publish` hard-capped at L1 for non-humans in code. One `violation` resets and
+  `publish` hard-capped at L1 for everyone but keyholders, in code. One `violation` resets and
   freezes the class; only a keyholder `reinstate` lifts it. New verbs: `magnemo autonomy
   <actor>` (scorecard), `magnemo trust record|events`. Derived events: promote → success,
   reject → failure (author, `stage`); MCP partition-wall hit → denied. `TrustLedger.record`
@@ -169,13 +182,13 @@ effective L2 SUPERVISED in merge-code under G0001.
   records: grantee, classes, level, scope, conditions, kind (standing | one-time), ref,
   expires, grantor; revocation is a second record. Keyholder-only verbs `magnemo grant` /
   `magnemo revoke`; `magnemo grants` shows state (active · revoked · expired · consumed ·
-  pending). `effective = min(computed, granted)`; human-only classes and L4 refused at
+  pending). `effective = min(computed, granted)`; keyholder-only classes and L4 refused at
   issue AND clamped at compute. One-time grants are consumed by the trust event that cites
   them (`trust record … --grant G0001`). **Genesis grant G0001** on record.
 - **B3 · The Gate Map** (`magnemo/gates.py`, docs/GATES.md). Six default
   gates in config (`trust.gates`): retrieve · staging · main · gate-code · canon · publish.
   State derived from the grant ledger at `as_of`: `computed` gates read delegated/locked;
-  locked and open gates never move by grant; human-only gates cannot be opened by config.
+  locked and open gates never move by grant; keyholder-only gates cannot be opened by config.
   `magnemo gates [--as-of] [--json]`. Boot pack gains `## GATES` after the Charter,
   rendered at ledger time (pure). LEDGER TAIL count unchanged.
 - **B4 · The agent always knows its own level.** `bootpack.generate(..., actor=)` adds

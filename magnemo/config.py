@@ -105,11 +105,11 @@ DEFAULTS = {
     # score = Σ weight[kind] × 0.5^(age_days / half_life_days) over events
     # after the latest violation; level = highest threshold met, clamped to
     # the class floor/ceiling. promote-canon and publish are hard-capped at
-    # L1 for non-humans in code — human-only forever; no key here can lift that.
+    # L1 for non-keyholders in code — keyholder-only forever; no key here can lift that.
     "trust": {
         "weights": {
             "success": 1.0,      # an action in the class completed and accepted
-            "verified": 2.0,     # a human verified the outcome after the fact
+            "verified": 2.0,     # a keyholder verified the outcome after the fact
             "halt": 1.0,         # stopped at a ceiling and waited (a halt honored)
             "failure": -1.0,     # rejected / reverted
             "denied": -0.5,      # tried an action a wall refused
@@ -129,11 +129,11 @@ DEFAULTS = {
             "promote-canon": {"floor": 0, "ceiling": 1, "default_grant": 1},
             "publish":       {"floor": 0, "ceiling": 1, "default_grant": 1},
         },
-        # Keyholders: humans who hold every key by declaration. Not scored.
+        # Keyholders: the people who hold every key by declaration. Not scored.
         "humans": ["founder", "The Founder"],
         # THE GATE MAP. state: locked | open | computed.
         # "computed" reads as delegated while an active grant covers the
-        # class for a non-human, else locked. Human-only classes are always
+        # class for a non-keyholder, else locked. Keyholder-only classes are always
         # locked, whatever is written here.
         "gates": [
             {"name": "retrieve", "class": "read", "state": "open",
@@ -141,7 +141,7 @@ DEFAULTS = {
              "note": "canon only; staged notes invisible until promoted"},
             {"name": "staging", "class": "stage", "state": "open",
              "keyholder": "partition wall + review queue",
-             "note": "the only write door; provenance mandatory; humans review after"},
+             "note": "the only write door; provenance mandatory; keyholders review after"},
             {"name": "main", "class": "merge-code", "state": "computed",
              "keyholder": "The Founder",
              "note": "self-merge only at effective L2+ under an active grant; one log line per merge"},

@@ -13,31 +13,31 @@ magnemo gates [--as-of ISO] [--json]
 
 | state | meaning |
 |---|---|
-| `locked` | keyholders only (humans). Nothing computed and no grant opens it. |
+| `locked` | keyholders only. Nothing computed and no grant opens it. |
 | `open` | any actor may pass, inside the walls that govern the class — the scope wall for `read`, the partition wall and review queue for `stage`. |
-| `delegated` | a keyholder has granted non-human actors a level in the gate's class. The map names them, their level, the grant id, and its scope. |
+| `delegated` | a keyholder has granted non-keyholder actors a level in the gate's class. The map names them, their level, the grant id, and its scope. |
 
 ## The default map
 
 | gate | class | configured | keyholder | note |
 |---|---|---|---|---|
 | `retrieve` | read | open | scope wall (`MAGNEMO_SCOPE`) | canon only; staged notes invisible until promoted |
-| `staging` | stage | open | partition wall + review queue | the only write door; provenance mandatory; humans review after |
+| `staging` | stage | open | partition wall + review queue | the only write door; provenance mandatory; keyholders review after |
 | `main` | merge-code | **computed** | The Founder | self-merge only at effective L2+ under an active grant; one log line per merge |
 | `gate-code` | merge-code | locked | The Founder | *the gates do not merge changes to the gates* — `trust.py`, `grants.py`, `gates.py`, `governance.py`, `mcp.py`, `server.py`, `vault/_config/` |
-| `canon` | promote-canon | locked | The Founder | promotion is never a tool · human-only forever |
-| `publish` | publish | locked | The Founder | PyPI, npm, tags, releases, repo settings and renames · human-only forever |
+| `canon` | promote-canon | locked | The Founder | promotion is never a tool · keyholder-only forever |
+| `publish` | publish | locked | The Founder | PyPI, npm, tags, releases, repo settings and renames · keyholder-only forever |
 
 Definitions live in config (`trust.gates`, the founder's file: name, class,
-state, keyholder, note, paths). Two things config cannot do: open a human-only
+state, keyholder, note, paths). Two things config cannot do: open a keyholder-only
 gate (read back as `locked` whatever is written), or make a locked gate honour
 a grant — a grant on `merge-code` delegates `main`, never `gate-code`.
 
 ## How state is derived
 
 A gate configured `computed` reads as **delegated** while any *active* grant
-(docs/GRANTS.md) covers its class for a non-human actor at `as_of`; otherwise
-**locked**. Grants to declared humans are not delegations — humans already hold
+(docs/GRANTS.md) covers its class for a non-keyholder actor at `as_of`; otherwise
+**locked**. Grants to declared keyholders are not delegations — keyholders already hold
 the key. `locked` and `open` gates never change by computation; only a founder
 config edit moves them.
 
@@ -62,7 +62,7 @@ The Gate Map at ledger time 2026-08-20T10:16:26Z. …
   - self-merge only at effective L2+ under an active grant; one log line per merge
 - **gate-code** (merge-code): LOCKED · keyholder The Founder
   - the gates do not merge changes to the gates
-- **canon** (promote-canon): LOCKED · keyholder The Founder · human-only forever
+- **canon** (promote-canon): LOCKED · keyholder The Founder · keyholder-only forever
 ```
 
 A session reading this knows, before it reads a single memory: which doors are

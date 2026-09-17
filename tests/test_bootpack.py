@@ -17,7 +17,7 @@ class TestBootPack(unittest.TestCase):
     def _seed(self, charter=True):
         if charter:
             c = self.g.agent_write(title="The SVTech Charter",
-                body="1. Canon is founder-owned.\n2. Agents stage; humans promote.",
+                body="1. Canon is founder-owned.\n2. Agents stage; keyholders promote.",
                 partition="dev", store="decisions", author="founder",
                 source="manual", tags="charter,doctrine", impact="process")
             self.g.promote(c.id, "founder", "ratified")
@@ -46,7 +46,7 @@ class TestBootPack(unittest.TestCase):
         self._seed()
         pack = bootpack.generate(self.v)
         i_charter = pack.index("## THE CHARTER")
-        self.assertIn("Agents stage; humans promote.", pack)  # verbatim body
+        self.assertIn("Agents stage; keyholders promote.", pack)  # verbatim body
         for section in ("## CANON DIGEST", "## OPEN THREADS", "## LEDGER TAIL"):
             self.assertGreater(pack.index(section), i_charter)
         self.assertNotIn("CHARTER NOT YET PROMOTED", pack)

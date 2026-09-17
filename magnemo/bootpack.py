@@ -109,7 +109,7 @@ def scorecard_lines(vault: Vault, actor: str, as_of: str, cfg: dict, entries: li
     L.append("|---|---|---|---|---|")
     for k in _trust.CLASSES:
         r = card["classes"][k]
-        flag = " FROZEN" if r.get("frozen") else (" (human-only cap)" if k in _trust.HUMAN_ONLY else "")
+        flag = " FROZEN" if r.get("frozen") else (" (keyholder-only cap)" if k in _trust.HUMAN_ONLY else "")
         L.append(f"| {k} | **{_trust.level_label(r['effective_level'])}**{flag} | "
                  f"{_trust.level_label(r['computed_level'])} | {_trust.level_label(r['granted_level'])} | "
                  f"{r['score']:.4f} |")
@@ -122,7 +122,7 @@ def scorecard_lines(vault: Vault, actor: str, as_of: str, cfg: dict, entries: li
         if r.get("frozen"):
             L.append(f"- **{k} is FROZEN** since {r['epoch']} — a keyholder must `reinstate` before you act there")
     L.append("")
-    L.append("effective = min(earned, permitted). L1 = propose and hand to a human; L2 = act and log one line; "
+    L.append("effective = min(earned, permitted). L1 = propose and hand to a keyholder; L2 = act and log one line; "
              "L3 = act. Full card: `magnemo autonomy " + actor + "`.")
     return L
 

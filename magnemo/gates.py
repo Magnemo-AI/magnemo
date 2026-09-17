@@ -3,18 +3,18 @@
 A GATE is a named door onto the vault or the repo. Each gate belongs to one
 action class, has a keyholder, and is in exactly one STATE at any moment:
 
-  locked      keyholders only (humans). Nothing computed opens it.
+  locked      keyholders only. Nothing computed opens it.
   open        any actor may pass, inside the walls that govern the class
               (scope wall for read, partition wall + review queue for stage).
-  delegated   a keyholder has granted non-human actors a level in the gate's
+  delegated   a keyholder has granted non-keyholder actors a level in the gate's
               class; the map names them, their level, and the grant's scope.
 
 Gate definitions are config (`trust.gates`, the founder's file). Their STATE
 is derived, deterministically, from the grant ledger at an `as_of`: a gate
 whose `state` is "computed" reads as `delegated` while any active grant
-covers its class for a non-human actor, else `locked`. `locked` and `open`
+covers its class for a non-keyholder actor, else `locked`. `locked` and `open`
 gates never change state by computation — only the founder's config edit
-moves them, and the human-only classes cannot be moved at all.
+moves them, and the keyholder-only classes cannot be moved at all.
 
 `magnemo gates` renders the map; the boot pack carries it under GATES so
 every session boots knowing the walls.
@@ -34,7 +34,7 @@ def definitions(cfg: dict) -> list:
             continue
         state = g.get("state", "locked")
         if g["class"] in trust.HUMAN_ONLY:
-            state = "locked"                        # human-only forever: not a config choice
+            state = "locked"                        # keyholder-only forever: not a config choice
         gs.append({"name": g["name"], "class": g["class"], "state": state,
                    "keyholder": g.get("keyholder", ""), "note": g.get("note", ""),
                    "paths": list(g.get("paths", []))})
@@ -95,7 +95,7 @@ def render(gmap: list, as_of: str = "") -> str:
     L.append("-" * 78)
     for g in gmap:
         L.append(f"{g['name']:<12} {g['class']:<14} {g['state']:<10} {g['keyholder']:<22} {g['last_change']}"
-                 + ("  · human-only (#81)" if g["human_only"] else ""))
+                 + ("  · keyholder-only (#81)" if g["human_only"] else ""))
         if g["note"]:
             L.append(f"{'':<12} {g['note']}")
         if g["paths"]:
@@ -111,7 +111,7 @@ def render(gmap: list, as_of: str = "") -> str:
                      f"by {h['grantor']} {h['issued']}" + (f" ({h['ref']})" if h['ref'] else ""))
     L.append("")
     L.append("locked = keyholders only · open = any actor inside the walls · "
-             "delegated = a keyholder granted non-humans a level (named above)")
+             "delegated = a keyholder granted non-keyholders a level (named above)")
     return "\n".join(L)
 
 
@@ -121,7 +121,7 @@ def bootpack_lines(gmap: list) -> list:
     for g in gmap:
         line = f"- **{g['name']}** ({g['class']}): {g['state'].upper()} · keyholder {g['keyholder']}"
         if g["human_only"]:
-            line += " · human-only forever (#81)"
+            line += " · keyholder-only forever (#81)"
         L.append(line)
         for d in g["delegations"]:
             L.append(f"  - delegated to `{d['grantee']}` at L{d['level']} ({d['grant_id']}"
