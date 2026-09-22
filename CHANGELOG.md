@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.4.post1 — THE DIRECTORY RELEASE
+- Registry name + privacy section + SECURITY.md. No engine change: the MCP registry name moves to our own domain
+  (`mcp-name: ai.magnemo/magnemo`), the README gains a Privacy section, `SECURITY.md` says how to report, and the
+  Claude Desktop bundle names its privacy page. A post-release in PyPI's own sense: metadata only.
+
+## 0.6.5 — Unreleased
+- The companion `magnemo-mcp` says `requires-python >=3.11`, the same as the engine it pins (it said 3.10).
+- The one paste's step 6 (P-53c): the first run closes by reading the boot pack in the same session; no restart.
+
 ## 0.6.4 — THE WORDS
 - The engine tells the truth about Python: `requires-python` is `>=3.11`, as the README, the site and the paste
   already say. `pip install` on 3.10 now refuses with the standard message.

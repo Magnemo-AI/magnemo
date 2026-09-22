@@ -15,7 +15,7 @@ Set up Magnemo in this project:
 3. Register the MCP server: run magnemo mount — it writes this project's MCP config itself.
 4. Verify: run magnemo doctor and confirm everything passes.
 5. Stage the first memory: one line on what this project is, using magnemo stage. Show me the note id.
-6. Then tell me the exact command to approve it, and remind me to restart you so the memory mounts.
+6. Then tell me the exact command to approve it. After I approve, run magnemo bootpack and tell me what you remember.
 If anything fails, show me what went wrong and fix it if you can.
 ```
 
@@ -224,6 +224,14 @@ magnemo mount --from <url-or-dir> ./vault              # restore onto a new mach
 Magnemo *conducts* copies to places you own; it never *holds* them. Full
 contract: [docs/CHEST.md](docs/CHEST.md).
 
+## Privacy
+Magnemo runs on your machine and nowhere else. The vault is a folder of plain markdown
+files you own and can read in any editor. The engine makes zero network calls — `magnemo
+doctor` proves it on every run — so nothing you or your agent writes leaves the computer.
+There is no telemetry, no account, no phone-home; the only copies of your memory are the
+ones you make yourself (`magnemo chest`), to places you own. The full page:
+https://magnemo.ai/privacy
+
 ## Guarantees (Phase 1 — Governed Recall)
 - Agent writes NEVER reach canonical stores directly — staging only, always.
 - Search returns canonical (keyholder-approved) notes only. Staged claims are invisible.
@@ -249,4 +257,4 @@ python -m unittest discover -s tests -v     # incl. full MCP round-trips (legacy
 the memory that is governed.
 
 ---
-Registry name: `mcp-name: io.github.magnemo-ai/magnemo` · Source: https://github.com/magnemo-ai/magnemo · Home: https://magnemo.ai
+Registry name: `mcp-name: ai.magnemo/magnemo` · Source: https://github.com/magnemo-ai/magnemo · Home: https://magnemo.ai
