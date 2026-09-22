@@ -1,0 +1,2062 @@
+{
+ "version": 1,
+ "seed": 67,
+ "facts": [
+  {
+   "id": "F001",
+   "session": 1,
+   "subject": "the API gateway",
+   "body": "The API gateway runs on port 2225.",
+   "question": "What port does the API gateway run on?",
+   "answer": "port 2225"
+  },
+  {
+   "id": "F002",
+   "session": 1,
+   "subject": "the API gateway",
+   "body": "The API gateway was moved to region ca-central-1.",
+   "question": "Which region is the API gateway in?",
+   "answer": "region ca-central-1"
+  },
+  {
+   "id": "F003",
+   "session": 1,
+   "subject": "the API gateway",
+   "body": "The API gateway times out after 4338 seconds.",
+   "question": "What is the timeout of the API gateway?",
+   "answer": "4338 seconds"
+  },
+  {
+   "id": "F004",
+   "session": 1,
+   "subject": "the API gateway",
+   "body": "The API gateway is owned by the growth team.",
+   "question": "Who owns the API gateway?",
+   "answer": "growth team"
+  },
+  {
+   "id": "F005",
+   "session": 1,
+   "subject": "the API gateway",
+   "body": "The API gateway keeps 9047 days of history.",
+   "question": "How much history does the API gateway keep?",
+   "answer": "9047 days"
+  },
+  {
+   "id": "F006",
+   "session": 1,
+   "subject": "the API gateway",
+   "body": "The API gateway uses the tundra key format.",
+   "question": "What key format does the API gateway use?",
+   "answer": "tundra key"
+  },
+  {
+   "id": "F007",
+   "session": 1,
+   "subject": "the API gateway",
+   "body": "The API gateway retries 8279 times.",
+   "question": "How many retries does the API gateway make?",
+   "answer": "8279 times"
+  },
+  {
+   "id": "F008",
+   "session": 1,
+   "subject": "the API gateway",
+   "body": "The API gateway was renamed from kestrel.",
+   "question": "What was the API gateway called before?",
+   "answer": "renamed from kestrel"
+  },
+  {
+   "id": "F009",
+   "session": 1,
+   "subject": "the API gateway",
+   "body": "The API gateway caps requests at 6727 a minute.",
+   "question": "What is the request cap of the API gateway?",
+   "answer": "6727 a minute"
+  },
+  {
+   "id": "F010",
+   "session": 1,
+   "subject": "the API gateway",
+   "body": "The API gateway writes its state to /opt/app/run/state.json.",
+   "question": "Where does the API gateway write its state?",
+   "answer": "/opt/app/run/state.json"
+  },
+  {
+   "id": "F011",
+   "session": 2,
+   "subject": "the billing job",
+   "body": "The billing job runs on port 1404.",
+   "question": "What port does the billing job run on?",
+   "answer": "port 1404"
+  },
+  {
+   "id": "F012",
+   "session": 2,
+   "subject": "the billing job",
+   "body": "The billing job was moved to region us-east-2.",
+   "question": "Which region is the billing job in?",
+   "answer": "region us-east-2"
+  },
+  {
+   "id": "F013",
+   "session": 2,
+   "subject": "the billing job",
+   "body": "The billing job times out after 7279 seconds.",
+   "question": "What is the timeout of the billing job?",
+   "answer": "7279 seconds"
+  },
+  {
+   "id": "F014",
+   "session": 2,
+   "subject": "the billing job",
+   "body": "The billing job is owned by the growth team.",
+   "question": "Who owns the billing job?",
+   "answer": "growth team"
+  },
+  {
+   "id": "F015",
+   "session": 2,
+   "subject": "the billing job",
+   "body": "The billing job keeps 8964 days of history.",
+   "question": "How much history does the billing job keep?",
+   "answer": "8964 days"
+  },
+  {
+   "id": "F016",
+   "session": 2,
+   "subject": "the billing job",
+   "body": "The billing job uses the zephyr key format.",
+   "question": "What key format does the billing job use?",
+   "answer": "zephyr key"
+  },
+  {
+   "id": "F017",
+   "session": 2,
+   "subject": "the billing job",
+   "body": "The billing job retries 9518 times.",
+   "question": "How many retries does the billing job make?",
+   "answer": "9518 times"
+  },
+  {
+   "id": "F018",
+   "session": 2,
+   "subject": "the billing job",
+   "body": "The billing job was renamed from ember.",
+   "question": "What was the billing job called before?",
+   "answer": "renamed from ember"
+  },
+  {
+   "id": "F019",
+   "session": 2,
+   "subject": "the billing job",
+   "body": "The billing job caps requests at 8550 a minute.",
+   "question": "What is the request cap of the billing job?",
+   "answer": "8550 a minute"
+  },
+  {
+   "id": "F020",
+   "session": 2,
+   "subject": "the billing job",
+   "body": "The billing job writes its state to /opt/app/run/state.json.",
+   "question": "Where does the billing job write its state?",
+   "answer": "/opt/app/run/state.json"
+  },
+  {
+   "id": "F021",
+   "session": 3,
+   "subject": "the nightly backup",
+   "body": "The nightly backup runs on port 9917.",
+   "question": "What port does the nightly backup run on?",
+   "answer": "port 9917"
+  },
+  {
+   "id": "F022",
+   "session": 3,
+   "subject": "the nightly backup",
+   "body": "The nightly backup was moved to region eu-west-1.",
+   "question": "Which region is the nightly backup in?",
+   "answer": "region eu-west-1"
+  },
+  {
+   "id": "F023",
+   "session": 3,
+   "subject": "the nightly backup",
+   "body": "The nightly backup times out after 1163 seconds.",
+   "question": "What is the timeout of the nightly backup?",
+   "answer": "1163 seconds"
+  },
+  {
+   "id": "F024",
+   "session": 3,
+   "subject": "the nightly backup",
+   "body": "The nightly backup is owned by the core team.",
+   "question": "Who owns the nightly backup?",
+   "answer": "core team"
+  },
+  {
+   "id": "F025",
+   "session": 3,
+   "subject": "the nightly backup",
+   "body": "The nightly backup keeps 6879 days of history.",
+   "question": "How much history does the nightly backup keep?",
+   "answer": "6879 days"
+  },
+  {
+   "id": "F026",
+   "session": 3,
+   "subject": "the nightly backup",
+   "body": "The nightly backup uses the lantern key format.",
+   "question": "What key format does the nightly backup use?",
+   "answer": "lantern key"
+  },
+  {
+   "id": "F027",
+   "session": 3,
+   "subject": "the nightly backup",
+   "body": "The nightly backup retries 1517 times.",
+   "question": "How many retries does the nightly backup make?",
+   "answer": "1517 times"
+  },
+  {
+   "id": "F028",
+   "session": 3,
+   "subject": "the nightly backup",
+   "body": "The nightly backup was renamed from willow.",
+   "question": "What was the nightly backup called before?",
+   "answer": "renamed from willow"
+  },
+  {
+   "id": "F029",
+   "session": 3,
+   "subject": "the nightly backup",
+   "body": "The nightly backup caps requests at 6045 a minute.",
+   "question": "What is the request cap of the nightly backup?",
+   "answer": "6045 a minute"
+  },
+  {
+   "id": "F030",
+   "session": 3,
+   "subject": "the nightly backup",
+   "body": "The nightly backup writes its state to s3://team-bucket/state.",
+   "question": "Where does the nightly backup write its state?",
+   "answer": "s3://team-bucket/state"
+  },
+  {
+   "id": "F031",
+   "session": 4,
+   "subject": "the search index",
+   "body": "The search index runs on port 1217.",
+   "question": "What port does the search index run on?",
+   "answer": "port 1217"
+  },
+  {
+   "id": "F032",
+   "session": 4,
+   "subject": "the search index",
+   "body": "The search index was moved to region ap-south-1.",
+   "question": "Which region is the search index in?",
+   "answer": "region ap-south-1"
+  },
+  {
+   "id": "F033",
+   "session": 4,
+   "subject": "the search index",
+   "body": "The search index times out after 2118 seconds.",
+   "question": "What is the timeout of the search index?",
+   "answer": "2118 seconds"
+  },
+  {
+   "id": "F034",
+   "session": 4,
+   "subject": "the search index",
+   "body": "The search index is owned by the ops team.",
+   "question": "Who owns the search index?",
+   "answer": "ops team"
+  },
+  {
+   "id": "F035",
+   "session": 4,
+   "subject": "the search index",
+   "body": "The search index keeps 7692 days of history.",
+   "question": "How much history does the search index keep?",
+   "answer": "7692 days"
+  },
+  {
+   "id": "F036",
+   "session": 4,
+   "subject": "the search index",
+   "body": "The search index uses the harbor key format.",
+   "question": "What key format does the search index use?",
+   "answer": "harbor key"
+  },
+  {
+   "id": "F037",
+   "session": 4,
+   "subject": "the search index",
+   "body": "The search index retries 9588 times.",
+   "question": "How many retries does the search index make?",
+   "answer": "9588 times"
+  },
+  {
+   "id": "F038",
+   "session": 4,
+   "subject": "the search index",
+   "body": "The search index was renamed from harbor.",
+   "question": "What was the search index called before?",
+   "answer": "renamed from harbor"
+  },
+  {
+   "id": "F039",
+   "session": 4,
+   "subject": "the search index",
+   "body": "The search index caps requests at 1050 a minute.",
+   "question": "What is the request cap of the search index?",
+   "answer": "1050 a minute"
+  },
+  {
+   "id": "F040",
+   "session": 4,
+   "subject": "the search index",
+   "body": "The search index writes its state to /opt/app/run/state.json.",
+   "question": "Where does the search index write its state?",
+   "answer": "/opt/app/run/state.json"
+  },
+  {
+   "id": "F041",
+   "session": 5,
+   "subject": "the login flow",
+   "body": "The login flow runs on port 5488.",
+   "question": "What port does the login flow run on?",
+   "answer": "port 5488"
+  },
+  {
+   "id": "F042",
+   "session": 5,
+   "subject": "the login flow",
+   "body": "The login flow was moved to region ap-south-1.",
+   "question": "Which region is the login flow in?",
+   "answer": "region ap-south-1"
+  },
+  {
+   "id": "F043",
+   "session": 5,
+   "subject": "the login flow",
+   "body": "The login flow times out after 6967 seconds.",
+   "question": "What is the timeout of the login flow?",
+   "answer": "6967 seconds"
+  },
+  {
+   "id": "F044",
+   "session": 5,
+   "subject": "the login flow",
+   "body": "The login flow is owned by the ops team.",
+   "question": "Who owns the login flow?",
+   "answer": "ops team"
+  },
+  {
+   "id": "F045",
+   "session": 5,
+   "subject": "the login flow",
+   "body": "The login flow keeps 6976 days of history.",
+   "question": "How much history does the login flow keep?",
+   "answer": "6976 days"
+  },
+  {
+   "id": "F046",
+   "session": 5,
+   "subject": "the login flow",
+   "body": "The login flow uses the tundra key format.",
+   "question": "What key format does the login flow use?",
+   "answer": "tundra key"
+  },
+  {
+   "id": "F047",
+   "session": 5,
+   "subject": "the login flow",
+   "body": "The login flow retries 5351 times.",
+   "question": "How many retries does the login flow make?",
+   "answer": "5351 times"
+  },
+  {
+   "id": "F048",
+   "session": 5,
+   "subject": "the login flow",
+   "body": "The login flow was renamed from granite.",
+   "question": "What was the login flow called before?",
+   "answer": "renamed from granite"
+  },
+  {
+   "id": "F049",
+   "session": 5,
+   "subject": "the login flow",
+   "body": "The login flow caps requests at 2056 a minute.",
+   "question": "What is the request cap of the login flow?",
+   "answer": "2056 a minute"
+  },
+  {
+   "id": "F050",
+   "session": 5,
+   "subject": "the login flow",
+   "body": "The login flow writes its state to /opt/app/run/state.json.",
+   "question": "Where does the login flow write its state?",
+   "answer": "/opt/app/run/state.json"
+  },
+  {
+   "id": "F051",
+   "session": 6,
+   "subject": "the mobile build",
+   "body": "The mobile build runs on port 1852.",
+   "question": "What port does the mobile build run on?",
+   "answer": "port 1852"
+  },
+  {
+   "id": "F052",
+   "session": 6,
+   "subject": "the mobile build",
+   "body": "The mobile build was moved to region us-east-2.",
+   "question": "Which region is the mobile build in?",
+   "answer": "region us-east-2"
+  },
+  {
+   "id": "F053",
+   "session": 6,
+   "subject": "the mobile build",
+   "body": "The mobile build times out after 5667 seconds.",
+   "question": "What is the timeout of the mobile build?",
+   "answer": "5667 seconds"
+  },
+  {
+   "id": "F054",
+   "session": 6,
+   "subject": "the mobile build",
+   "body": "The mobile build is owned by the platform team.",
+   "question": "Who owns the mobile build?",
+   "answer": "platform team"
+  },
+  {
+   "id": "F055",
+   "session": 6,
+   "subject": "the mobile build",
+   "body": "The mobile build keeps 2981 days of history.",
+   "question": "How much history does the mobile build keep?",
+   "answer": "2981 days"
+  },
+  {
+   "id": "F056",
+   "session": 6,
+   "subject": "the mobile build",
+   "body": "The mobile build uses the quartz key format.",
+   "question": "What key format does the mobile build use?",
+   "answer": "quartz key"
+  },
+  {
+   "id": "F057",
+   "session": 6,
+   "subject": "the mobile build",
+   "body": "The mobile build retries 9157 times.",
+   "question": "How many retries does the mobile build make?",
+   "answer": "9157 times"
+  },
+  {
+   "id": "F058",
+   "session": 6,
+   "subject": "the mobile build",
+   "body": "The mobile build was renamed from quartz.",
+   "question": "What was the mobile build called before?",
+   "answer": "renamed from quartz"
+  },
+  {
+   "id": "F059",
+   "session": 6,
+   "subject": "the mobile build",
+   "body": "The mobile build caps requests at 6102 a minute.",
+   "question": "What is the request cap of the mobile build?",
+   "answer": "6102 a minute"
+  },
+  {
+   "id": "F060",
+   "session": 6,
+   "subject": "the mobile build",
+   "body": "The mobile build writes its state to /opt/app/run/state.json.",
+   "question": "Where does the mobile build write its state?",
+   "answer": "/opt/app/run/state.json"
+  },
+  {
+   "id": "F061",
+   "session": 7,
+   "subject": "the deploy script",
+   "body": "The deploy script runs on port 4194.",
+   "question": "What port does the deploy script run on?",
+   "answer": "port 4194"
+  },
+  {
+   "id": "F062",
+   "session": 7,
+   "subject": "the deploy script",
+   "body": "The deploy script was moved to region eu-west-1.",
+   "question": "Which region is the deploy script in?",
+   "answer": "region eu-west-1"
+  },
+  {
+   "id": "F063",
+   "session": 7,
+   "subject": "the deploy script",
+   "body": "The deploy script times out after 1318 seconds.",
+   "question": "What is the timeout of the deploy script?",
+   "answer": "1318 seconds"
+  },
+  {
+   "id": "F064",
+   "session": 7,
+   "subject": "the deploy script",
+   "body": "The deploy script is owned by the ops team.",
+   "question": "Who owns the deploy script?",
+   "answer": "ops team"
+  },
+  {
+   "id": "F065",
+   "session": 7,
+   "subject": "the deploy script",
+   "body": "The deploy script keeps 6977 days of history.",
+   "question": "How much history does the deploy script keep?",
+   "answer": "6977 days"
+  },
+  {
+   "id": "F066",
+   "session": 7,
+   "subject": "the deploy script",
+   "body": "The deploy script uses the marrow key format.",
+   "question": "What key format does the deploy script use?",
+   "answer": "marrow key"
+  },
+  {
+   "id": "F067",
+   "session": 7,
+   "subject": "the deploy script",
+   "body": "The deploy script retries 9491 times.",
+   "question": "How many retries does the deploy script make?",
+   "answer": "9491 times"
+  },
+  {
+   "id": "F068",
+   "session": 7,
+   "subject": "the deploy script",
+   "body": "The deploy script was renamed from marrow.",
+   "question": "What was the deploy script called before?",
+   "answer": "renamed from marrow"
+  },
+  {
+   "id": "F069",
+   "session": 7,
+   "subject": "the deploy script",
+   "body": "The deploy script caps requests at 2526 a minute.",
+   "question": "What is the request cap of the deploy script?",
+   "answer": "2526 a minute"
+  },
+  {
+   "id": "F070",
+   "session": 7,
+   "subject": "the deploy script",
+   "body": "The deploy script writes its state to /srv/data/state.db.",
+   "question": "Where does the deploy script write its state?",
+   "answer": "/srv/data/state.db"
+  },
+  {
+   "id": "F071",
+   "session": 8,
+   "subject": "the cache layer",
+   "body": "The cache layer runs on port 5779.",
+   "question": "What port does the cache layer run on?",
+   "answer": "port 5779"
+  },
+  {
+   "id": "F072",
+   "session": 8,
+   "subject": "the cache layer",
+   "body": "The cache layer was moved to region ap-south-1.",
+   "question": "Which region is the cache layer in?",
+   "answer": "region ap-south-1"
+  },
+  {
+   "id": "F073",
+   "session": 8,
+   "subject": "the cache layer",
+   "body": "The cache layer times out after 2282 seconds.",
+   "question": "What is the timeout of the cache layer?",
+   "answer": "2282 seconds"
+  },
+  {
+   "id": "F074",
+   "session": 8,
+   "subject": "the cache layer",
+   "body": "The cache layer is owned by the platform team.",
+   "question": "Who owns the cache layer?",
+   "answer": "platform team"
+  },
+  {
+   "id": "F075",
+   "session": 8,
+   "subject": "the cache layer",
+   "body": "The cache layer keeps 7347 days of history.",
+   "question": "How much history does the cache layer keep?",
+   "answer": "7347 days"
+  },
+  {
+   "id": "F076",
+   "session": 8,
+   "subject": "the cache layer",
+   "body": "The cache layer uses the marrow key format.",
+   "question": "What key format does the cache layer use?",
+   "answer": "marrow key"
+  },
+  {
+   "id": "F077",
+   "session": 8,
+   "subject": "the cache layer",
+   "body": "The cache layer retries 4516 times.",
+   "question": "How many retries does the cache layer make?",
+   "answer": "4516 times"
+  },
+  {
+   "id": "F078",
+   "session": 8,
+   "subject": "the cache layer",
+   "body": "The cache layer was renamed from marrow.",
+   "question": "What was the cache layer called before?",
+   "answer": "renamed from marrow"
+  },
+  {
+   "id": "F079",
+   "session": 8,
+   "subject": "the cache layer",
+   "body": "The cache layer caps requests at 3982 a minute.",
+   "question": "What is the request cap of the cache layer?",
+   "answer": "3982 a minute"
+  },
+  {
+   "id": "F080",
+   "session": 8,
+   "subject": "the cache layer",
+   "body": "The cache layer writes its state to /srv/data/state.db.",
+   "question": "Where does the cache layer write its state?",
+   "answer": "/srv/data/state.db"
+  },
+  {
+   "id": "F081",
+   "session": 9,
+   "subject": "the export tool",
+   "body": "The export tool runs on port 4587.",
+   "question": "What port does the export tool run on?",
+   "answer": "port 4587"
+  },
+  {
+   "id": "F082",
+   "session": 9,
+   "subject": "the export tool",
+   "body": "The export tool was moved to region ap-south-1.",
+   "question": "Which region is the export tool in?",
+   "answer": "region ap-south-1"
+  },
+  {
+   "id": "F083",
+   "session": 9,
+   "subject": "the export tool",
+   "body": "The export tool times out after 9212 seconds.",
+   "question": "What is the timeout of the export tool?",
+   "answer": "9212 seconds"
+  },
+  {
+   "id": "F084",
+   "session": 9,
+   "subject": "the export tool",
+   "body": "The export tool is owned by the ops team.",
+   "question": "Who owns the export tool?",
+   "answer": "ops team"
+  },
+  {
+   "id": "F085",
+   "session": 9,
+   "subject": "the export tool",
+   "body": "The export tool keeps 2199 days of history.",
+   "question": "How much history does the export tool keep?",
+   "answer": "2199 days"
+  },
+  {
+   "id": "F086",
+   "session": 9,
+   "subject": "the export tool",
+   "body": "The export tool uses the ember key format.",
+   "question": "What key format does the export tool use?",
+   "answer": "ember key"
+  },
+  {
+   "id": "F087",
+   "session": 9,
+   "subject": "the export tool",
+   "body": "The export tool retries 2237 times.",
+   "question": "How many retries does the export tool make?",
+   "answer": "2237 times"
+  },
+  {
+   "id": "F088",
+   "session": 9,
+   "subject": "the export tool",
+   "body": "The export tool was renamed from quartz.",
+   "question": "What was the export tool called before?",
+   "answer": "renamed from quartz"
+  },
+  {
+   "id": "F089",
+   "session": 9,
+   "subject": "the export tool",
+   "body": "The export tool caps requests at 6584 a minute.",
+   "question": "What is the request cap of the export tool?",
+   "answer": "6584 a minute"
+  },
+  {
+   "id": "F090",
+   "session": 9,
+   "subject": "the export tool",
+   "body": "The export tool writes its state to s3://team-bucket/state.",
+   "question": "Where does the export tool write its state?",
+   "answer": "s3://team-bucket/state"
+  },
+  {
+   "id": "F091",
+   "session": 10,
+   "subject": "the audit log",
+   "body": "The audit log runs on port 1644.",
+   "question": "What port does the audit log run on?",
+   "answer": "port 1644"
+  },
+  {
+   "id": "F092",
+   "session": 10,
+   "subject": "the audit log",
+   "body": "The audit log was moved to region ca-central-1.",
+   "question": "Which region is the audit log in?",
+   "answer": "region ca-central-1"
+  },
+  {
+   "id": "F093",
+   "session": 10,
+   "subject": "the audit log",
+   "body": "The audit log times out after 6233 seconds.",
+   "question": "What is the timeout of the audit log?",
+   "answer": "6233 seconds"
+  },
+  {
+   "id": "F094",
+   "session": 10,
+   "subject": "the audit log",
+   "body": "The audit log is owned by the platform team.",
+   "question": "Who owns the audit log?",
+   "answer": "platform team"
+  },
+  {
+   "id": "F095",
+   "session": 10,
+   "subject": "the audit log",
+   "body": "The audit log keeps 6670 days of history.",
+   "question": "How much history does the audit log keep?",
+   "answer": "6670 days"
+  },
+  {
+   "id": "F096",
+   "session": 10,
+   "subject": "the audit log",
+   "body": "The audit log uses the granite key format.",
+   "question": "What key format does the audit log use?",
+   "answer": "granite key"
+  },
+  {
+   "id": "F097",
+   "session": 10,
+   "subject": "the audit log",
+   "body": "The audit log retries 8705 times.",
+   "question": "How many retries does the audit log make?",
+   "answer": "8705 times"
+  },
+  {
+   "id": "F098",
+   "session": 10,
+   "subject": "the audit log",
+   "body": "The audit log was renamed from kestrel.",
+   "question": "What was the audit log called before?",
+   "answer": "renamed from kestrel"
+  },
+  {
+   "id": "F099",
+   "session": 10,
+   "subject": "the audit log",
+   "body": "The audit log caps requests at 6451 a minute.",
+   "question": "What is the request cap of the audit log?",
+   "answer": "6451 a minute"
+  },
+  {
+   "id": "F100",
+   "session": 10,
+   "subject": "the audit log",
+   "body": "The audit log writes its state to /opt/app/run/state.json.",
+   "question": "Where does the audit log write its state?",
+   "answer": "/opt/app/run/state.json"
+  },
+  {
+   "id": "F101",
+   "session": 11,
+   "subject": "the rate limiter",
+   "body": "The rate limiter runs on port 5640.",
+   "question": "What port does the rate limiter run on?",
+   "answer": "port 5640"
+  },
+  {
+   "id": "F102",
+   "session": 11,
+   "subject": "the rate limiter",
+   "body": "The rate limiter was moved to region eu-west-1.",
+   "question": "Which region is the rate limiter in?",
+   "answer": "region eu-west-1"
+  },
+  {
+   "id": "F103",
+   "session": 11,
+   "subject": "the rate limiter",
+   "body": "The rate limiter times out after 6353 seconds.",
+   "question": "What is the timeout of the rate limiter?",
+   "answer": "6353 seconds"
+  },
+  {
+   "id": "F104",
+   "session": 11,
+   "subject": "the rate limiter",
+   "body": "The rate limiter is owned by the core team.",
+   "question": "Who owns the rate limiter?",
+   "answer": "core team"
+  },
+  {
+   "id": "F105",
+   "session": 11,
+   "subject": "the rate limiter",
+   "body": "The rate limiter keeps 9538 days of history.",
+   "question": "How much history does the rate limiter keep?",
+   "answer": "9538 days"
+  },
+  {
+   "id": "F106",
+   "session": 11,
+   "subject": "the rate limiter",
+   "body": "The rate limiter uses the kestrel key format.",
+   "question": "What key format does the rate limiter use?",
+   "answer": "kestrel key"
+  },
+  {
+   "id": "F107",
+   "session": 11,
+   "subject": "the rate limiter",
+   "body": "The rate limiter retries 6042 times.",
+   "question": "How many retries does the rate limiter make?",
+   "answer": "6042 times"
+  },
+  {
+   "id": "F108",
+   "session": 11,
+   "subject": "the rate limiter",
+   "body": "The rate limiter was renamed from granite.",
+   "question": "What was the rate limiter called before?",
+   "answer": "renamed from granite"
+  },
+  {
+   "id": "F109",
+   "session": 11,
+   "subject": "the rate limiter",
+   "body": "The rate limiter caps requests at 5996 a minute.",
+   "question": "What is the request cap of the rate limiter?",
+   "answer": "5996 a minute"
+  },
+  {
+   "id": "F110",
+   "session": 11,
+   "subject": "the rate limiter",
+   "body": "The rate limiter writes its state to s3://team-bucket/state.",
+   "question": "Where does the rate limiter write its state?",
+   "answer": "s3://team-bucket/state"
+  },
+  {
+   "id": "F111",
+   "session": 12,
+   "subject": "the image pipeline",
+   "body": "The image pipeline runs on port 9285.",
+   "question": "What port does the image pipeline run on?",
+   "answer": "port 9285"
+  },
+  {
+   "id": "F112",
+   "session": 12,
+   "subject": "the image pipeline",
+   "body": "The image pipeline was moved to region eu-west-1.",
+   "question": "Which region is the image pipeline in?",
+   "answer": "region eu-west-1"
+  },
+  {
+   "id": "F113",
+   "session": 12,
+   "subject": "the image pipeline",
+   "body": "The image pipeline times out after 7291 seconds.",
+   "question": "What is the timeout of the image pipeline?",
+   "answer": "7291 seconds"
+  },
+  {
+   "id": "F114",
+   "session": 12,
+   "subject": "the image pipeline",
+   "body": "The image pipeline is owned by the core team.",
+   "question": "Who owns the image pipeline?",
+   "answer": "core team"
+  },
+  {
+   "id": "F115",
+   "session": 12,
+   "subject": "the image pipeline",
+   "body": "The image pipeline keeps 7630 days of history.",
+   "question": "How much history does the image pipeline keep?",
+   "answer": "7630 days"
+  },
+  {
+   "id": "F116",
+   "session": 12,
+   "subject": "the image pipeline",
+   "body": "The image pipeline uses the willow key format.",
+   "question": "What key format does the image pipeline use?",
+   "answer": "willow key"
+  },
+  {
+   "id": "F117",
+   "session": 12,
+   "subject": "the image pipeline",
+   "body": "The image pipeline retries 2822 times.",
+   "question": "How many retries does the image pipeline make?",
+   "answer": "2822 times"
+  },
+  {
+   "id": "F118",
+   "session": 12,
+   "subject": "the image pipeline",
+   "body": "The image pipeline was renamed from kestrel.",
+   "question": "What was the image pipeline called before?",
+   "answer": "renamed from kestrel"
+  },
+  {
+   "id": "F119",
+   "session": 12,
+   "subject": "the image pipeline",
+   "body": "The image pipeline caps requests at 8977 a minute.",
+   "question": "What is the request cap of the image pipeline?",
+   "answer": "8977 a minute"
+  },
+  {
+   "id": "F120",
+   "session": 12,
+   "subject": "the image pipeline",
+   "body": "The image pipeline writes its state to /srv/data/state.db.",
+   "question": "Where does the image pipeline write its state?",
+   "answer": "/srv/data/state.db"
+  },
+  {
+   "id": "F121",
+   "session": 13,
+   "subject": "the email sender",
+   "body": "The email sender runs on port 6767.",
+   "question": "What port does the email sender run on?",
+   "answer": "port 6767"
+  },
+  {
+   "id": "F122",
+   "session": 13,
+   "subject": "the email sender",
+   "body": "The email sender was moved to region ca-central-1.",
+   "question": "Which region is the email sender in?",
+   "answer": "region ca-central-1"
+  },
+  {
+   "id": "F123",
+   "session": 13,
+   "subject": "the email sender",
+   "body": "The email sender times out after 9746 seconds.",
+   "question": "What is the timeout of the email sender?",
+   "answer": "9746 seconds"
+  },
+  {
+   "id": "F124",
+   "session": 13,
+   "subject": "the email sender",
+   "body": "The email sender is owned by the data team.",
+   "question": "Who owns the email sender?",
+   "answer": "data team"
+  },
+  {
+   "id": "F125",
+   "session": 13,
+   "subject": "the email sender",
+   "body": "The email sender keeps 8319 days of history.",
+   "question": "How much history does the email sender keep?",
+   "answer": "8319 days"
+  },
+  {
+   "id": "F126",
+   "session": 13,
+   "subject": "the email sender",
+   "body": "The email sender uses the ember key format.",
+   "question": "What key format does the email sender use?",
+   "answer": "ember key"
+  },
+  {
+   "id": "F127",
+   "session": 13,
+   "subject": "the email sender",
+   "body": "The email sender retries 3438 times.",
+   "question": "How many retries does the email sender make?",
+   "answer": "3438 times"
+  },
+  {
+   "id": "F128",
+   "session": 13,
+   "subject": "the email sender",
+   "body": "The email sender was renamed from quartz.",
+   "question": "What was the email sender called before?",
+   "answer": "renamed from quartz"
+  },
+  {
+   "id": "F129",
+   "session": 13,
+   "subject": "the email sender",
+   "body": "The email sender caps requests at 7445 a minute.",
+   "question": "What is the request cap of the email sender?",
+   "answer": "7445 a minute"
+  },
+  {
+   "id": "F130",
+   "session": 13,
+   "subject": "the email sender",
+   "body": "The email sender writes its state to /srv/data/state.db.",
+   "question": "Where does the email sender write its state?",
+   "answer": "/srv/data/state.db"
+  },
+  {
+   "id": "F131",
+   "session": 14,
+   "subject": "the config loader",
+   "body": "The config loader runs on port 6320.",
+   "question": "What port does the config loader run on?",
+   "answer": "port 6320"
+  },
+  {
+   "id": "F132",
+   "session": 14,
+   "subject": "the config loader",
+   "body": "The config loader was moved to region us-east-2.",
+   "question": "Which region is the config loader in?",
+   "answer": "region us-east-2"
+  },
+  {
+   "id": "F133",
+   "session": 14,
+   "subject": "the config loader",
+   "body": "The config loader times out after 5273 seconds.",
+   "question": "What is the timeout of the config loader?",
+   "answer": "5273 seconds"
+  },
+  {
+   "id": "F134",
+   "session": 14,
+   "subject": "the config loader",
+   "body": "The config loader is owned by the data team.",
+   "question": "Who owns the config loader?",
+   "answer": "data team"
+  },
+  {
+   "id": "F135",
+   "session": 14,
+   "subject": "the config loader",
+   "body": "The config loader keeps 9521 days of history.",
+   "question": "How much history does the config loader keep?",
+   "answer": "9521 days"
+  },
+  {
+   "id": "F136",
+   "session": 14,
+   "subject": "the config loader",
+   "body": "The config loader uses the zephyr key format.",
+   "question": "What key format does the config loader use?",
+   "answer": "zephyr key"
+  },
+  {
+   "id": "F137",
+   "session": 14,
+   "subject": "the config loader",
+   "body": "The config loader retries 3096 times.",
+   "question": "How many retries does the config loader make?",
+   "answer": "3096 times"
+  },
+  {
+   "id": "F138",
+   "session": 14,
+   "subject": "the config loader",
+   "body": "The config loader was renamed from sable.",
+   "question": "What was the config loader called before?",
+   "answer": "renamed from sable"
+  },
+  {
+   "id": "F139",
+   "session": 14,
+   "subject": "the config loader",
+   "body": "The config loader caps requests at 1134 a minute.",
+   "question": "What is the request cap of the config loader?",
+   "answer": "1134 a minute"
+  },
+  {
+   "id": "F140",
+   "session": 14,
+   "subject": "the config loader",
+   "body": "The config loader writes its state to s3://team-bucket/state.",
+   "question": "Where does the config loader write its state?",
+   "answer": "s3://team-bucket/state"
+  },
+  {
+   "id": "F141",
+   "session": 15,
+   "subject": "the test runner",
+   "body": "The test runner runs on port 8192.",
+   "question": "What port does the test runner run on?",
+   "answer": "port 8192"
+  },
+  {
+   "id": "F142",
+   "session": 15,
+   "subject": "the test runner",
+   "body": "The test runner was moved to region eu-west-1.",
+   "question": "Which region is the test runner in?",
+   "answer": "region eu-west-1"
+  },
+  {
+   "id": "F143",
+   "session": 15,
+   "subject": "the test runner",
+   "body": "The test runner times out after 5223 seconds.",
+   "question": "What is the timeout of the test runner?",
+   "answer": "5223 seconds"
+  },
+  {
+   "id": "F144",
+   "session": 15,
+   "subject": "the test runner",
+   "body": "The test runner is owned by the core team.",
+   "question": "Who owns the test runner?",
+   "answer": "core team"
+  },
+  {
+   "id": "F145",
+   "session": 15,
+   "subject": "the test runner",
+   "body": "The test runner keeps 6196 days of history.",
+   "question": "How much history does the test runner keep?",
+   "answer": "6196 days"
+  },
+  {
+   "id": "F146",
+   "session": 15,
+   "subject": "the test runner",
+   "body": "The test runner uses the velvet key format.",
+   "question": "What key format does the test runner use?",
+   "answer": "velvet key"
+  },
+  {
+   "id": "F147",
+   "session": 15,
+   "subject": "the test runner",
+   "body": "The test runner retries 3152 times.",
+   "question": "How many retries does the test runner make?",
+   "answer": "3152 times"
+  },
+  {
+   "id": "F148",
+   "session": 15,
+   "subject": "the test runner",
+   "body": "The test runner was renamed from willow.",
+   "question": "What was the test runner called before?",
+   "answer": "renamed from willow"
+  },
+  {
+   "id": "F149",
+   "session": 15,
+   "subject": "the test runner",
+   "body": "The test runner caps requests at 3761 a minute.",
+   "question": "What is the request cap of the test runner?",
+   "answer": "3761 a minute"
+  },
+  {
+   "id": "F150",
+   "session": 15,
+   "subject": "the test runner",
+   "body": "The test runner writes its state to /opt/app/run/state.json.",
+   "question": "Where does the test runner write its state?",
+   "answer": "/opt/app/run/state.json"
+  },
+  {
+   "id": "F151",
+   "session": 16,
+   "subject": "the metrics page",
+   "body": "The metrics page runs on port 7817.",
+   "question": "What port does the metrics page run on?",
+   "answer": "port 7817"
+  },
+  {
+   "id": "F152",
+   "session": 16,
+   "subject": "the metrics page",
+   "body": "The metrics page was moved to region eu-west-1.",
+   "question": "Which region is the metrics page in?",
+   "answer": "region eu-west-1"
+  },
+  {
+   "id": "F153",
+   "session": 16,
+   "subject": "the metrics page",
+   "body": "The metrics page times out after 8006 seconds.",
+   "question": "What is the timeout of the metrics page?",
+   "answer": "8006 seconds"
+  },
+  {
+   "id": "F154",
+   "session": 16,
+   "subject": "the metrics page",
+   "body": "The metrics page is owned by the core team.",
+   "question": "Who owns the metrics page?",
+   "answer": "core team"
+  },
+  {
+   "id": "F155",
+   "session": 16,
+   "subject": "the metrics page",
+   "body": "The metrics page keeps 8235 days of history.",
+   "question": "How much history does the metrics page keep?",
+   "answer": "8235 days"
+  },
+  {
+   "id": "F156",
+   "session": 16,
+   "subject": "the metrics page",
+   "body": "The metrics page uses the ember key format.",
+   "question": "What key format does the metrics page use?",
+   "answer": "ember key"
+  },
+  {
+   "id": "F157",
+   "session": 16,
+   "subject": "the metrics page",
+   "body": "The metrics page retries 6250 times.",
+   "question": "How many retries does the metrics page make?",
+   "answer": "6250 times"
+  },
+  {
+   "id": "F158",
+   "session": 16,
+   "subject": "the metrics page",
+   "body": "The metrics page was renamed from quartz.",
+   "question": "What was the metrics page called before?",
+   "answer": "renamed from quartz"
+  },
+  {
+   "id": "F159",
+   "session": 16,
+   "subject": "the metrics page",
+   "body": "The metrics page caps requests at 6623 a minute.",
+   "question": "What is the request cap of the metrics page?",
+   "answer": "6623 a minute"
+  },
+  {
+   "id": "F160",
+   "session": 16,
+   "subject": "the metrics page",
+   "body": "The metrics page writes its state to s3://team-bucket/state.",
+   "question": "Where does the metrics page write its state?",
+   "answer": "s3://team-bucket/state"
+  },
+  {
+   "id": "F161",
+   "session": 17,
+   "subject": "the staging cluster",
+   "body": "The staging cluster runs on port 2799.",
+   "question": "What port does the staging cluster run on?",
+   "answer": "port 2799"
+  },
+  {
+   "id": "F162",
+   "session": 17,
+   "subject": "the staging cluster",
+   "body": "The staging cluster was moved to region ca-central-1.",
+   "question": "Which region is the staging cluster in?",
+   "answer": "region ca-central-1"
+  },
+  {
+   "id": "F163",
+   "session": 17,
+   "subject": "the staging cluster",
+   "body": "The staging cluster times out after 1514 seconds.",
+   "question": "What is the timeout of the staging cluster?",
+   "answer": "1514 seconds"
+  },
+  {
+   "id": "F164",
+   "session": 17,
+   "subject": "the staging cluster",
+   "body": "The staging cluster is owned by the core team.",
+   "question": "Who owns the staging cluster?",
+   "answer": "core team"
+  },
+  {
+   "id": "F165",
+   "session": 17,
+   "subject": "the staging cluster",
+   "body": "The staging cluster keeps 7290 days of history.",
+   "question": "How much history does the staging cluster keep?",
+   "answer": "7290 days"
+  },
+  {
+   "id": "F166",
+   "session": 17,
+   "subject": "the staging cluster",
+   "body": "The staging cluster uses the marrow key format.",
+   "question": "What key format does the staging cluster use?",
+   "answer": "marrow key"
+  },
+  {
+   "id": "F167",
+   "session": 17,
+   "subject": "the staging cluster",
+   "body": "The staging cluster retries 1213 times.",
+   "question": "How many retries does the staging cluster make?",
+   "answer": "1213 times"
+  },
+  {
+   "id": "F168",
+   "session": 17,
+   "subject": "the staging cluster",
+   "body": "The staging cluster was renamed from velvet.",
+   "question": "What was the staging cluster called before?",
+   "answer": "renamed from velvet"
+  },
+  {
+   "id": "F169",
+   "session": 17,
+   "subject": "the staging cluster",
+   "body": "The staging cluster caps requests at 4300 a minute.",
+   "question": "What is the request cap of the staging cluster?",
+   "answer": "4300 a minute"
+  },
+  {
+   "id": "F170",
+   "session": 17,
+   "subject": "the staging cluster",
+   "body": "The staging cluster writes its state to /opt/app/run/state.json.",
+   "question": "Where does the staging cluster write its state?",
+   "answer": "/opt/app/run/state.json"
+  },
+  {
+   "id": "F171",
+   "session": 18,
+   "subject": "the CLI",
+   "body": "The CLI runs on port 2067.",
+   "question": "What port does the CLI run on?",
+   "answer": "port 2067"
+  },
+  {
+   "id": "F172",
+   "session": 18,
+   "subject": "the CLI",
+   "body": "The CLI was moved to region ca-central-1.",
+   "question": "Which region is the CLI in?",
+   "answer": "region ca-central-1"
+  },
+  {
+   "id": "F173",
+   "session": 18,
+   "subject": "the CLI",
+   "body": "The CLI times out after 7303 seconds.",
+   "question": "What is the timeout of the CLI?",
+   "answer": "7303 seconds"
+  },
+  {
+   "id": "F174",
+   "session": 18,
+   "subject": "the CLI",
+   "body": "The CLI is owned by the core team.",
+   "question": "Who owns the CLI?",
+   "answer": "core team"
+  },
+  {
+   "id": "F175",
+   "session": 18,
+   "subject": "the CLI",
+   "body": "The CLI keeps 3686 days of history.",
+   "question": "How much history does the CLI keep?",
+   "answer": "3686 days"
+  },
+  {
+   "id": "F176",
+   "session": 18,
+   "subject": "the CLI",
+   "body": "The CLI uses the sable key format.",
+   "question": "What key format does the CLI use?",
+   "answer": "sable key"
+  },
+  {
+   "id": "F177",
+   "session": 18,
+   "subject": "the CLI",
+   "body": "The CLI retries 6811 times.",
+   "question": "How many retries does the CLI make?",
+   "answer": "6811 times"
+  },
+  {
+   "id": "F178",
+   "session": 18,
+   "subject": "the CLI",
+   "body": "The CLI was renamed from velvet.",
+   "question": "What was the CLI called before?",
+   "answer": "renamed from velvet"
+  },
+  {
+   "id": "F179",
+   "session": 18,
+   "subject": "the CLI",
+   "body": "The CLI caps requests at 1542 a minute.",
+   "question": "What is the request cap of the CLI?",
+   "answer": "1542 a minute"
+  },
+  {
+   "id": "F180",
+   "session": 18,
+   "subject": "the CLI",
+   "body": "The CLI writes its state to /var/lib/app/state.",
+   "question": "Where does the CLI write its state?",
+   "answer": "/var/lib/app/state"
+  },
+  {
+   "id": "F181",
+   "session": 19,
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver runs on port 1079.",
+   "question": "What port does the webhook receiver run on?",
+   "answer": "port 1079"
+  },
+  {
+   "id": "F182",
+   "session": 19,
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver was moved to region us-east-2.",
+   "question": "Which region is the webhook receiver in?",
+   "answer": "region us-east-2"
+  },
+  {
+   "id": "F183",
+   "session": 19,
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver times out after 6494 seconds.",
+   "question": "What is the timeout of the webhook receiver?",
+   "answer": "6494 seconds"
+  },
+  {
+   "id": "F184",
+   "session": 19,
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver is owned by the data team.",
+   "question": "Who owns the webhook receiver?",
+   "answer": "data team"
+  },
+  {
+   "id": "F185",
+   "session": 19,
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver keeps 9430 days of history.",
+   "question": "How much history does the webhook receiver keep?",
+   "answer": "9430 days"
+  },
+  {
+   "id": "F186",
+   "session": 19,
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver uses the quartz key format.",
+   "question": "What key format does the webhook receiver use?",
+   "answer": "quartz key"
+  },
+  {
+   "id": "F187",
+   "session": 19,
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver retries 3428 times.",
+   "question": "How many retries does the webhook receiver make?",
+   "answer": "3428 times"
+  },
+  {
+   "id": "F188",
+   "session": 19,
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver was renamed from tundra.",
+   "question": "What was the webhook receiver called before?",
+   "answer": "renamed from tundra"
+  },
+  {
+   "id": "F189",
+   "session": 19,
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver caps requests at 2173 a minute.",
+   "question": "What is the request cap of the webhook receiver?",
+   "answer": "2173 a minute"
+  },
+  {
+   "id": "F190",
+   "session": 19,
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver writes its state to s3://team-bucket/state.",
+   "question": "Where does the webhook receiver write its state?",
+   "answer": "s3://team-bucket/state"
+  },
+  {
+   "id": "F191",
+   "session": 20,
+   "subject": "the scheduler",
+   "body": "The scheduler runs on port 7464.",
+   "question": "What port does the scheduler run on?",
+   "answer": "port 7464"
+  },
+  {
+   "id": "F192",
+   "session": 20,
+   "subject": "the scheduler",
+   "body": "The scheduler was moved to region ap-south-1.",
+   "question": "Which region is the scheduler in?",
+   "answer": "region ap-south-1"
+  },
+  {
+   "id": "F193",
+   "session": 20,
+   "subject": "the scheduler",
+   "body": "The scheduler times out after 7587 seconds.",
+   "question": "What is the timeout of the scheduler?",
+   "answer": "7587 seconds"
+  },
+  {
+   "id": "F194",
+   "session": 20,
+   "subject": "the scheduler",
+   "body": "The scheduler is owned by the growth team.",
+   "question": "Who owns the scheduler?",
+   "answer": "growth team"
+  },
+  {
+   "id": "F195",
+   "session": 20,
+   "subject": "the scheduler",
+   "body": "The scheduler keeps 1251 days of history.",
+   "question": "How much history does the scheduler keep?",
+   "answer": "1251 days"
+  },
+  {
+   "id": "F196",
+   "session": 20,
+   "subject": "the scheduler",
+   "body": "The scheduler uses the ember key format.",
+   "question": "What key format does the scheduler use?",
+   "answer": "ember key"
+  },
+  {
+   "id": "F197",
+   "session": 20,
+   "subject": "the scheduler",
+   "body": "The scheduler retries 5319 times.",
+   "question": "How many retries does the scheduler make?",
+   "answer": "5319 times"
+  },
+  {
+   "id": "F198",
+   "session": 20,
+   "subject": "the scheduler",
+   "body": "The scheduler was renamed from ember.",
+   "question": "What was the scheduler called before?",
+   "answer": "renamed from ember"
+  },
+  {
+   "id": "F199",
+   "session": 20,
+   "subject": "the scheduler",
+   "body": "The scheduler caps requests at 3643 a minute.",
+   "question": "What is the request cap of the scheduler?",
+   "answer": "3643 a minute"
+  },
+  {
+   "id": "F200",
+   "session": 20,
+   "subject": "the scheduler",
+   "body": "The scheduler writes its state to s3://team-bucket/state.",
+   "question": "Where does the scheduler write its state?",
+   "answer": "s3://team-bucket/state"
+  }
+ ],
+ "decoys": [
+  {
+   "id": "D001",
+   "question": "What color is the login button?"
+  },
+  {
+   "id": "D002",
+   "question": "Who reviews the invoices on Fridays?"
+  },
+  {
+   "id": "D003",
+   "question": "What is the name of the office plant?"
+  },
+  {
+   "id": "D004",
+   "question": "Which font does the marketing site use?"
+  },
+  {
+   "id": "D005",
+   "question": "How many chairs are in the meeting room?"
+  },
+  {
+   "id": "D006",
+   "question": "What is the parking code?"
+  },
+  {
+   "id": "D007",
+   "question": "Who has the spare laptop?"
+  },
+  {
+   "id": "D008",
+   "question": "What day is the team lunch?"
+  },
+  {
+   "id": "D009",
+   "question": "Which printer is on the second floor?"
+  },
+  {
+   "id": "D010",
+   "question": "What is the wifi name in the lobby?"
+  },
+  {
+   "id": "D011",
+   "question": "What color is the login button?"
+  },
+  {
+   "id": "D012",
+   "question": "Who reviews the invoices on Fridays?"
+  },
+  {
+   "id": "D013",
+   "question": "What is the name of the office plant?"
+  },
+  {
+   "id": "D014",
+   "question": "Which font does the marketing site use?"
+  },
+  {
+   "id": "D015",
+   "question": "How many chairs are in the meeting room?"
+  },
+  {
+   "id": "D016",
+   "question": "What is the parking code?"
+  },
+  {
+   "id": "D017",
+   "question": "Who has the spare laptop?"
+  },
+  {
+   "id": "D018",
+   "question": "What day is the team lunch?"
+  },
+  {
+   "id": "D019",
+   "question": "Which printer is on the second floor?"
+  },
+  {
+   "id": "D020",
+   "question": "What is the wifi name in the lobby?"
+  },
+  {
+   "id": "D021",
+   "question": "What color is the login button?"
+  },
+  {
+   "id": "D022",
+   "question": "Who reviews the invoices on Fridays?"
+  },
+  {
+   "id": "D023",
+   "question": "What is the name of the office plant?"
+  },
+  {
+   "id": "D024",
+   "question": "Which font does the marketing site use?"
+  },
+  {
+   "id": "D025",
+   "question": "How many chairs are in the meeting room?"
+  },
+  {
+   "id": "D026",
+   "question": "What is the parking code?"
+  },
+  {
+   "id": "D027",
+   "question": "Who has the spare laptop?"
+  },
+  {
+   "id": "D028",
+   "question": "What day is the team lunch?"
+  },
+  {
+   "id": "D029",
+   "question": "Which printer is on the second floor?"
+  },
+  {
+   "id": "D030",
+   "question": "What is the wifi name in the lobby?"
+  },
+  {
+   "id": "D031",
+   "question": "What color is the login button?"
+  },
+  {
+   "id": "D032",
+   "question": "Who reviews the invoices on Fridays?"
+  },
+  {
+   "id": "D033",
+   "question": "What is the name of the office plant?"
+  },
+  {
+   "id": "D034",
+   "question": "Which font does the marketing site use?"
+  },
+  {
+   "id": "D035",
+   "question": "How many chairs are in the meeting room?"
+  },
+  {
+   "id": "D036",
+   "question": "What is the parking code?"
+  },
+  {
+   "id": "D037",
+   "question": "Who has the spare laptop?"
+  },
+  {
+   "id": "D038",
+   "question": "What day is the team lunch?"
+  },
+  {
+   "id": "D039",
+   "question": "Which printer is on the second floor?"
+  },
+  {
+   "id": "D040",
+   "question": "What is the wifi name in the lobby?"
+  }
+ ],
+ "shadows": [
+  {
+   "id": "S001",
+   "subject": "the API gateway",
+   "body": "The API gateway has a hidden 778-step fallback.",
+   "question": "How many steps does the fallback of the API gateway have?",
+   "answer": "778-step"
+  },
+  {
+   "id": "S002",
+   "subject": "the billing job",
+   "body": "The billing job has a hidden 193-step fallback.",
+   "question": "How many steps does the fallback of the billing job have?",
+   "answer": "193-step"
+  },
+  {
+   "id": "S003",
+   "subject": "the nightly backup",
+   "body": "The nightly backup has a hidden 842-step fallback.",
+   "question": "How many steps does the fallback of the nightly backup have?",
+   "answer": "842-step"
+  },
+  {
+   "id": "S004",
+   "subject": "the search index",
+   "body": "The search index has a hidden 268-step fallback.",
+   "question": "How many steps does the fallback of the search index have?",
+   "answer": "268-step"
+  },
+  {
+   "id": "S005",
+   "subject": "the login flow",
+   "body": "The login flow has a hidden 127-step fallback.",
+   "question": "How many steps does the fallback of the login flow have?",
+   "answer": "127-step"
+  },
+  {
+   "id": "S006",
+   "subject": "the mobile build",
+   "body": "The mobile build has a hidden 699-step fallback.",
+   "question": "How many steps does the fallback of the mobile build have?",
+   "answer": "699-step"
+  },
+  {
+   "id": "S007",
+   "subject": "the deploy script",
+   "body": "The deploy script has a hidden 163-step fallback.",
+   "question": "How many steps does the fallback of the deploy script have?",
+   "answer": "163-step"
+  },
+  {
+   "id": "S008",
+   "subject": "the cache layer",
+   "body": "The cache layer has a hidden 675-step fallback.",
+   "question": "How many steps does the fallback of the cache layer have?",
+   "answer": "675-step"
+  },
+  {
+   "id": "S009",
+   "subject": "the export tool",
+   "body": "The export tool has a hidden 497-step fallback.",
+   "question": "How many steps does the fallback of the export tool have?",
+   "answer": "497-step"
+  },
+  {
+   "id": "S010",
+   "subject": "the audit log",
+   "body": "The audit log has a hidden 513-step fallback.",
+   "question": "How many steps does the fallback of the audit log have?",
+   "answer": "513-step"
+  },
+  {
+   "id": "S011",
+   "subject": "the rate limiter",
+   "body": "The rate limiter has a hidden 774-step fallback.",
+   "question": "How many steps does the fallback of the rate limiter have?",
+   "answer": "774-step"
+  },
+  {
+   "id": "S012",
+   "subject": "the image pipeline",
+   "body": "The image pipeline has a hidden 196-step fallback.",
+   "question": "How many steps does the fallback of the image pipeline have?",
+   "answer": "196-step"
+  },
+  {
+   "id": "S013",
+   "subject": "the email sender",
+   "body": "The email sender has a hidden 511-step fallback.",
+   "question": "How many steps does the fallback of the email sender have?",
+   "answer": "511-step"
+  },
+  {
+   "id": "S014",
+   "subject": "the config loader",
+   "body": "The config loader has a hidden 788-step fallback.",
+   "question": "How many steps does the fallback of the config loader have?",
+   "answer": "788-step"
+  },
+  {
+   "id": "S015",
+   "subject": "the test runner",
+   "body": "The test runner has a hidden 635-step fallback.",
+   "question": "How many steps does the fallback of the test runner have?",
+   "answer": "635-step"
+  },
+  {
+   "id": "S016",
+   "subject": "the metrics page",
+   "body": "The metrics page has a hidden 580-step fallback.",
+   "question": "How many steps does the fallback of the metrics page have?",
+   "answer": "580-step"
+  },
+  {
+   "id": "S017",
+   "subject": "the staging cluster",
+   "body": "The staging cluster has a hidden 804-step fallback.",
+   "question": "How many steps does the fallback of the staging cluster have?",
+   "answer": "804-step"
+  },
+  {
+   "id": "S018",
+   "subject": "the CLI",
+   "body": "The CLI has a hidden 819-step fallback.",
+   "question": "How many steps does the fallback of the CLI have?",
+   "answer": "819-step"
+  },
+  {
+   "id": "S019",
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver has a hidden 247-step fallback.",
+   "question": "How many steps does the fallback of the webhook receiver have?",
+   "answer": "247-step"
+  },
+  {
+   "id": "S020",
+   "subject": "the scheduler",
+   "body": "The scheduler has a hidden 980-step fallback.",
+   "question": "How many steps does the fallback of the scheduler have?",
+   "answer": "980-step"
+  },
+  {
+   "id": "S021",
+   "subject": "the API gateway",
+   "body": "The API gateway has a hidden 928-step fallback.",
+   "question": "How many steps does the fallback of the API gateway have?",
+   "answer": "928-step"
+  },
+  {
+   "id": "S022",
+   "subject": "the billing job",
+   "body": "The billing job has a hidden 675-step fallback.",
+   "question": "How many steps does the fallback of the billing job have?",
+   "answer": "675-step"
+  },
+  {
+   "id": "S023",
+   "subject": "the nightly backup",
+   "body": "The nightly backup has a hidden 747-step fallback.",
+   "question": "How many steps does the fallback of the nightly backup have?",
+   "answer": "747-step"
+  },
+  {
+   "id": "S024",
+   "subject": "the search index",
+   "body": "The search index has a hidden 819-step fallback.",
+   "question": "How many steps does the fallback of the search index have?",
+   "answer": "819-step"
+  },
+  {
+   "id": "S025",
+   "subject": "the login flow",
+   "body": "The login flow has a hidden 440-step fallback.",
+   "question": "How many steps does the fallback of the login flow have?",
+   "answer": "440-step"
+  },
+  {
+   "id": "S026",
+   "subject": "the mobile build",
+   "body": "The mobile build has a hidden 310-step fallback.",
+   "question": "How many steps does the fallback of the mobile build have?",
+   "answer": "310-step"
+  },
+  {
+   "id": "S027",
+   "subject": "the deploy script",
+   "body": "The deploy script has a hidden 363-step fallback.",
+   "question": "How many steps does the fallback of the deploy script have?",
+   "answer": "363-step"
+  },
+  {
+   "id": "S028",
+   "subject": "the cache layer",
+   "body": "The cache layer has a hidden 257-step fallback.",
+   "question": "How many steps does the fallback of the cache layer have?",
+   "answer": "257-step"
+  },
+  {
+   "id": "S029",
+   "subject": "the export tool",
+   "body": "The export tool has a hidden 858-step fallback.",
+   "question": "How many steps does the fallback of the export tool have?",
+   "answer": "858-step"
+  },
+  {
+   "id": "S030",
+   "subject": "the audit log",
+   "body": "The audit log has a hidden 894-step fallback.",
+   "question": "How many steps does the fallback of the audit log have?",
+   "answer": "894-step"
+  },
+  {
+   "id": "S031",
+   "subject": "the rate limiter",
+   "body": "The rate limiter has a hidden 238-step fallback.",
+   "question": "How many steps does the fallback of the rate limiter have?",
+   "answer": "238-step"
+  },
+  {
+   "id": "S032",
+   "subject": "the image pipeline",
+   "body": "The image pipeline has a hidden 402-step fallback.",
+   "question": "How many steps does the fallback of the image pipeline have?",
+   "answer": "402-step"
+  },
+  {
+   "id": "S033",
+   "subject": "the email sender",
+   "body": "The email sender has a hidden 299-step fallback.",
+   "question": "How many steps does the fallback of the email sender have?",
+   "answer": "299-step"
+  },
+  {
+   "id": "S034",
+   "subject": "the config loader",
+   "body": "The config loader has a hidden 932-step fallback.",
+   "question": "How many steps does the fallback of the config loader have?",
+   "answer": "932-step"
+  },
+  {
+   "id": "S035",
+   "subject": "the test runner",
+   "body": "The test runner has a hidden 893-step fallback.",
+   "question": "How many steps does the fallback of the test runner have?",
+   "answer": "893-step"
+  },
+  {
+   "id": "S036",
+   "subject": "the metrics page",
+   "body": "The metrics page has a hidden 846-step fallback.",
+   "question": "How many steps does the fallback of the metrics page have?",
+   "answer": "846-step"
+  },
+  {
+   "id": "S037",
+   "subject": "the staging cluster",
+   "body": "The staging cluster has a hidden 440-step fallback.",
+   "question": "How many steps does the fallback of the staging cluster have?",
+   "answer": "440-step"
+  },
+  {
+   "id": "S038",
+   "subject": "the CLI",
+   "body": "The CLI has a hidden 536-step fallback.",
+   "question": "How many steps does the fallback of the CLI have?",
+   "answer": "536-step"
+  },
+  {
+   "id": "S039",
+   "subject": "the webhook receiver",
+   "body": "The webhook receiver has a hidden 645-step fallback.",
+   "question": "How many steps does the fallback of the webhook receiver have?",
+   "answer": "645-step"
+  },
+  {
+   "id": "S040",
+   "subject": "the scheduler",
+   "body": "The scheduler has a hidden 738-step fallback.",
+   "question": "How many steps does the fallback of the scheduler have?",
+   "answer": "738-step"
+  }
+ ],
+ "noise": [
+  "Meeting notes: nothing decided, follow up next week.",
+  "Reminder to rotate the on-call schedule.",
+  "The office coffee machine was descaled.",
+  "Someone asked about the holiday calendar.",
+  "A vendor sent a brochure; filed.",
+  "Lunch options were discussed at length.",
+  "The parking lot repainting is scheduled.",
+  "A typo in the footer was fixed.",
+  "The all-hands was moved by an hour.",
+  "Someone found the old sticker sheet."
+ ]
+}

@@ -38,6 +38,133 @@ promote it, and every boot thereafter serves it back verbatim.
 
 **Open beta — read [KNOWN_LIMITS.md](KNOWN_LIMITS.md) before trusting it with anything you can't lose.** Honest caveats, no fine print.
 
+## Install in your client
+One server, said ten ways. Every block below is the same thing: `uvx magnemo-mcp` with `MAGNEMO_VAULT` pointing at
+the folder your memory lives in (make one with `magnemo init ./vault`). Tested on this Mac where it says so;
+the rest is from each client's own docs and marked untested — corrections welcome, open an issue.
+
+**Claude Code** — tested.
+```bash
+claude mcp add magnemo -e MAGNEMO_VAULT=/absolute/path/to/vault -- uvx magnemo-mcp
+```
+(`claude mcp list` shows `magnemo … ✔ Connected`. Add `-s project` to write it into the repo's `.mcp.json` for your team.)
+
+**Claude Desktop** — tested. Download the extension from the latest release —
+[magnemo-0.6.4.post1.mcpb](https://github.com/Magnemo-AI/magnemo/releases/latest) — and open it; Claude Desktop asks for the
+vault folder and does the rest. (The connectors directory listing follows once it is accepted.)
+
+**Cursor** — untested here (not installed on this Mac); the link and the block follow Cursor's docs.
+[![Add to Cursor](https://img.shields.io/badge/Cursor-Add_Magnemo-000000?style=flat-square)](cursor://anysphere.cursor-deeplink/mcp/install?name=magnemo&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJtYWduZW1vLW1jcCJdLCJlbnYiOnsiTUFHTkVNT19WQVVMVCI6Ii9hYnNvbHV0ZS9wYXRoL3RvL3ZhdWx0In19)
+Or `~/.cursor/mcp.json` (or `.cursor/mcp.json` in the project):
+```json
+{
+  "mcpServers": {
+    "magnemo": {
+      "command": "uvx",
+      "args": ["magnemo-mcp"],
+      "env": { "MAGNEMO_VAULT": "/absolute/path/to/vault" }
+    }
+  }
+}
+```
+
+**VS Code / Copilot** — untested here; per VS Code's docs.
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Magnemo-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22magnemo%22%2C%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22magnemo-mcp%22%5D%2C%22env%22%3A%7B%22MAGNEMO_VAULT%22%3A%22%2Fabsolute%2Fpath%2Fto%2Fvault%22%7D%7D)
+Or `.vscode/mcp.json` in the workspace:
+```json
+{
+  "servers": {
+    "magnemo": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["magnemo-mcp"],
+      "env": { "MAGNEMO_VAULT": "/absolute/path/to/vault" }
+    }
+  }
+}
+```
+
+**Windsurf** — untested; `~/.codeium/windsurf/mcp_config.json`:
+```json
+{
+  "mcpServers": {
+    "magnemo": {
+      "command": "uvx",
+      "args": ["magnemo-mcp"],
+      "env": { "MAGNEMO_VAULT": "/absolute/path/to/vault" }
+    }
+  }
+}
+```
+
+**Cline** — untested; Cline → MCP Servers → Configure → `cline_mcp_settings.json`:
+```json
+{
+  "mcpServers": {
+    "magnemo": {
+      "command": "uvx",
+      "args": ["magnemo-mcp"],
+      "env": { "MAGNEMO_VAULT": "/absolute/path/to/vault" },
+      "disabled": false
+    }
+  }
+}
+```
+
+**Continue** — untested; `~/.continue/config.yaml` (or a file in `.continue/mcpServers/`):
+```yaml
+mcpServers:
+  - name: magnemo
+    command: uvx
+    args: ["magnemo-mcp"]
+    env:
+      MAGNEMO_VAULT: /absolute/path/to/vault
+```
+
+**Gemini CLI** — untested; `~/.gemini/settings.json`:
+```json
+{
+  "mcpServers": {
+    "magnemo": {
+      "command": "uvx",
+      "args": ["magnemo-mcp"],
+      "env": { "MAGNEMO_VAULT": "/absolute/path/to/vault" }
+    }
+  }
+}
+```
+
+**Codex CLI** — untested; `~/.codex/config.toml`:
+```toml
+[mcp_servers.magnemo]
+command = "uvx"
+args = ["magnemo-mcp"]
+env = { MAGNEMO_VAULT = "/absolute/path/to/vault" }
+```
+
+**Zed** — untested; `settings.json` → `context_servers`:
+```json
+{
+  "context_servers": {
+    "magnemo": {
+      "source": "custom",
+      "command": "uvx",
+      "args": ["magnemo-mcp"],
+      "env": { "MAGNEMO_VAULT": "/absolute/path/to/vault" }
+    }
+  }
+}
+```
+
+**After the install**, the loop is the same everywhere: your agent writes to staging, you review.
+```bash
+magnemo yes             # promote the top of the queue (yes <id-fragment> · yes --all)
+magnemo no <id> --reason "…"   # reject one — the reason is required; rejections teach
+magnemo review          # the interactive queue, when you want to read first
+magnemo doctor          # python, vault, config, ledger, and the mount — proves the zero-network line too
+```
+Anything that speaks MCP over stdio mounts the same way. The remote door (ChatGPT and hosted clients) is on its way in 0.7.0.
+
 ## Agents draft, people keep — the one rule
 Agents get four MCP tools. Promotion is not one of them.
 
@@ -45,41 +172,6 @@ Agents get four MCP tools. Promotion is not one of them.
 |--------|---------------------|--------|
 | Agents | MCP server (stdio)  | `retrieve` canonical memory · `stage` → **staging only, the one write tool** · `bootpack` on wake · `handoff` at the boundary |
 | You    | CLI + git (any editor)| review the queue · **promote / reject** · edit anything · own everything |
-
-## Quick start (open beta)
-Five minutes from install to a governed, booted agent. Python 3.11+, zero dependencies.
-
-```bash
-# 1 · install — needs Python 3.11 or newer; if pip can't find it, install uv and run: uv tool install magnemo
-pip install magnemo
-
-# 2 · create a vault — plain markdown you own; read it in any editor
-magnemo init ./vault
-
-# 3 · mount it into your agent (Claude Code / any MCP client) — .mcp.json:
-#   {"mcpServers":{"magnemo":{
-#     "command":"magnemo-mcp",
-#     "env":{"MAGNEMO_VAULT":"/absolute/path/to/vault",
-#            "MAGNEMO_AGENT":"my-agent",
-#            "MAGNEMO_SCOPE":"ops,shared",
-#            "MAGNEMO_PARTITIONS":"ops,shared"}}}}
-#   (full tool reference and postures: docs/MCP.md)
-
-# 4 · render the first boot pack — what a fresh session wakes up knowing
-magnemo bootpack --stdout
-
-# 5 · checkup — python, vault, config, ledger, and your .mcp.json mount
-magnemo doctor --mount .mcp.json
-```
-
-Then the loop begins: agents write to staging, you review.
-```bash
-magnemo yes             # the gate lift is a word: promote the top of the queue (yes <id-fragment> · yes --all)
-magnemo no <id> --reason "…"   # reject one — the reason is required; rejections teach
-magnemo review          # the interactive queue, when you want to read first
-magnemo ledger          # every decision, forever
-```
-Beta honesty: read [KNOWN_LIMITS.md](KNOWN_LIMITS.md) before you rely on it.
 
 ## The vault
 ```
@@ -93,136 +185,6 @@ vault/
 ```
 Every note is markdown with provenance frontmatter (author, written, source,
 status, reviewed_by, supersedes, strength). **Provenance is the file format.**
-
-## New in v0.2 — the consequence sockets (consequence, taint, token budgets)
-- **Retrieval receipts**: every search returns a `rid` and logs which notes it
-  served (`_ledger/retrievals.jsonl`) plus the payload size in chars.
-- **Outcome recording** (`magnemo outcome <rid> approved|denied --by NAME`): links
-  an action's result back to the memories that informed it. Each note accrues
-  `yield_w / yield_l` — an earned track record — and **ranking multiplies by
-  proven yield**. Memory that pays ranks up; memory that misleads sinks.
-- **Taint propagation**: writes from untrusted sources carry `taint:` in
-  frontmatter; taint is **hereditary** through supersession and only a keyholder
-  clears it (`magnemo cleartaint`). Injection cannot launder itself through
-  derivation, and tainted notes are rank-penalized and excludable.
-- **Char budgets**: `retrieve(budget=…)` bounds every payload; payload
-  size is measured and logged on every retrieval — the instrumentation for the
-  token-efficiency benchmark is on by default from day one.
-
-## New in v0.3 — salience-sorted review — so you read what mattered first
-The founder's attention is the scarcest resource in the loop. Every staged
-note now gets a **deterministic salience score at stage time** — no model
-calls, no embeddings — stored in frontmatter (`salience` +
-`salience_components`) so the ranking is auditable from the file alone:
-
-- **consequence** — the writer's declared impact class
-  (security > money > correctness > process > info, via `stage(impact=…)`)
-- **novelty** — trigram/tag overlap vs existing canon in the same partition;
-  duplicates of settled truth sink, new claims rise
-- **operator signal** — `cli flag <note-id> --by NAME`; by config invariant a
-  founder-flagged note outranks *any* unflagged note
-- **source weight** — audit/postmortem findings outrank routine runs
-
-`cli review` presents the queue salience-descending with score + components,
-capped per pass (`--batch N`, default from config), and reports queue depth
-up front; the MCP server reports queue depth at session start. `cli rescore`
-backfills legacy notes. Weights live in the vault's documented config file —
-see [docs/CONFIG.md](docs/CONFIG.md).
-
-## New in v0.3 — the Boot Pack: served on every wake — the agent never starts from nothing
-```bash
-python -m magnemo.cli bootpack [--scope dev|ops|shared] [--class worker|partner]
-```
-One command renders `BOOT_PACK.md` — the orientation a fresh session boots
-from. Section order is doctrine, for both classes: **(1) the Charter,
-verbatim, always first** (an explicit placeholder if not yet promoted — the
-Charter is never fabricated); (2) canon digest — every canonical note's
-title, one-line summary, and stable path; (3) open threads, staged count,
-and the top-5 staged notes by salience; (4) trust-ledger tail.
-
-`--class partner` additionally serves a **RELATIONSHIP LAYER** sourced from
-a codex file (voice/lore/relationship — what makes a spawn a partner, not a
-clone). Worker boots omit it and stay lean. No codex file, no section: a
-partner boot degrades gracefully. The codex source is a pluggable seam —
-see [docs/CONFIG.md](docs/CONFIG.md).
-
-The pack is **deterministic**: a pure function of vault state — identical
-state yields identical bytes, per class (tested).
-
-## New in v0.3 — Boundary Telemetry — every handoff records where it stopped and why
-```bash
-python -m magnemo.cli handoff --usage 91 --trigger planned --cut "deferred X" --by NAME
-python -m magnemo.cli handoff --report     # every boundary ever, as a table
-```
-Sessions end at boundaries — the context wall, a planned stop, a compaction —
-and untracked boundaries are where continuity silently dies. Each `handoff`
-appends a structured telemetry entry to `_ledger/handoffs.jsonl`
-(**append-only**: usage %, trigger, what was cut, actor) *and* stages a
-provenance-complete handoff note for review like any other memory candidate.
-Known historical boundaries can be recorded honestly with `--when`: the entry
-keeps both `ts` (when the boundary happened) and `recorded_at` (when it was
-written down).
-
-**The ~90% soft-threshold doctrine.** Don't ride to the wall. At ~90% context
-usage, write the handoff and stand down — a handoff written *at* the wall is
-written in a panic with no room to verify the catch. The first recorded
-datum is the scar that set the rule: **Aug 13 2026, 98% usage, trigger=wall**
-(operator-confirmed). Everything after ~90% should be boundary work, not new
-work; the telemetry exists so the doctrine gets numbers instead of vibes.
-
-## New in v0.3 — Foresight counters — what memory costs, measured from day one
-```bash
-python -m magnemo.cli costs      # per-kind payload costs + the stated baseline
-```
-Every memory payload served — a retrieval result set, a boot pack — logs an
-append-only event to `_ledger/costs.jsonl`: bytes plus a rough token
-estimate (bytes/4, documented, swappable for a real tokenizer later).
-`cli costs` summarizes per kind and **states the measured baseline** — the
-number every future payload optimization (renditions, pointers, adaptive
-resolution) gets judged against. First datum: a full worker boot of this
-repo's vault costs ~465 tokens. A failed counter never fails the retrieval
-it was measuring.
-
-## v0.5.0 "First Trust" — the trust ledger is math
-
-Every actor holds a computed autonomy level per action class (read · stage · merge-code ·
-promote-canon · publish), derived only from append-only ledger events: `score = Σ weight ×
-0.5^(age/half-life)`, thresholds → L0 frozen … L3 autonomous; L4 keyholder is held by people,
-never computed. Grants are ledger records (`magnemo grant`) — a standing order becomes a grant id, so permission is data with a receipt — and the Gate Map
-(`magnemo gates`) plus your own scorecard ride every boot pack. `promote-canon` and `publish`
-stay keyholder-only forever. Read `docs/TRUST.md`, `docs/GRANTS.md`, `docs/GATES.md`.
-
-## v0.4.0 "First Name" — the product is Magnemo
-Ratified 2026-08-20 after the naming gauntlet. Package `magnemo`; CLI `python -m magnemo.cli`
-(or `magnemo`); MCP server `magnemo-mcp`. The previous package name is retired.
-Full notes: [CHANGELOG.md](CHANGELOG.md).
-
-## New in v0.4 — the four-tool MCP server — the whole agent surface, nothing more
-`python -m magnemo.mcp` (or `magnemo-mcp`) exposes **exactly four tools**, each
-bound to existing code — `retrieve` · `stage` · `bootpack` · `handoff`. Promotion is not
-a tool — promotion is your act, always. Zero deps, stdio, stdlib only.
-
-```
-retrieve ─▶ scope gate ─▶ walled BM25 ─▶ budget/rendition (snippet→pointer) ─▶ cost event
-stage    ─▶ provenance check ─▶ dup flag ─▶ salience ─▶ _staging/ ─▶ cost event
-bootpack ─▶ Charter ─▶ digest ─▶ salience-ranked queue ─▶ LAST HANDOFF ─▶ ledger tail
-handoff  ─▶ handoffs.jsonl ─▶ staged note ─▶ next bootpack inherits it
-```
-
-Tested invariants: staging is the only write path · provenance mandatory · scope walls
-(`MAGNEMO_SCOPE`) · budgets cap payloads with logged truncation · free tier · least privilege.
-Three postures (native / mount-and-govern / gateway), full tool reference and cascade
-diagrams: **[docs/MCP.md](docs/MCP.md)**. `magnemo-mcp` is the only server.
-
-## The chest — machines die, the memory doesn't
-```bash
-magnemo chest add git <url-you-own> --label laptop     # Copy B
-magnemo chest add path /Volumes/Drawer/vault --label drawer   # Copy C
-magnemo chest push                                     # swept for secrets first, every time
-magnemo mount --from <url-or-dir> ./vault              # restore onto a new machine
-```
-Magnemo *conducts* copies to places you own; it never *holds* them. Full
-contract: [docs/CHEST.md](docs/CHEST.md).
 
 ## Privacy
 Magnemo runs on your machine and nowhere else. The vault is a folder of plain markdown
@@ -240,21 +202,17 @@ https://magnemo.ai/privacy
 - Rejections are kept and recorded — rejections teach.
 - Every promote/reject lands in the append-only Trust Ledger with actor + reason.
 
-## Designed-in evolution (do not remove these seams)
-- `strength` field + score hook in `search.py` → Phase 2 reinforcement/decay.
-- `TrustLedger.pass_rate()` → the L0→L3 graduation math.
-- `Index.search()` signature is stable → embedding retrieval swaps in behind it.
-- Consolidation/reflection jobs write through `Governance.agent_write` like any
-  agent — the sleep cycle inherits the review queue for free.
-
 ## Tests
 ```bash
 python -m unittest discover -s tests -v     # incl. full MCP round-trips (legacy + four-verb)
 # or: pip install -e ".[test]" && pytest
 ```
 
+## Everything that shipped
+Release by release, with the design notes that used to live here: [CHANGELOG.md](CHANGELOG.md).
+
 — Silver Valley Technologies Inc. · Phase 1 of 3 · The memory that learns is
 the memory that is governed.
 
 ---
-Registry name: `mcp-name: ai.magnemo/magnemo` · Source: https://github.com/magnemo-ai/magnemo · Home: https://magnemo.ai
+`mcp-name: ai.magnemo/magnemo` · [Source](https://github.com/Magnemo-AI/magnemo) · [Security](SECURITY.md) · [Privacy](https://magnemo.ai/privacy)
