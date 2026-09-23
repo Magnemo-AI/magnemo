@@ -15,7 +15,7 @@ Set up Magnemo in this project:
 3. Register the MCP server: run magnemo mount — it writes this project's MCP config itself.
 4. Verify: run magnemo doctor and confirm everything passes.
 5. Stage the first memory: one line on what this project is, using magnemo stage. Show me the note id.
-6. Then tell me the exact command to approve it. After I approve, run magnemo bootpack and tell me what you remember.
+6. Then tell me the exact command to approve it. After I approve, run magnemo bootpack and tell me what you remember — then remind me to restart you, so the memory mounts for every session after this one.
 If anything fails, show me what went wrong and fix it if you can.
 ```
 

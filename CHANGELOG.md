@@ -5,9 +5,20 @@
   (`mcp-name: ai.magnemo/magnemo`), the README gains a Privacy section, `SECURITY.md` says how to report, and the
   Claude Desktop bundle names its privacy page. A post-release in PyPI's own sense: metadata only.
 
-## 0.6.5 — Unreleased
-- The companion `magnemo-mcp` says `requires-python >=3.11`, the same as the engine it pins (it said 3.10).
-- The one paste's step 6 (P-53c): the first run closes by reading the boot pack in the same session; no restart.
+## 0.6.5 — SENTINEL AT THE GATE
+- **The stage door is swept.** Every note staged through the MCP `stage` tool or the CLI's `magnemo stage` passes Sentinel,
+  the same sweep the inbox, the Room and the chest already ran: a secret-shaped value never lands (the note carries the
+  redaction line and a `sentinel:secret:<pattern>` taint; the reply says HELD and names the pattern, never the value); an
+  instruction-shaped line stages TAINTED beside a Sentinel ALERT note. Four doors, one sweep.
+- **A tainted note is never served to an agent** — not by `retrieve`, not in the boot pack's digest — until a keyholder
+  reads it and clears it: `magnemo clear <id> --reason …` (the short name for `cleartaint`; ledgered).
+- **`magnemo doctor` checks the network sentence** instead of the README asserting it: `network: transport stdio ·
+  listener none · outbound modules none` from a static scan of the installed package, FAIL if a network module appears; and
+  `server: never connected` until an MCP client has actually started this vault's server (the server now logs each session
+  start to `_ledger/connections.jsonl`) — the CLI answering is not the server connecting.
+- The one paste's step 6 keeps the same-session read and gets the restart back: approve, `magnemo bootpack`, then restart
+  so the memory mounts for every later session. The CLI's stage reply names the word (`magnemo yes <id>`).
+- The companion `magnemo-mcp` says `requires-python >=3.11`, the same as the engine it pins; docs/MCP.md says 3.11 too.
 
 ## 0.6.4 — THE WORDS
 - The engine tells the truth about Python: `requires-python` is `>=3.11`, as the README, the site and the paste

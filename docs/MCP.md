@@ -20,7 +20,7 @@ file tool — least privilege is the surface itself.
 ## Install & mount
 
 ```bash
-pip install -e .                 # zero runtime deps; Python ≥ 3.10
+pip install -e .                 # zero runtime deps; Python ≥ 3.11
 magnemo init ./vault         # once
 ```
 

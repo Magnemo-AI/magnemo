@@ -185,8 +185,9 @@ class MemoryServer(Server):
         budget = max(200, min(asked, MAX_BUDGET))
         # Candidate set from the existing index: scope-walled, receipt logged,
         # cost NOT logged here — the served (post-budget) payload is what counts.
+        # P-74: a tainted note is never served to an agent until a keyholder clears it (`magnemo clear`)
         out = self.index.search(query, k, None, max_chars=SNIPPET_CHARS,
-                                agent=self.agent, log_receipt=True,
+                                agent=self.agent, log_receipt=True, include_tainted=False,
                                 partitions=None if set(parts) == set(self.vault.partitions) else parts,
                                 log_cost=False)
         rendered, rendition, truncated = select_rendition(out["results"], budget)
@@ -265,6 +266,10 @@ class MemoryServer(Server):
                 f"DENIED: agent '{self.agent}' may not stage into partition '{part}'. "
                 f"Write partitions: {', '.join(self.write_partitions)}")
         impact = note.get("impact") or "info"
+        # P-74 · SENTINEL AT THE GATE: the main door is swept like the inbox and the Room.
+        from . import sentinel
+        sv = sentinel.gate(self.vault, title, body, partition=part, store=store, source=source, door="MCP")
+        title, body = sv["title"], sv["body"]
         # Pattern separation: is this a near-duplicate of something already
         # known (canon in-partition) or already waiting (staged)?
         dup = nearest_duplicate(title, body, part, self.vault)
@@ -273,7 +278,7 @@ class MemoryServer(Server):
         n = self.gov.agent_write(
             title=title, body=body, partition=part, store=store,
             author=author, source=source, tags=note.get("tags", "") or "",
-            supersedes=note.get("supersedes", "") or "", taint=note.get("taint", "") or "",
+            supersedes=note.get("supersedes", "") or "", taint=sv["taint"] or note.get("taint", "") or "",
             impact=impact)
         if claimed and claimed != author:
             n.extra["claimed_author"] = claimed
@@ -297,9 +302,16 @@ class MemoryServer(Server):
             "duplicate_of": dup["id"] if dup else None,
             "duplicate_similarity": round(dup["sim"], 4) if dup else None,
             "taint": n.taint or None,
+            "sentinel": sv["verdict"] and {"verdict": sv["verdict"].upper(), "pattern": sv["pattern"], "alert": sv["alert"]},
             "bytes": nbytes,
-            "note": "Awaits KEYHOLDER review: magnemo yes (or magnemo review). "
-                    "Not canonical; will not appear in retrieve until promoted.",
+            "note": ({"held": f"HELD by Sentinel: secret-shaped text (pattern {sv['pattern']}). The value was not stored — "
+                              "the note carries the redaction line and a taint. Move the secret out of what you stage.",
+                      "tainted": f"TAINTED by Sentinel: an instruction-shaped line (pattern {sv['pattern']}). Staged with a "
+                                 "taint beside an ALERT note; retrieve will not serve it until a keyholder clears it."}
+                     .get(sv["verdict"], "")
+                     + (" " if sv["verdict"] else "")
+                     + "Awaits KEYHOLDER review: magnemo yes (or magnemo review). "
+                       "Not canonical; will not appear in retrieve until promoted."),
         }, indent=1)
 
     # ---------------- bootpack ----------------

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "magnemo"
-version = "0.6.4.post1"
+version = "0.6.5"
 description = "Governed memory for AI agents. Memory with receipts."
 readme = "README.md"
 requires-python = ">=3.11"

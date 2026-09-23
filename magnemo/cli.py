@@ -248,20 +248,29 @@ def cmd_stage(a):
         if otag not in tl:
             tl.append(otag)
         tags = ",".join(tl)
-    dup = nearest_duplicate(a.title, body, a.partition, g.vault)
-    n = g.agent_write(title=a.title, body=body, partition=a.partition,
+    # P-74 · SENTINEL AT THE GATE: the terminal's stage is swept like every other door
+    from . import sentinel
+    sv = sentinel.gate(g.vault, a.title, body, partition=a.partition, store=a.store, source=a.source, door="CLI")
+    title, body = sv["title"], sv["body"]
+    dup = nearest_duplicate(title, body, a.partition, g.vault)
+    n = g.agent_write(title=title, body=body, partition=a.partition,
                       store=a.store, author=author, source=a.source,
-                      tags=tags, supersedes=a.supersedes, taint=a.taint,
+                      tags=tags, supersedes=a.supersedes, taint=sv["taint"] or a.taint,
                       impact=a.impact)
     foresight.log_cost(g.vault, "stage", len(body.encode("utf-8")), {
         "via": "cli", "id": n.id, "agent": author, "partition": a.partition,
         "store": a.store, "salience": n.salience,
         "dup_of": dup["id"] if dup else "", "taint": bool(n.taint)})
+    if sv["verdict"] == "held":
+        print(f"HELD by Sentinel: secret-shaped text (pattern {sv['pattern']}). The value was not stored; "
+              "the note carries the redaction line.")
+    elif sv["verdict"] == "tainted":
+        print(f"TAINTED by Sentinel: an instruction-shaped line (pattern {sv['pattern']}); an ALERT note is staged beside it.")
     print(f"staged: {n.id}")
     print(f"  {_fmt_salience(n)}")
     if dup:
         print(f"  possible duplicate of: {dup['id']}")
-    print(f"  path: _staging/{n.id}.md — awaiting review (cli review)")
+    print(f"  path: _staging/{n.id}.md — awaiting review: magnemo yes {n.id[-8:]} (or magnemo review)")
 
 
 def cmd_inbox(a):
@@ -619,6 +628,13 @@ def cmd_handoff(a):
     print(f"  handoff note staged → {e['note_id']}")
 
 
+def cmd_clear(a):
+    """P-74: `magnemo clear <id> --reason` — the same verb as cleartaint; --by defaults to the first keyholder."""
+    g = _gov(a.vault)
+    a.by = _by_default(g, a.by)
+    return cmd_cleartaint(a)
+
+
 def cmd_cleartaint(a):
     g = _gov(a.vault)
     n = g.clear_taint(a.note_id, a.by, a.reason)
@@ -733,6 +749,7 @@ def main():
     s = sub.add_parser("reject");  s.add_argument("note_id"); s.add_argument("--by", required=True); s.add_argument("--reason", required=True); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_reject)
     s = sub.add_parser("outcome"); s.add_argument("rid"); s.add_argument("verdict", choices=["approved","denied","failed"]); s.add_argument("--by", required=True); s.add_argument("--reason", default=""); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_outcome)
     s = sub.add_parser("cleartaint"); s.add_argument("note_id"); s.add_argument("--by", required=True); s.add_argument("--reason", required=True); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_cleartaint)
+    s = sub.add_parser("clear", help="clear a note's taint after reading it (the keyholder's verb; ledgered) — cleartaint's short name"); s.add_argument("note_id"); s.add_argument("--by", default="", help="default: the first keyholder in trust.humans"); s.add_argument("--reason", required=True); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_clear)
     s = sub.add_parser("autonomy"); s.add_argument("actor"); s.add_argument("--as-of", dest="as_of", default="", help="ISO timestamp to score at (default: now)"); s.add_argument("--json", action="store_true"); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_autonomy)
     s = sub.add_parser("trust");   ts = s.add_subparsers(dest="sub", required=True)
     t = ts.add_parser("record");   t.add_argument("actor"); t.add_argument("klass", metavar="class", choices=["read","stage","merge-code","promote-canon","publish"]); t.add_argument("kind", choices=["success","verified","halt","failure","denied","surprise","violation","reinstate"]); t.add_argument("--by", required=True); t.add_argument("--reason", default=""); t.add_argument("--ref", default="", help="PR number, note id, commit, ..."); t.add_argument("--when", default="", help="ISO timestamp for a KNOWN historical event"); t.add_argument("--grant", default="", help="grant id acted under (consumes a one-time grant)"); t.add_argument("vault", nargs="?", default=DEF)

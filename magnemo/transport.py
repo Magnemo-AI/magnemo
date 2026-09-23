@@ -52,6 +52,7 @@ class Server:
         mid = msg.get("id")
         if method == "initialize":
             client_ver = (msg.get("params") or {}).get("protocolVersion", PROTOCOL_FALLBACK)
+            self._connected((msg.get("params") or {}).get("clientInfo") or {})
             return self._result(mid, {
                 "protocolVersion": client_ver,
                 "capabilities": {"tools": {}},
@@ -82,6 +83,19 @@ class Server:
         if mid is not None:
             return self._error(mid, -32601, f"unknown method: {method}")
         return None
+
+    def _connected(self, client: dict):
+        """P-74: one line per MCP session start, so `doctor` can tell a mounted server from one that never connected.
+        Never raises into the protocol."""
+        try:
+            from .vault import now_iso
+            d = os.path.join(self.vault.root, "_ledger")
+            os.makedirs(d, exist_ok=True)
+            with open(os.path.join(d, "connections.jsonl"), "a") as f:
+                f.write(json.dumps({"ts": now_iso(), "agent": self.agent, "client": str(client.get("name", ""))[:80],
+                                    "client_version": str(client.get("version", ""))[:40], "server": __version__}) + "\n")
+        except Exception:
+            pass
 
     @staticmethod
     def _result(mid, result):

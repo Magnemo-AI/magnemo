@@ -239,6 +239,9 @@ def generate(vault: Vault, cls: str = "worker", scope: str | None = None,
                     continue
                 L.append(f"### {p}/{s}")
                 for n in group:
+                    if n.taint:                       # P-74: a tainted note is not served to an agent's wake
+                        L.append(f"- *(a tainted note, withheld until a keyholder clears it)* (`{p}/{s}/{n.id}.md`)")
+                        continue
                     L.append(f"- **{n.title}** — {_one_liner(n.body)} "
                              f"(`{p}/{s}/{n.id}.md`)")
                 L.append("")

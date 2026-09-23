@@ -168,6 +168,8 @@ def run(vault_path: str, mounts: list[str]) -> list[dict]:
         check_drift(results, v)
         check_guard(results, v)
         check_chest(results, v)
+        check_server(results, v)
+    check_network(results)
     for m in mounts:
         check_mount(results, m)
     if _LEGACY_SEEN:   # exactly once, however many places still say the old name
@@ -272,6 +274,67 @@ def check_chest(results, v):
         _check(results, WARN, "chest", line + " — this vault exists in ONE place. `magnemo chest add` conducts a copy somewhere you own")
     else:
         _check(results, OK, "chest", line)
+
+
+OUTBOUND = ("socket", "ssl", "urllib.request", "http.client", "http.server", "socketserver", "requests",
+            "httpx", "aiohttp", "websocket", "websockets", "ftplib", "smtplib", "xmlrpc")
+LISTENERS = {}          # a declared listener, by module (P-72's loopback server is declared here when it lands)
+
+
+def network_surface(pkg_dir: str | None = None) -> dict:
+    """A static scan of the installed package: every import of a network module, by file. No code runs."""
+    import ast
+    pkg_dir = pkg_dir or os.path.dirname(os.path.abspath(__file__))
+    hits, n = [], 0
+    for fn in sorted(os.listdir(pkg_dir)):
+        if not fn.endswith(".py"):
+            continue
+        n += 1
+        try:
+            tree = ast.parse(open(os.path.join(pkg_dir, fn), encoding="utf-8").read(), fn)
+        except SyntaxError:
+            hits.append((fn, "unparseable"))
+            continue
+        for node in ast.walk(tree):
+            names = [a.name for a in node.names] if isinstance(node, ast.Import) else \
+                    ([node.module or ""] if isinstance(node, ast.ImportFrom) else [])
+            for m in names:
+                if any(m == o or m.startswith(o + ".") for o in OUTBOUND) and fn not in LISTENERS:
+                    hits.append((fn, m))
+    return {"modules": n, "hits": hits}
+
+
+def check_network(results):
+    """P-74: the zero-network sentence, checked on every run instead of asserted."""
+    s = network_surface()
+    if s["hits"]:
+        _check(results, FAIL, "network", "outbound modules in the package: "
+               + ", ".join(f"{f} imports {m}" for f, m in s["hits"]))
+        return
+    listen = " · ".join(f"listener {v}" for v in LISTENERS.values()) or "listener none"
+    _check(results, OK, "network", f"transport stdio · {listen} · outbound modules none "
+           f"(a static scan of {s['modules']} modules) · nothing reaches another machine unless you start it by name: "
+           "`chest push` / `mount --from` (git, to a remote you add) and `magnemo run` (the agent CLI you name)")
+
+
+def check_server(results, v):
+    """P-74: has an MCP client ever started this vault's server? (The CLI answering is not the server connecting.)"""
+    p = os.path.join(v.root, "_ledger", "connections.jsonl")
+    last = None
+    if os.path.exists(p):
+        with open(p) as f:
+            for ln in f:
+                if ln.strip():
+                    try:
+                        last = json.loads(ln)
+                    except ValueError:
+                        pass
+    if not last:
+        _check(results, WARN, "server", "never connected — no MCP client has started this vault's server yet. "
+               "Restart your AI after `magnemo mount` so it loads the server; the CLI answering is not the server connecting")
+    else:
+        _check(results, OK, "server", f"last connected {last.get('ts', '?')} · agent {last.get('agent', '?')}"
+               + (f" · client {last['client']}" if last.get("client") else ""))
 
 
 def report(results) -> bool:
