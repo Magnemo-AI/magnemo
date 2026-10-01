@@ -94,10 +94,23 @@ def cmd_review(a):
         if n.supersedes:
             print(f"  supersedes: {n.supersedes}")
         preview = n.body[:400].replace("\n", "\n  ")
+        held = _held(n)
+        if held:                                       # P-39b · the CLI matches the pane: the flag is said before the text
+            sid = n.id[-8:]
+            print(f"  ⚠ {_held_word(n)} by Sentinel ({n.taint})")
+            if _held_word(n) == "HELD":
+                print("    A secret was removed before this could become memory. There is nothing to keep.")
+            else:
+                print("    The text below reads like an instruction to an agent. It is shown for you to read; nothing acts on it.")
+                preview = "│ " + n.body[:400].replace("\n", "\n  │ ")
+            print(f"    No yes until it is cleared: magnemo clear {sid} --reason \"…\"")
         print(f"  ---\n  {preview}{'…' if len(n.body) > 400 else ''}")
         while True:
             try:
-                ans = input("\n  [p]romote / [r]eject / [s]kip / [q]uit > ").strip().lower()
+                ans = input("\n  " + ("[r]eject / [s]kip / [q]uit > " if held else "[p]romote / [r]eject / [s]kip / [q]uit > ")).strip().lower()
+                if ans == "p" and held:
+                    print(f"  held by Sentinel — `magnemo clear {n.id[-8:]}` first")
+                    continue
                 who = (input("  your name: ").strip() or "founder") if ans in ("p", "r") else ""
                 why = (input("  reason (recorded — rejections teach): ").strip() or "no reason given") if ans == "r" else ""
             except EOFError:
@@ -105,14 +118,14 @@ def cmd_review(a):
                 return
             if ans == "p":
                 try:
-                    g.promote(n.id, who)
+                    g.promote(n.id, who, "approved in review", ran_by=_ran_by())
                 except ValueError as e:
                     print(f"  {e}")                # tainted or held: read it, clear it, then yes
                     break
                 print(f"  ✓ PROMOTED — canonical in {n.partition}/{n.store}")
                 break
             if ans == "r":
-                g.reject(n.id, who, why)
+                g.reject(n.id, who, why, ran_by=_ran_by())
                 print("  ✗ REJECTED — recorded to ledger")
                 break
             if ans == "s":
@@ -347,7 +360,7 @@ def cmd_inbox(a):
     drop BEFORE it becomes a memory: a hit is held in <dir>/blocked/, a Sentinel note
     is staged naming file + pattern (never the value), and the chest is blocked."""
     import hashlib, fnmatch, shutil
-    from . import chest
+    from . import chest, sentinel as _sentinel
     from .vault import Note, now_iso
     g = _gov(a.vault)
     v = g.vault
@@ -378,7 +391,7 @@ def cmd_inbox(a):
             os.makedirs(os.path.join(inbox, "blocked"), exist_ok=True)
             shutil.move(path, os.path.join(inbox, "blocked", fn))
             sid = v.new_id(f"sentinel held {fn}")
-            v.stage(Note(id=sid, title=f"Sentinel: '{fn}' held at the inbox door — secret-shaped text ({hits[0][1]})",
+            _sentinel.stage_alert(v, Note(id=sid, title=f"Sentinel: '{fn}' held at the inbox door — secret-shaped text ({hits[0][1]})",
                          author="sentinel", written=now_iso(), source=f"inbox:{fn} sha256:{sha} by {a.tag}",
                          status="staged", partition=route["partition"], store=route["store"], impact="security",
                          tags="sentinel-alert",
@@ -400,7 +413,7 @@ def cmd_inbox(a):
             if ikind == "injection":
                 taint = f"sentinel:injection:{ipat}"
                 aid = v.new_id(f"sentinel alert {fn}")
-                v.stage(Note(id=aid, title=f"Sentinel ALERT: '{fn}' carries an instruction-shaped line ({ipat})", author="sentinel",
+                _sentinel.stage_alert(v, Note(id=aid, title=f"Sentinel ALERT: '{fn}' carries an instruction-shaped line ({ipat})", author="sentinel",
                              written=now_iso(), source=f"inbox:{fn} sha256:{sha} by {a.tag}", status="staged",
                              partition=route["partition"], store=route["store"], impact="security", tags="sentinel-alert",
                              body=(f"The drop `{fn}` was staged TAINTED: it contains text shaped like an instruction to an agent "

@@ -223,11 +223,14 @@ class Governance:
         self.ledger.record("memory.promote", "approved", reviewer, note_id, reason,
                            **({"ran_by": ran_by} if ran_by else {}))
         self._render(note, reviewer)
-        # P-02: a promoted candidate is a verified success for its author in `stage`.
-        from . import trust
-        trust.record(self.vault, note.author, "stage", "success", by=reviewer,
-                     reason=f"promoted {note_id}" + (f": {reason}" if reason else ""),
-                     ref=note_id)
+        # P-02: a promoted candidate is a verified success for its author in `stage` — unless Sentinel caught it.
+        # A secret or an instruction-shaped line that a keyholder read, cleared and kept is a catch, not labor:
+        # the note is canon, and its author earns nothing for having staged it (P-39b).
+        if "\n> taint 'sentinel:" not in note.body:
+            from . import trust
+            trust.record(self.vault, note.author, "stage", "success", by=reviewer,
+                         reason=f"promoted {note_id}" + (f": {reason}" if reason else ""),
+                         ref=note_id)
         from . import chest
         chest.notify(self.vault, "promote")    # THE CHEST (#129): a canon change is a copy event
         return note

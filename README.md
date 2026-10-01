@@ -48,9 +48,11 @@ the rest is from each client's own docs and marked untested — corrections welc
 claude mcp add magnemo -e MAGNEMO_VAULT=/absolute/path/to/vault -- uvx magnemo-mcp
 ```
 (`claude mcp list` shows `magnemo … ✔ Connected`. Add `-s project` to write it into the repo's `.mcp.json` for your team.)
+Only have the desktop app? `claude` may not be a command in your shell. On a Mac the app keeps its own copy at
+`~/Library/Application Support/Claude/claude-code/<version>/claude.app/Contents/MacOS/claude`; run that in place of `claude`.
 
 **Claude Desktop** — tested. Download the extension from the latest release —
-[magnemo-0.6.6.mcpb](https://github.com/Magnemo-AI/magnemo/releases/latest) — and open it; Claude Desktop asks for the
+[magnemo-0.6.7.mcpb](https://github.com/Magnemo-AI/magnemo/releases/latest) — and open it; Claude Desktop asks for the
 vault folder and does the rest. (The connectors directory listing follows once it is accepted.)
 
 **Cursor** — untested here (not installed on this Mac); the link and the block follow Cursor's docs.

@@ -125,12 +125,14 @@ def apply(note: Note, canon_notes: list, cfg: dict) -> Note:
 
 
 def sorted_queue(notes: list, batch: int | None = None) -> list:
-    """Review-queue order: salience desc; unscored (salience < 0) last;
-    id as the deterministic tiebreak. Optional batch cap."""
+    """Review-queue order: Sentinel's alerts first (an alarm is read before the notes it is about); then salience
+    desc; unscored (salience < 0) last; id as the deterministic tiebreak. Optional batch cap."""
     ordered = sorted(notes, key=lambda n: (-n.salience, n.id))
-    scored = [n for n in ordered if n.salience >= 0]
-    unscored = sorted([n for n in ordered if n.salience < 0], key=lambda n: n.id)
-    out = scored + unscored
+    alerts = [n for n in ordered if n.author == "sentinel"]
+    rest = [n for n in ordered if n.author != "sentinel"]
+    scored = [n for n in rest if n.salience >= 0]
+    unscored = sorted([n for n in rest if n.salience < 0], key=lambda n: n.id)
+    out = alerts + scored + unscored
     if batch is not None and batch > 0:
         out = out[:batch]
     return out

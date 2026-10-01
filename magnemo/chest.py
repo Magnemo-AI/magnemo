@@ -585,7 +585,8 @@ def _stage_sentinel_note(root: str, label: str, hits: list) -> None:
     nid = f"{_now().strftime('%Y%m%d')}-sentinel-push-blocked-{hashlib.sha256(json.dumps(hits).encode()).hexdigest()[:8]}"
     if v.find(nid) is not None:
         return
-    v.stage(Note(id=nid, title=f"Sentinel: push to '{label}' blocked — secret-shaped text in {hits[0][0]}",
+    from . import sentinel as _sentinel
+    _sentinel.stage_alert(v, Note(id=nid, title=f"Sentinel: push to '{label}' blocked — secret-shaped text in {hits[0][0]}",
                  author="sentinel", written=_now_iso(), source="chest:sentinel", status="staged",
                  partition=v.default_target(("shared", "tickets"))[0], store=v.default_target(("shared", "tickets"))[1], impact="security",
                  body=(f"The chest refused to copy the vault to '{label}' because the files below contain text "

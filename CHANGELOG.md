@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.7 — THE POLISH, SECOND PASS
+- **`magnemo review` says HELD and TAINTED.** A note Sentinel is holding is labelled before its text, the text of a
+  flagged note is shown quoted, and there is no `[p]` for it: "held by Sentinel — `magnemo clear <id>` first". The
+  terminal now matches what `magnemo yes` already did in 0.6.6.
+- **A yes or a no from `review` is on the record like every other:** the ledger line carries `ran_by` and a reason.
+- **A note Sentinel caught earns its author no trust.** A secret or an instruction-shaped line that you read, cleared
+  and kept becomes canon; the `trust.event success` a promotion gives its author is not written for it.
+- **The ALERT is scored when it is staged and is read first.** No more "unscored — run: cli rescore"; Sentinel's
+  notices lead the review queue. The inbox door's and the chest's notices are scored too. It says "an MCP stage".
+- README: for a desktop-only Mac, where the app keeps its own `claude`.
+
 ## 0.6.6 — THE POLISH
 - **No traceback reaches a person.** `magnemo stage` with a store the partition does not have answers in one line naming
   the partition's stores (and checks before anything is written, Sentinel's notice included); an unknown partition names

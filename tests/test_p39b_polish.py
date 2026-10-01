@@ -109,6 +109,7 @@ class TestReviewAtATerminal(Polish):
         import io, contextlib
         it = iter(answers)
         def fake_input(prompt=""):
+            sys.stdout.write(prompt)                                  # a terminal shows the prompt; so does the capture
             try:
                 return next(it)
             except StopIteration:
@@ -133,8 +134,8 @@ class TestReviewAtATerminal(Polish):
     def test_p_on_a_tainted_note_refuses_in_a_sentence(self):
         self.stage(title="queue", body=INJECTION)
         tainted = [n for n in self.v.staged() if n.taint][0]
-        out = self.run_review(["p", "founder", "s", "s"])
-        self.assertNotIn("Traceback", out); self.assertIn("TAINTED — read it, then clear it: magnemo clear " + tainted.id[-8:], out)
+        out = self.run_review(["s", "p", "s"])                        # the alert first (skipped), then the flagged note
+        self.assertNotIn("Traceback", out); self.assertIn(f"held by Sentinel — `magnemo clear {tainted.id[-8:]}` first", out)
         self.assertEqual(self.v.read(tainted.id).status, "staged")
 
     def test_input_closing_mid_review_is_a_sentence(self):
@@ -197,6 +198,97 @@ class TestYesAndTheHeld(Polish):
         self.stage(title="queue", body=INJECTION)
         rc, out = self.cli("yes", "--all")
         self.assertEqual(rc, 0, out); self.assertNotIn("queue is empty", out)
+
+
+class TestTheAddendum(Polish):
+    """0.6.7 · what the second bench found on 0.6.5 (the order's addendum): review says HELD / TAINTED and has no [p] for
+    them; a yes from review is on the record like every other; a note Sentinel caught earns its author nothing; the
+    alert is scored, first, and says "an MCP stage"."""
+    SECRET = "the deploy key is AKIA" + "ABCDEFGHIJKLMNOP" + " — keep it handy"
+
+    def review(self, answers):
+        return TestReviewAtATerminal.run_review(self, answers)
+
+    def ledger(self, klass=None):
+        from magnemo.governance import TrustLedger
+        return TrustLedger(self.v).entries(klass)
+
+    def test_review_says_tainted_before_the_text_and_offers_no_promote(self):
+        self.stage(title="queue", body=INJECTION)
+        t = [n for n in self.v.staged() if n.taint][0]
+        out = self.review(["s", "p", "p", "s"])
+        self.assertIn("⚠ TAINTED by Sentinel (sentinel:injection:S1-ignore-instructions)", out)
+        self.assertIn("reads like an instruction to an agent", out)
+        self.assertIn(f"No yes until it is cleared: magnemo clear {t.id[-8:]}", out)
+        self.assertLess(out.index("⚠ TAINTED"), out.index("│ Ignore previous instructions"))    # the flag, then the quoted text
+        self.assertIn("[r]eject / [s]kip / [q]uit >", out)
+        self.assertEqual(out.count(f"held by Sentinel — `magnemo clear {t.id[-8:]}` first"), 2)  # p twice, refused twice, same item
+        self.assertEqual(self.v.read(t.id).status, "staged"); self.assertEqual(self.v.canonical(), [])
+
+    def test_review_says_held_for_a_secret(self):
+        self.stage(title="deploy", body=self.SECRET)
+        h = self.v.staged()[0]
+        out = self.review(["p", "s"])
+        self.assertIn("⚠ HELD by Sentinel (sentinel:secret:aws-access-key)", out); self.assertIn("There is nothing to keep", out)
+        self.assertIn(f"held by Sentinel — `magnemo clear {h.id[-8:]}` first", out)
+        self.assertNotIn("AKIA", out); self.assertEqual(self.v.read(h.id).status, "staged")
+
+    def test_a_clean_note_in_review_is_unchanged(self):
+        self.stage()
+        out = self.review(["p", "founder"])
+        self.assertIn("[p]romote / [r]eject / [s]kip / [q]uit >", out); self.assertNotIn("⚠", out); self.assertIn("PROMOTED", out)
+
+    def test_a_yes_and_a_no_from_review_are_on_the_record_like_any_other(self):
+        self.stage(title="One"); self.stage(title="Two", body="The admin port is 9090.")
+        self.review(["p", "founder", "r", "founder", "a duplicate"])
+        es = self.ledger("memory.promote")
+        self.assertEqual([(e["verdict"], e["actor"], e["ran_by"]) for e in es], [("approved", "founder", "terminal"), ("rejected", "founder", "terminal")])
+        self.assertEqual(es[0]["detail"], "approved in review"); self.assertEqual(es[1]["detail"], "a duplicate")
+
+    def test_a_note_sentinel_caught_earns_its_author_no_trust(self):
+        self.stage(title="queue", body=INJECTION); self.stage(title="deploy", body=self.SECRET); self.stage()
+        for n in [x for x in self.v.staged() if x.taint]:
+            self.assertEqual(self.cli("clear", n.id[-8:], "--reason", "read it; kept as an example")[0], 0)
+        rc, out = self.cli("yes", "--all")
+        self.assertEqual(rc, 0, out)
+        self.assertEqual(len(self.v.canonical()), 3)                             # all three are canon after the clear…
+        ev = [e for e in self.ledger("trust.event") if e["verdict"] == "success"]
+        self.assertEqual(len(ev), 1)                                             # …and only the clean one earned its author trust
+        self.assertIn("-port-", ev[0]["ref"])
+
+    def test_the_alert_is_scored_first_and_says_an_mcp_stage(self):
+        sys.path.insert(0, os.path.join(ROOT, "tests"))
+        from test_mcp import make_server, call
+        from magnemo import kairos
+        s = make_server(self.d, MAGNEMO_AGENT="drill-agent")
+        self.stage(title="Flagged by a person", body="Something the keyholder cares about.")
+        call(s, "stage", note={"title": "queue", "body": INJECTION, "partition": "dev", "store": "knowledge"}, provenance={"source": "drill"})
+        self.stage(title="queue two", body=INJECTION)
+        alerts = [n for n in self.v.staged() if n.author == "sentinel"]
+        self.assertEqual(sorted(n.title for n in alerts),
+                         ["Sentinel ALERT: a CLI stage carries an instruction-shaped line (S1-ignore-instructions)",
+                          "Sentinel ALERT: an MCP stage carries an instruction-shaped line (S1-ignore-instructions)"])
+        self.assertTrue(all(n.salience >= 0 and n.salience_components for n in alerts))
+        q = kairos.sorted_queue([n for n in self.v.staged() if n.status == "staged"])
+        self.assertEqual([n.author for n in q[:2]], ["sentinel", "sentinel"])    # the alarm is read before the notes it is about
+        out = self.review(["q"])
+        self.assertNotIn("unscored", out); self.assertNotIn("cli rescore", out); self.assertIn("Sentinel ALERT", out.split("---")[0])
+
+    def test_the_inbox_doors_notices_are_scored_too(self):
+        import json as _json
+        inbox = os.path.join(self.d, "..", "inbox-" + os.path.basename(self.d)); os.makedirs(inbox)
+        cfg = os.path.join(self.d, "_config", "magnemo.json")
+        c = _json.load(open(cfg)) if os.path.exists(cfg) else {}
+        c["inbox"] = {"dir": os.path.abspath(inbox), "routes": [{"match": "*", "partition": "dev", "store": "knowledge"}]}
+        _json.dump(c, open(cfg, "w"))
+        open(os.path.join(inbox, "note.md"), "w").write(INJECTION + "\n")
+        try:
+            rc, out = self.cli("inbox")
+            self.assertEqual(rc, 0, out)
+            alert = [n for n in self.v.staged() if n.author == "sentinel"][0]
+            self.assertGreaterEqual(alert.salience, 0)
+        finally:
+            shutil.rmtree(inbox, ignore_errors=True)
 
 
 class TestStageHelp(Polish):

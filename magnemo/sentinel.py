@@ -48,6 +48,22 @@ def sweep_text(text: str):
 REDACTED = "[REDACTED by Sentinel on stage: secret-shaped text, pattern {pat}. The value never became a memory.]"
 
 
+def stage_alert(vault, note) -> str:
+    """Stage one of Sentinel's own notices, scored like every staged note (so the queue never says "unscored")."""
+    from . import kairos
+    from .config import load_config
+    try:
+        kairos.apply(note, vault.canonical(note.partition), load_config(vault.root))
+    except (KeyError, ValueError):
+        pass
+    return vault.stage(note)
+
+
+def a_door(door: str) -> str:
+    """'an MCP stage', 'a CLI stage': the article follows how the door's name is said."""
+    return ("an " if door == "MCP" or door[:1].lower() in "aeiou" else "a ") + door
+
+
 def gate(vault, title: str, body: str, *, partition: str, store: str, source: str, door: str) -> dict:
     """The stage door's sweep (P-74). Returns {verdict: None|'held'|'tainted', pattern, title, body, taint, alert}.
     A secret: the value never lands — the body is the redaction line (and the title, if it carried the secret).
@@ -62,7 +78,7 @@ def gate(vault, title: str, body: str, *, partition: str, store: str, source: st
     from .vault import Note, now_iso
     taint = f"sentinel:injection:{pat}"
     aid = vault.new_id(f"sentinel alert {door} stage")
-    vault.stage(Note(id=aid, title=f"Sentinel ALERT: a {door} stage carries an instruction-shaped line ({pat})",
+    stage_alert(vault, Note(id=aid, title=f"Sentinel ALERT: {a_door(door)} stage carries an instruction-shaped line ({pat})",
                      author="sentinel", written=now_iso(), source=f"{door.lower()}-stage:{source}", status="staged",
                      partition=partition, store=store, impact="security", tags="sentinel-alert",
                      body=(f"A note staged through the {door} door carries text shaped like an instruction to an agent "
