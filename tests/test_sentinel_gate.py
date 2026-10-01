@@ -47,12 +47,13 @@ class TestTheMcpDoor(unittest.TestCase):
     def test_retrieve_withholds_a_tainted_note_until_a_keyholder_clears_it(self):
         g = Governance(self.v)
         r = json.loads(stage(self.s, "gateway port", "The gateway port is 8080. " + INJECTION)[0])
-        g.promote(r["staged"], "founder", "read it")
+        n = self.v.read(r["staged"]); n.status, n.reviewed_by = "canonical", "founder"; self.v._place_canonical(n)
+        # (promote now refuses a tainted note — P-74b; a canonical tainted note exists only from before 0.7.0)
         hits = json.loads(call(self.s, "retrieve", query="gateway port")[0])["results"]
         self.assertNotIn(r["staged"], [h["id"] for h in hits])
         self.assertIn("a tainted note, withheld", bootpack.generate(self.v))       # the wake withholds its line too
         e = dict(os.environ); e.pop("MAGNEMO_AGENT", None)
-        p = subprocess.run([sys.executable, "-m", "magnemo.cli", "clear", r["staged"], "--reason", "read it; a test phrase", self.d],
+        p = subprocess.run([sys.executable, "-m", "magnemo.cli", "clear", r["staged"][-8:], "--reason", "read it; a test phrase", self.d],
                            capture_output=True, text=True, cwd=ROOT, env=e)
         self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
         hits = json.loads(call(self.s, "retrieve", query="gateway port")[0])["results"]
@@ -108,6 +109,47 @@ class TestDoctor(unittest.TestCase):
             r = []; doctor.check_server(r, v); self.assertEqual(r[0]["level"], "ok"); self.assertIn("agent probe · client claude-code", r[0]["detail"])
         finally:
             shutil.rmtree(d)
+
+
+class TestOneVerbOneRule(unittest.TestCase):
+    """P-74b: the boardroom's drill as a test — secret · injection · clean staged at the MCP door → `yes --all` → the wake."""
+    def setUp(self):
+        self.d = tempfile.mkdtemp(); self.v = Vault(self.d); self.v.init()
+        self.s = make_server(self.d, MAGNEMO_AGENT="drill-agent")
+    def tearDown(self):
+        shutil.rmtree(self.d, ignore_errors=True)
+    def cli(self, *args):
+        e = dict(os.environ); e.pop("MAGNEMO_AGENT", None)
+        p = subprocess.run([sys.executable, "-m", "magnemo.cli", *args, self.d], capture_output=True, text=True, cwd=ROOT, env=e)
+        return p.returncode, p.stdout + p.stderr
+    def test_the_drill(self):
+        sec = json.loads(stage(self.s, "deploy", SECRET)[0]); inj = json.loads(stage(self.s, "queue", INJECTION)[0])
+        clean = json.loads(stage(self.s, "port", "The API gateway runs on port 8080.")[0])
+        alert = self.v.read(inj["sentinel"]["alert"])
+        self.assertEqual(alert.taint, ""); self.assertIn("sentinel-alert", alert.tags)                  # the alarm is never tainted
+        rc, out = self.cli("yes", "--all")
+        self.assertEqual(rc, 0, out); self.assertIn("2 skipped (tainted) — magnemo review shows them", out)
+        self.assertIn("1 skipped (Sentinel alert)", out)                                                 # P-39b: --all never promotes the alarm
+        canon = {n.id for n in self.v.canonical()}
+        self.assertEqual(canon, {clean["staged"]})
+        self.assertEqual(self.v.read(alert.id).status, "staged")
+        rc, out = self.cli("yes")                                                                        # nor does a bare yes: no id was named
+        self.assertEqual(rc, 0, out); self.assertNotIn("PROMOTED", out); self.assertIn("1 skipped (Sentinel alert)", out)
+        self.assertIn("Sentinel held 2 notes — magnemo review", bootpack.generate(self.v))
+        rc, out = self.cli("yes", alert.id[-8:])                                                         # named by a person, it is kept
+        self.assertEqual(rc, 0, out); self.assertIn("PROMOTED", out)
+        self.assertIn(alert.title, bootpack.generate(self.v))                                            # and then the alarm wakes, never withheld
+        rc, out = self.cli("yes", inj["staged"][-8:])
+        self.assertEqual(rc, 2); self.assertIn("TAINTED — read it, then clear it: magnemo clear", out)
+        rc, out = self.cli("yes", sec["staged"][-8:])
+        self.assertEqual(rc, 2); self.assertIn("HELD — read it, then clear it", out)
+    def test_show_clear_and_no_take_the_short_id(self):
+        inj = json.loads(stage(self.s, "queue", INJECTION)[0]); sid = inj["staged"][-8:]
+        rc, out = self.cli("show", sid); self.assertEqual(rc, 0, out); self.assertIn(inj["staged"], out)
+        rc, out = self.cli("clear", sid, "--reason", "read; a quoted example"); self.assertEqual(rc, 0, out)
+        rc, out = self.cli("yes", sid); self.assertEqual(rc, 0, out); self.assertIn("PROMOTED", out)       # read, cleared, kept
+        other = json.loads(stage(self.s, "another", "Plain note.")[0])
+        rc, out = self.cli("no", other["staged"][-8:], "--reason", "not needed"); self.assertEqual(rc, 0, out); self.assertIn("REJECTED", out)
 
 
 if __name__ == "__main__":

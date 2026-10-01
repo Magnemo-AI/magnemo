@@ -50,7 +50,7 @@ claude mcp add magnemo -e MAGNEMO_VAULT=/absolute/path/to/vault -- uvx magnemo-m
 (`claude mcp list` shows `magnemo … ✔ Connected`. Add `-s project` to write it into the repo's `.mcp.json` for your team.)
 
 **Claude Desktop** — tested. Download the extension from the latest release —
-[magnemo-0.6.4.post1.mcpb](https://github.com/Magnemo-AI/magnemo/releases/latest) — and open it; Claude Desktop asks for the
+[magnemo-0.6.6.mcpb](https://github.com/Magnemo-AI/magnemo/releases/latest) — and open it; Claude Desktop asks for the
 vault folder and does the rest. (The connectors directory listing follows once it is accepted.)
 
 **Cursor** — untested here (not installed on this Mac); the link and the block follow Cursor's docs.

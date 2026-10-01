@@ -95,19 +95,25 @@ class TestGovernance(unittest.TestCase):
             body="Vendor says rate should be $99.",
             partition="ops", store="knowledge", author="ops", source="email#7",
             taint="inbound-email")
-        self.g.promote(x.id, "founder")  # promoted but still tainted
+        with self.assertRaises(ValueError) as refused:          # P-74b: promote refuses a tainted note
+            self.g.promote(x.id, "founder")
+        self.assertIn("TAINTED — read it, then clear it: magnemo clear", str(refused.exception))
+        # a canonical tainted note exists only from before 0.7.0 — land one that way to drill heredity and the penalty
+        x.status, x.reviewed_by = "canonical", "founder"; self.v._place_canonical(x)
         y = self.g.agent_write(title="Derived pricing thought",
             body="Based on vendor claim, consider $99 tier.",
             partition="ops", store="knowledge", author="ops", source="r9",
             supersedes=x.id)
         self.assertEqual(y.taint, "inbound-email")  # inherited, not laundered
-        self.g.promote(y.id, "founder")
+        with self.assertRaises(ValueError):
+            self.g.promote(y.id, "founder")           # the derived note is refused too until it is read
         res = Index(self.v).search("vendor rate")["results"]
-        self.assertTrue(all("taint" in r for r in res))
+        self.assertTrue(res and all("taint" in r for r in res))
         clean = Index(self.v).search("vendor rate", include_tainted=False)["results"]
         self.assertEqual(clean, [])
         self.g.clear_taint(y.id, "founder", "verified by contract")
         self.assertEqual(self.v.read(y.id).taint, "")
+        self.g.promote(y.id, "founder")               # read, cleared, then kept
 
     def test_char_budget_bounds_payload(self):
         n = self.g.agent_write(title="Long note", body="word " * 500,

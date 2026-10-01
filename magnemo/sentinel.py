@@ -64,7 +64,7 @@ def gate(vault, title: str, body: str, *, partition: str, store: str, source: st
     aid = vault.new_id(f"sentinel alert {door} stage")
     vault.stage(Note(id=aid, title=f"Sentinel ALERT: a {door} stage carries an instruction-shaped line ({pat})",
                      author="sentinel", written=now_iso(), source=f"{door.lower()}-stage:{source}", status="staged",
-                     partition=partition, store=store, impact="security", taint=taint,
+                     partition=partition, store=store, impact="security", tags="sentinel-alert",
                      body=(f"A note staged through the {door} door carries text shaped like an instruction to an agent "
                            f"(pattern **{pat}**). It was staged TAINTED; nothing acts on it; `retrieve` will not serve it "
                            "to an agent. A keyholder reads it, then rejects it or clears the taint "

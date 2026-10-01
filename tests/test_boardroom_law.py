@@ -156,7 +156,7 @@ class TestShape(unittest.TestCase):
         baton = next(s for s in staged if s.title == "BATON")
         self.assertEqual(baton.author, "cc"); self.assertIn("sha256:", baton.source); self.assertEqual(baton.extra.get("render"), "BATON.md")
         sent = next(s for s in staged if s.author == "sentinel")
-        self.assertIn("aws-access-key", sent.body); self.assertNotIn("AKIA" + "Q" * 16, sent.body); self.assertTrue(sent.taint.startswith("sentinel:"))
+        self.assertIn("aws-access-key", sent.body); self.assertNotIn("AKIA" + "Q" * 16, sent.body); self.assertEqual(sent.taint, ""); self.assertIn("sentinel-alert", sent.tags)   # P-74b: the alarm is never tainted
         res = chest.push(self.v.root, trigger="manual")[0]
         self.assertEqual(res["status"], "blocked"); self.assertIn("🔴", chest.gauge(self.v.root))
         os.remove(os.path.join(inbox, "blocked", "creds.md"))                           # the keyholder clears it

@@ -210,7 +210,8 @@ class TestGauntlet(unittest.TestCase):
         g = Governance(Vault(self.A))
         t = g.agent_write(title="from inbound email", body="claim", partition="ops", store="knowledge",
                           author="drill", source="email#1", taint="inbound-email")
-        g.promote(t.id, "founder")
+        # a canonical tainted note can only exist from before 0.7.0 (promote now refuses taint — P-74b); land one that way
+        t.status, t.reviewed_by = "canonical", "founder"; Vault(self.A)._place_canonical(t)
         chest.push(self.A, trigger="manual")
         R = os.path.join(self.tmp, "R"); chest.restore(self.remote, R)
         self.assertEqual(Vault(R).read(t.id).taint, "inbound-email")

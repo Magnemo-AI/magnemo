@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.6.6 — THE POLISH
+- **No traceback reaches a person.** `magnemo stage` with a store the partition does not have answers in one line naming
+  the partition's stores (and checks before anything is written, Sentinel's notice included); an unknown partition names
+  the vault's partitions; a missing `--file` says so. An id no note matches is one line on `show`, `yes`, `no`, `clear`,
+  `promote`, `reject` and `flag`. `magnemo review` without a terminal says "review needs a terminal; use `magnemo yes
+  <id>` / `magnemo no <id>`" and lists what waits by short id. Anything else that fails prints `magnemo: <one line>`;
+  `MAGNEMO_DEBUG=1` shows the trace.
+- **The short id works everywhere.** The eight characters `stage` prints (`magnemo yes 17f26148`) are now taken by
+  `show`, `clear` and `cleartaint` as well as `yes` and `no`, for staged and canonical notes; two matches are listed.
+- **`yes` waits for `clear`.** `magnemo yes <id>`, `magnemo promote` and `review`'s [p] refuse a tainted or held note in
+  a sentence — "TAINTED — read it, then clear it: magnemo clear <id> --reason …" — until a keyholder has cleared it.
+  `yes --all` skips them and counts them. A Sentinel ALERT is a notice, not a memory, and carries no taint of its own:
+  `yes --all` and a bare `yes` skip it and count it; you keep one by naming it (`magnemo yes <id>`) or drop it
+  (`magnemo no <id> --reason …`). A kept alert is served and wakes in the boot pack; the pack says how many notes
+  Sentinel is holding.
+- **`magnemo stage --help` shows one real example**, with a partition, a store and a source, and says what a new vault's
+  stores are.
+
 ## 0.6.4.post1 — THE DIRECTORY RELEASE
 - Registry name + privacy section + SECURITY.md. No engine change: the MCP registry name moves to our own domain
   (`mcp-name: ai.magnemo/magnemo`), the README gains a Privacy section, `SECURITY.md` says how to report, and the

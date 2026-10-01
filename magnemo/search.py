@@ -87,7 +87,7 @@ class Index:
                 continue
             yield_ratio = (1.0 + n.yield_w) / (1.0 + n.yield_l)   # Telos multiplier
             taint_pen = 0.4 if n.taint else 1.0                    # tainted sinks
-            if n.taint and not include_tainted:
+            if n.taint and not include_tainted and n.author != "sentinel":     # P-74b: the alarm is never withheld
                 continue
             scored.append((base * max(n.strength, 0.05) * yield_ratio * taint_pen, n))
         scored.sort(key=lambda x: -x[0])

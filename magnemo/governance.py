@@ -202,6 +202,11 @@ class Governance:
         note = self.vault.read(note_id)
         if note.status != "staged":
             raise ValueError(f"{note_id} is not staged (status={note.status})")
+        if note.taint and note.author != "sentinel":
+            # P-74b · ONE VERB, ONE RULE: a held or tainted note is read and cleared before it can become canon.
+            # (A Sentinel note is the alarm itself — never tainted, never refused, never withheld.)
+            word = "HELD" if ("secret" in note.taint or note.taint.count(":") == 1) else "TAINTED"
+            raise ValueError(f"{word} — read it, then clear it: magnemo clear {note_id[-8:]} --reason \"…\"")
         note.status = "canonical"
         note.reviewed_by = reviewer
         note.reviewed_at = now_iso()

@@ -239,7 +239,7 @@ def generate(vault: Vault, cls: str = "worker", scope: str | None = None,
                     continue
                 L.append(f"### {p}/{s}")
                 for n in group:
-                    if n.taint:                       # P-74: a tainted note is not served to an agent's wake
+                    if n.taint and n.author != "sentinel":   # P-74: a tainted note is not served to an agent's wake
                         L.append(f"- *(a tainted note, withheld until a keyholder clears it)* (`{p}/{s}/{n.id}.md`)")
                         continue
                     L.append(f"- **{n.title}** — {_one_liner(n.body)} "
@@ -260,6 +260,9 @@ def generate(vault: Vault, cls: str = "worker", scope: str | None = None,
         L.append(f"- {n.title} ({n.status}, {n.partition}/{n.store}, `{n.id}`)")
     L.append("")
     L.append(f"Staged notes awaiting review: {len(staged)}")
+    held = [n for n in staged if n.taint and n.author != "sentinel"]
+    if held:                                              # P-74b: the alarm, one line, never withheld
+        L.append(f"Sentinel held {len(held)} note{'s' if len(held) != 1 else ''} — magnemo review")
     top = kairos.sorted_queue(staged, int(bp["top_staged"]))
     if top:
         L.append(f"Top {len(top)} by salience:")

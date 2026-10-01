@@ -80,6 +80,7 @@ class TestRun(unittest.TestCase):
         end = [e for e in R.entries(self.d) if e["kind"] == "RUN_END"][-1]
         self.assertTrue(end["exit_reason"].startswith("engine error:"))                    # never silent, always ledgered
 
+    @unittest.skipUnless(sys.platform == "darwin", "launchd is macOS-only; the rail row's plist path does not exist elsewhere")
     def test_unschedule_retires_the_rail_row(self):
         agents = os.path.join(self.d, "agents")
         out = R.schedule(self.d, "nightly", "0 2 * * *", install=False, agents_dir=agents)

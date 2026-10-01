@@ -77,6 +77,11 @@ def cmd_review(a):
     if not staged:
         print("Review queue is empty. Nothing awaits you.")
         return
+    if not sys.stdin.isatty():
+        print("review needs a terminal; use `magnemo yes <id>` / `magnemo no <id>`")
+        for n in kairos.sorted_queue(staged):
+            print(f"  {n.id[-8:]}  {n.title}" + ("  · " + _held_word(n) if _held(n) else ""))
+        sys.exit(2)
     batch = a.batch if a.batch is not None else int(cfg["review"]["batch"])
     queue = kairos.sorted_queue(staged, batch)
     print(f"\n  MAGNEMO REVIEW QUEUE — depth {len(staged)}, "
@@ -91,15 +96,22 @@ def cmd_review(a):
         preview = n.body[:400].replace("\n", "\n  ")
         print(f"  ---\n  {preview}{'…' if len(n.body) > 400 else ''}")
         while True:
-            ans = input("\n  [p]romote / [r]eject / [s]kip / [q]uit > ").strip().lower()
+            try:
+                ans = input("\n  [p]romote / [r]eject / [s]kip / [q]uit > ").strip().lower()
+                who = (input("  your name: ").strip() or "founder") if ans in ("p", "r") else ""
+                why = (input("  reason (recorded — rejections teach): ").strip() or "no reason given") if ans == "r" else ""
+            except EOFError:
+                print("\n  input closed — nothing more was changed.")
+                return
             if ans == "p":
-                who = input("  your name: ").strip() or "founder"
-                g.promote(n.id, who)
+                try:
+                    g.promote(n.id, who)
+                except ValueError as e:
+                    print(f"  {e}")                # tainted or held: read it, clear it, then yes
+                    break
                 print(f"  ✓ PROMOTED — canonical in {n.partition}/{n.store}")
                 break
             if ans == "r":
-                who = input("  your name: ").strip() or "founder"
-                why = input("  reason (recorded — rejections teach): ").strip() or "no reason given"
                 g.reject(n.id, who, why)
                 print("  ✗ REJECTED — recorded to ledger")
                 break
@@ -112,7 +124,7 @@ def cmd_review(a):
 
 def cmd_show(a):
     g = _gov(a.vault)
-    print(g.vault.read(a.note_id).to_markdown())
+    print(_find(g, a.note_id).to_markdown())       # an id, or a short id like `yes` takes
 
 
 def _queue(g):
@@ -131,6 +143,36 @@ def _pick(g, fragment):
             print(f"  {n.id}  {n.title}")
         sys.exit(2)
     return hits[0]
+
+def _find(g, fragment):
+    """Any note — staged or canonical — by its id or a fragment of it, like `yes` takes; two matches = refuse and list."""
+    nid = fragment
+    if g.vault.find(nid):
+        return g.vault.read(nid)
+    hits = [n for n in (g.vault.staged() + g.vault.canonical()) if nid in n.id]
+    if not hits:
+        print(f"no note matches {fragment!r}")
+        sys.exit(2)
+    if len(hits) > 1:
+        print(f"{len(hits)} notes match {fragment!r} — say which:")
+        for n in hits:
+            print(f"  {n.id}  {n.title}")
+        sys.exit(2)
+    return hits[0]
+
+
+def _held(n):
+    return bool(n.taint) and n.author != "sentinel"
+
+
+def _held_word(n):
+    return "HELD" if "secret" in (n.taint or "") else "TAINTED"
+
+
+def _alert(n):
+    """A Sentinel notice in the queue: it says what Sentinel saw. A person reads it; `--all` never promotes it."""
+    return n.author == "sentinel"
+
 
 def _by_default(g, by):
     """`--by` defaults to the first keyholder in trust.humans: the yes is the keyholder's."""
@@ -154,22 +196,34 @@ def cmd_yes(a):
     by = _by_default(g, a.by)
     reason = a.reason or "approved in chat"
     ran_by = _ran_by()
+    skipped, alerts = [], []
     if a.all:
-        targets = _queue(g)
+        q = _queue(g)
+        skipped = [n for n in q if _held(n)]
+        alerts = [n for n in q if _alert(n)]
+        targets = [n for n in q if not _held(n) and not _alert(n)]
     elif a.fragment:
         targets = [_pick(g, a.fragment)]
     else:
-        q = _queue(g)
-        if not q:
-            print("Review queue is empty. Nothing awaits you.")
-            return
-        targets = [q[0]]
-    if not targets:
-        print("Review queue is empty. Nothing awaits you.")
-        return
+        q = _queue(g)                               # no id named: the top note that is neither held nor a notice
+        skipped = [n for n in q if _held(n)]
+        alerts = [n for n in q if _alert(n)]
+        targets = [n for n in q if not _held(n) and not _alert(n)][:1]
     for n in targets:
-        g.promote(n.id, by, reason, ran_by=ran_by)
+        try:
+            g.promote(n.id, by, reason, ran_by=ran_by)
+        except ValueError as e:                    # tainted or held: the yes waits for `magnemo clear`
+            print(str(e))
+            sys.exit(2)
         print(f"✓ PROMOTED {n.id} — canonical in {n.partition}/{n.store} · by {by} · ran_by {ran_by}")
+    if skipped:
+        print(f"{len(skipped)} skipped (tainted) — magnemo review shows them; read one, then: magnemo clear <id> --reason \"…\"")
+    if alerts:
+        print(f"{len(alerts)} skipped (Sentinel alert) — a notice, not a memory; read it, then: magnemo no <id> --reason \"…\" "
+              f"(or magnemo yes <id> to keep it)")
+    if not targets and not skipped and not alerts:
+        print("Review queue is empty. Nothing awaits you.")
+
 
 def cmd_no(a):
     """`no <fragment> --reason TXT`: rejects one staged note. The reason stays required — rejections teach."""
@@ -179,6 +233,7 @@ def cmd_no(a):
     ran_by = _ran_by()
     g.reject(n.id, by, a.reason, ran_by=ran_by)
     print(f"✗ REJECTED {n.id} — recorded to ledger · by {by} · ran_by {ran_by}")
+
 
 def cmd_promote(a):
     g = _gov(a.vault)
@@ -227,8 +282,18 @@ def cmd_stage(a):
     from . import foresight
     from .mcp import nearest_duplicate
     g = _gov(a.vault)
+    v = g.vault
+    if a.partition not in v.partitions:
+        print(f"stage: this vault has no partition {a.partition!r} — it has: {', '.join(v.partitions)}")
+        sys.exit(2)
+    if a.store not in v.stores[a.partition]:
+        print(f"stage: partition {a.partition!r} has no store {a.store!r} — its stores: {', '.join(v.stores[a.partition])}")
+        sys.exit(2)
     body = a.body
     if a.file:
+        if not os.path.isfile(a.file):
+            print(f"stage: no file at {a.file}")
+            sys.exit(2)
         with open(a.file, encoding="utf-8") as f:
             body = f.read()
     elif body is None and not sys.stdin.isatty():
@@ -316,7 +381,7 @@ def cmd_inbox(a):
             v.stage(Note(id=sid, title=f"Sentinel: '{fn}' held at the inbox door — secret-shaped text ({hits[0][1]})",
                          author="sentinel", written=now_iso(), source=f"inbox:{fn} sha256:{sha} by {a.tag}",
                          status="staged", partition=route["partition"], store=route["store"], impact="security",
-                         taint=f"sentinel:{hits[0][1]}",
+                         tags="sentinel-alert",
                          body=(f"The drop `{fn}` was NOT staged: it contains text shaped like a secret "
                                f"(pattern: **{hits[0][1]}**). The value is deliberately not recorded here. "
                                "It is held in the inbox's blocked/ folder; the chest will not conduct a copy "
@@ -337,7 +402,7 @@ def cmd_inbox(a):
                 aid = v.new_id(f"sentinel alert {fn}")
                 v.stage(Note(id=aid, title=f"Sentinel ALERT: '{fn}' carries an instruction-shaped line ({ipat})", author="sentinel",
                              written=now_iso(), source=f"inbox:{fn} sha256:{sha} by {a.tag}", status="staged",
-                             partition=route["partition"], store=route["store"], impact="security", taint=taint,
+                             partition=route["partition"], store=route["store"], impact="security", tags="sentinel-alert",
                              body=(f"The drop `{fn}` was staged TAINTED: it contains text shaped like an instruction to an agent "
                                    f"(pattern **{ipat}**). Nothing acts on it; taint travels with anything derived from it; a keyholder clears it.")))
         except UnicodeDecodeError:
@@ -637,7 +702,7 @@ def cmd_clear(a):
 
 def cmd_cleartaint(a):
     g = _gov(a.vault)
-    n = g.clear_taint(a.note_id, a.by, a.reason)
+    n = g.clear_taint(_find(g, a.note_id).id, a.by, a.reason)
     print(f"taint cleared on {n.id} — lineage trusted again")
 
 
@@ -730,6 +795,29 @@ def cmd_ledger(a):
     print(f"\nmemory.promote pass-rate: {rate:.0%} over {n} decision(s)")
 
 
+STAGE_EXAMPLE = """example (a new vault has dev, ops and shared; ops holds knowledge, playbooks, clients, decisions, style):
+  magnemo stage "Invoices go out on the 1st" \\
+      --body "We bill every client on the first business day of the month." \\
+      --partition ops --store knowledge --source "the founder, at the terminal"
+
+it lands in _staging/ and waits; nothing is canon until: magnemo yes <id>
+"""
+
+
+def _one_line(e):
+    """What a person reads when a verb fails: one line, never a traceback (MAGNEMO_DEBUG=1 shows the trace)."""
+    if isinstance(e, FileNotFoundError):
+        return f"no such file: {e.filename}" if e.filename else str(e)
+    if isinstance(e, PermissionError):
+        return f"not allowed to read or write: {e.filename}" if e.filename else str(e)
+    if isinstance(e, EOFError):
+        return "this needs a terminal to answer at; nothing was changed"
+    if isinstance(e, KeyError):
+        return f"not found: {e.args[0] if e.args else ''}".strip()
+    msg = " ".join(str(e).split()) or type(e).__name__
+    return msg if isinstance(e, (ValueError, OSError)) else f"{type(e).__name__}: {msg}"
+
+
 def main():
     p = argparse.ArgumentParser(prog="magnemo")
     from . import __version__
@@ -761,7 +849,7 @@ def main():
     s = sub.add_parser("gates");   s.add_argument("--as-of", dest="as_of", default=""); s.add_argument("--json", action="store_true"); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_gates)
     s = sub.add_parser("ledger");  s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_ledger)
     s = sub.add_parser("costs");   s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_costs)
-    s = sub.add_parser("stage");   s.add_argument("title"); s.add_argument("--body", default=None, help="note body (or --file, or pipe via stdin)"); s.add_argument("--file", default=None, help="read the body from this file"); s.add_argument("--partition", required=True, help="a partition this vault declares"); s.add_argument("--store", required=True); s.add_argument("--source", required=True, help="provenance: run id / audit id / where this came from (mandatory)"); s.add_argument("--author", default="", help="default: $MAGNEMO_AGENT, else 'founder'"); s.add_argument("--tags", default=""); s.add_argument("--impact", choices=["security", "money", "correctness", "process", "info"], default="info"); s.add_argument("--supersedes", default=""); s.add_argument("--taint", default="", help="REQUIRED labelling when content came from an untrusted source"); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_stage)
+    s = sub.add_parser("stage", formatter_class=argparse.RawDescriptionHelpFormatter, epilog=STAGE_EXAMPLE);   s.add_argument("title"); s.add_argument("--body", default=None, help="note body (or --file, or pipe via stdin)"); s.add_argument("--file", default=None, help="read the body from this file"); s.add_argument("--partition", required=True, help="a partition this vault declares"); s.add_argument("--store", required=True, help="a store inside that partition (a wrong one is refused with the valid ones named)"); s.add_argument("--source", required=True, help="provenance: run id / audit id / where this came from (mandatory)"); s.add_argument("--author", default="", help="default: $MAGNEMO_AGENT, else 'founder'"); s.add_argument("--tags", default=""); s.add_argument("--impact", choices=["security", "money", "correctness", "process", "info"], default="info"); s.add_argument("--supersedes", default=""); s.add_argument("--taint", default="", help="REQUIRED labelling when content came from an untrusted source"); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_stage)
     s = sub.add_parser("inbox");   s.add_argument("--dir", default="", help="the drop folder (default: config inbox.dir)"); s.add_argument("--as", dest="tag", default=None, help="author tag: boardroom-session | founder | cc (default: $MAGNEMO_AGENT)"); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_inbox)
     s = sub.add_parser("guard");   s.add_argument("--off", action="store_true", help="lower the wall (keyholder verb, ledgered)"); s.add_argument("--status", action="store_true"); s.add_argument("--reason", default=""); s.add_argument("--by", default=""); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_guard)
     s = sub.add_parser("restore"); s.add_argument("target", help="a render path (relative to the render root) or a note id"); s.add_argument("--to", default="latest", help="archived version (ts prefix or sha12); default latest"); s.add_argument("--versions", action="store_true", help="list archived versions"); s.add_argument("--by", default=""); s.add_argument("vault", nargs="?", default=DEF); s.set_defaults(f=cmd_restore)
@@ -798,7 +886,18 @@ def main():
             a.vault = extra[0]
         else:
             p.error("unrecognized arguments: " + " ".join(extra))
-    a.f(a)
+    try:
+        a.f(a)
+    except KeyboardInterrupt:
+        print(file=sys.stderr)
+        sys.exit(130)
+    except BrokenPipeError:
+        sys.exit(0)
+    except Exception as e:                         # P-39b: no traceback ever reaches a person
+        if os.environ.get("MAGNEMO_DEBUG"):
+            raise
+        print(f"magnemo: {_one_line(e)}", file=sys.stderr)
+        sys.exit(2)
 
 
 if __name__ == "__main__":
