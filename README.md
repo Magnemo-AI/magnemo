@@ -189,12 +189,8 @@ Every note is markdown with provenance frontmatter (author, written, source,
 status, reviewed_by, supersedes, strength). **Provenance is the file format.**
 
 ## Privacy
-Magnemo runs on your machine and nowhere else. The vault is a folder of plain markdown
-files you own and can read in any editor. The engine makes zero network calls — `magnemo
-doctor` proves it on every run — so nothing you or your agent writes leaves the computer.
-There is no telemetry, no account, no phone-home; the only copies of your memory are the
-ones you make yourself (`magnemo chest`), to places you own. The full page:
-https://magnemo.ai/privacy
+Your memory lives on your computer, in plain files you can open. The engine makes no network calls, and
+`magnemo doctor` checks that every time it runs. The full page: https://magnemo.ai/privacy
 
 ## Guarantees (Phase 1 — Governed Recall)
 - Agent writes NEVER reach canonical stores directly — staging only, always.

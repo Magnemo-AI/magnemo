@@ -30,12 +30,9 @@ of them is a roadmap item, not a surprise we hope you won't find.
   frontmatter, so your data is never trapped — but tooling-level migrations
   between beta versions may be needed. Breaking changes will be listed in the
   CHANGELOG with migration notes.
-- **Python 3.10+ required.** Zero runtime dependencies, standard library
+- **Python 3.11+ required.** Zero runtime dependencies, standard library
   only. Primary development and dogfood happen on macOS/Linux; Windows path
   handling is untested territory this release.
-- **Source opens at launch.** The package is real and complete; the
-  repository is private until the 1.0 launch. Every release is
-  `twine check`-ed and audited for secrets before upload.
 
 Found an edge not on this list? That is exactly the kind of receipt we want —
 the beta channel at [magnemo.ai](https://magnemo.ai).
