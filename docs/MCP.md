@@ -11,8 +11,9 @@ bootpack(scope?, class?)               read   → bootpack.generate
 handoff(usage, trigger, cut?)          write* → handoff.record           (* telemetry + staged note)
 ```
 
-**Promotion is not a tool** — it is your act, always. Nothing an agent can call moves a
-note into canon. That asymmetry is the protocol. There is no shell, eval, or
+**Promotion is not a tool.** Nothing an agent can call through this server moves a
+note into canon. That asymmetry is the protocol. (The CLI is a separate door: see
+`KNOWN_LIMITS.md` on `magnemo yes`.) There is no shell, eval, or
 file tool — least privilege is the surface itself.
 
 ---
@@ -164,7 +165,7 @@ memory becomes canon without passing the staging gate.
 behind a gateway that sets those per connection. Scope walls give a dev agent
 dev, an ops agent ops, and the `shared/` bus to both; receipts, cost events, and
 handoff telemetry stay attributable per agent. Promotion still happens in one
-place: the founder's CLI.
+place: the CLI.
 
-In every posture the same two things are true: **agents can only stage**, and
-**keyholders alone promote**.
+In every posture the same two things are true of this server: **agents can only stage**, and
+**promotion is not one of its tools**.

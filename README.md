@@ -3,10 +3,12 @@
 **Tools gave your agent hands. MCP gave it a nervous system. Magnemo gives it a brain.**
 
 Governed memory for AI agents. Every entry with a receipt. Your agent writes the
-draft; nothing is kept until you say yes.
+draft; promotion is a separate step, and it is not an MCP tool.
+
+[![tests](https://github.com/Magnemo-AI/magnemo/actions/workflows/test.yml/badge.svg)](https://github.com/Magnemo-AI/magnemo/actions/workflows/test.yml)
 
 ## The one paste
-Open your AI (Claude Code, Cursor, Windsurf, or anything that speaks MCP) in any of your project folders, and paste this:
+Open Claude Code in any of your project folders, and paste this. (Its `magnemo mount` step writes `.mcp.json`, the file Claude Code reads. In Cursor, Windsurf or another client, use the block for your client under "Install in your client".)
 
 ```text
 Set up Magnemo in this project:
@@ -24,9 +26,9 @@ You'll know it worked — your AI will tell you who it is now.
 **For builders.** Magnemo is an MCP server with four tools — `retrieve`, `stage`,
 `bootpack`, `handoff` — and a CLI for your side: review, promote, reject.
 It runs on your machine, in plain markdown files you own, with zero network calls
-(the `doctor` line proves it). Every promotion is a person's click, recorded with
-who wrote the entry, when, and through which gate — memory with a witness. Trust is
-computed from that record, never asserted. It mounts beside any memory you already
+(`magnemo doctor` checks it on every run). Every promotion is recorded with who wrote
+the entry, who promoted it, when, and through which gate. Trust is computed from that
+record, never asserted. It mounts beside any memory you already
 run (a folder of notes, Obsidian, a RAG stack). Python 3.11+, zero dependencies,
 Apache-2.0.
 
@@ -43,7 +45,8 @@ One server, said ten ways. Every block below is the same thing: `uvx magnemo-mcp
 the folder your memory lives in (make one with `magnemo init ./vault`). Tested on this Mac where it says so;
 the rest is from each client's own docs and marked untested — corrections welcome, open an issue.
 
-**Claude Code** — tested.
+**Claude Code** — tested: a Claude Code session mounts the server, lists the four tools and calls them (last run
+Oct 4, 2026: Claude Code 2.1.289, `magnemo-mcp` 0.6.7).
 ```bash
 claude mcp add magnemo -e MAGNEMO_VAULT=/absolute/path/to/vault -- uvx magnemo-mcp
 ```
@@ -51,7 +54,7 @@ claude mcp add magnemo -e MAGNEMO_VAULT=/absolute/path/to/vault -- uvx magnemo-m
 Only have the desktop app? `claude` may not be a command in your shell. On a Mac the app keeps its own copy at
 `~/Library/Application Support/Claude/claude-code/<version>/claude.app/Contents/MacOS/claude`; run that in place of `claude`.
 
-**Claude Desktop** — tested. Download the extension from the latest release —
+**Claude Desktop** — untested end to end here. Download the extension from the latest release —
 [magnemo-0.6.7.mcpb](https://github.com/Magnemo-AI/magnemo/releases/latest) — and open it; Claude Desktop asks for the
 vault folder and does the rest. (The connectors directory listing follows once it is accepted.)
 
@@ -163,12 +166,13 @@ env = { MAGNEMO_VAULT = "/absolute/path/to/vault" }
 magnemo yes             # promote the top of the queue (yes <id-fragment> · yes --all)
 magnemo no <id> --reason "…"   # reject one — the reason is required; rejections teach
 magnemo review          # the interactive queue, when you want to read first
-magnemo doctor          # python, vault, config, ledger, and the mount — proves the zero-network line too
+magnemo doctor          # python, vault, config, ledger, and the mount — checks the zero-network line too
 ```
 Anything that speaks MCP over stdio mounts the same way. The remote door (ChatGPT and hosted clients) is on its way in 0.7.0.
 
 ## Agents draft, people keep — the one rule
 Agents get four MCP tools. Promotion is not one of them.
+The CLI is the other door, and `magnemo yes` does not yet check who runs it: read [KNOWN_LIMITS.md](KNOWN_LIMITS.md) first.
 
 | Actor  | Door                | Can do |
 |--------|---------------------|--------|
@@ -193,8 +197,8 @@ Your memory lives on your computer, in plain files you can open. The engine make
 `magnemo doctor` checks that every time it runs. The full page: https://magnemo.ai/privacy
 
 ## Guarantees (Phase 1 — Governed Recall)
-- Agent writes NEVER reach canonical stores directly — staging only, always.
-- Search returns canonical (keyholder-approved) notes only. Staged claims are invisible.
+- Through the MCP server, agent writes NEVER reach canonical stores directly — staging only, always.
+- Search returns canonical (promoted) notes only. Staged notes are not searched; the boot pack lists the titles of the top staged notes, as staged.
 - Partition walls enforced per agent (`MAGNEMO_PARTITIONS`); cross-partition = DENIED.
 - Supersession is explicit: old notes archive with a forward link. Nothing deletes.
 - Rejections are kept and recorded — rejections teach.
@@ -205,6 +209,7 @@ Your memory lives on your computer, in plain files you can open. The engine make
 python -m unittest discover -s tests -v     # incl. full MCP round-trips (legacy + four-verb)
 # or: pip install -e ".[test]" && pytest
 ```
+The same suite runs on every push, on Python 3.9, 3.11 and 3.12: [the runs](https://github.com/Magnemo-AI/magnemo/actions/workflows/test.yml).
 
 ## Everything that shipped
 Release by release, with the design notes that used to live here: [CHANGELOG.md](CHANGELOG.md).

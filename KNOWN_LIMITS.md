@@ -1,11 +1,19 @@
 # KNOWN LIMITS — open beta (0.6.x)
 
 Honesty is the product. These are the current edges, stated plainly. Every one
-of them is a roadmap item, not a surprise we hope you won't find.
+of them is a roadmap item, not a surprise left for you to find.
 
-- **Beta software.** The engine runs our own company daily (we are customer
-  zero), but you are early. Expect rough edges in exactly the places this
-  file names.
+- **The yes is not checked yet.** Promotion is not an MCP tool, and that is
+  the wall today. `magnemo yes` itself takes no credential: anything that can
+  run a command in your shell, your agent included if you gave it one, can
+  promote a note, and the ledger records the name it was given. A keyholder
+  check on the CLI is the next engine work.
+- **Beta software.** The engine runs its maker's company daily, but you are
+  early. Expect rough edges in exactly the places this file names.
+- **One client is tested.** Claude Code. Every other client's block in the
+  README is written from that client's own docs and marked untested.
+  `magnemo mount` writes `.mcp.json`, the file Claude Code reads; other
+  clients take their config by hand.
 - **Local and single-machine.** The vault is plain markdown on one disk.
   Multi-machine continuity works the way git works — you sync the vault
   yourself (git is the tested path). There is no hosted sync service.
@@ -34,5 +42,5 @@ of them is a roadmap item, not a surprise we hope you won't find.
   only. Primary development and dogfood happen on macOS/Linux; Windows path
   handling is untested territory this release.
 
-Found an edge not on this list? That is exactly the kind of receipt we want —
+Found an edge not on this list? That is exactly the kind of receipt wanted here —
 the beta channel at [magnemo.ai](https://magnemo.ai).

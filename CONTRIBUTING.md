@@ -6,7 +6,7 @@ enforces: every change has provenance, every ruling has a story.
 ## The short version
 1. Open an issue before a large change; small fixes can go straight to a PR.
 2. Zero dependencies is a feature, not an accident. PRs that add a runtime
-   dependency will be declined; pure Python 3.10+ stdlib only.
+   dependency will be declined; pure Python 3.11+ stdlib only.
 3. Every PR must pass the suite: `python3 -m unittest discover -s tests`.
 4. Sign your work (DCO — see below).
 
