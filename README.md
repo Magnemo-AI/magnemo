@@ -25,9 +25,10 @@ You'll know it worked — your AI will tell you who it is now.
 
 **For builders.** Magnemo is an MCP server with four tools — `retrieve`, `stage`,
 `bootpack`, `handoff` — and a CLI for your side: review, promote, reject.
-It runs on your machine, in plain markdown files you own, with zero network calls
-(`magnemo doctor` checks it on every run). Every promotion is recorded with who wrote
-the entry, who promoted it, when, and through which gate. Trust is computed from that
+It runs on your machine, in plain markdown files you own. The package imports no network
+module (`magnemo doctor` scans for one on every run); the only traffic is `git push` to a
+backup destination, if you add one. Every promotion is recorded with who wrote the entry,
+the name given for the yes, when, and through which gate. Trust is computed from that
 record, never asserted. It mounts beside any memory you already
 run (a folder of notes, Obsidian, a RAG stack). Python 3.11+, zero dependencies,
 Apache-2.0.
@@ -166,7 +167,7 @@ env = { MAGNEMO_VAULT = "/absolute/path/to/vault" }
 magnemo yes             # promote the top of the queue (yes <id-fragment> · yes --all)
 magnemo no <id> --reason "…"   # reject one — the reason is required; rejections teach
 magnemo review          # the interactive queue, when you want to read first
-magnemo doctor          # python, vault, config, ledger, and the mount — checks the zero-network line too
+magnemo doctor          # python, vault, config, ledger, and the mount — scans the package for network modules too
 ```
 Anything that speaks MCP over stdio mounts the same way. The remote door (ChatGPT and hosted clients) is on its way in 0.7.0.
 
@@ -193,12 +194,12 @@ Every note is markdown with provenance frontmatter (author, written, source,
 status, reviewed_by, supersedes, strength). **Provenance is the file format.**
 
 ## Privacy
-Your memory lives on your computer, in plain files you can open. The engine makes no network calls, and
-`magnemo doctor` checks that every time it runs. The full page: https://magnemo.ai/privacy
+Your memory lives on your computer, in plain files you can open. The package imports no network module, and
+`magnemo doctor` scans for one every time it runs. If you add a backup destination, the engine runs `git push` to it. The full page: https://magnemo.ai/privacy
 
 ## Guarantees (Phase 1 — Governed Recall)
 - Through the MCP server, agent writes NEVER reach canonical stores directly — staging only, always.
-- Search returns canonical (promoted) notes only. Staged notes are not searched; the boot pack lists the titles of the top staged notes, as staged.
+- Search returns canonical (promoted) notes only. Staged notes are not searched. The boot pack shows staged material marked as staged: the titles of open threads and of the top staged notes, and the last handoff's cut line with a pointer to its note.
 - Partition walls enforced per agent (`MAGNEMO_PARTITIONS`); cross-partition = DENIED.
 - Supersession is explicit: old notes archive with a forward link. Nothing deletes.
 - Rejections are kept and recorded — rejections teach.

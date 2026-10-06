@@ -26,7 +26,8 @@ class TestTheYesIsSaidAsItIs(unittest.TestCase):
         for name in PAGES + ("llms-install.md",):
             text = " ".join(read(ROOT, name).lower().split())
             for claim in ("until you say yes", "is a person's click", "it is your act, always", "keyholders alone promote",
-                          "nothing is kept until they approve", "waits in a review queue for your yes"):
+                          "nothing is kept until they approve", "waits in a review queue for your yes",
+                          "invisible until you promote", "only on your yes", "who promoted it", "zero network calls"):
                 self.assertNotIn(claim, text, f"{name}: {claim}")
 
     def test_the_limit_is_written_down_where_the_limits_are(self):
@@ -36,6 +37,14 @@ class TestTheYesIsSaidAsItIs(unittest.TestCase):
         self.assertIn("Promotion is not an MCP tool", limits)
         self.assertIn("KNOWN_LIMITS.md", read(ROOT, "README.md").split("Agents get four MCP tools. Promotion is not one of them.")[1][:400])
         self.assertIn("An agent that has a shell running `magnemo yes` itself", read(ROOT, "SECURITY.md"))
+        self.assertIn("or the first keyholder's name when none is given", limits)
+
+    def test_the_network_sentence_says_what_doctor_checks_and_names_the_push(self):
+        readme = " ".join(read(ROOT, "README.md").split())
+        self.assertIn("The package imports no network module", readme)
+        self.assertIn("the only traffic is `git push` to a backup destination, if you add one", readme)
+        self.assertIn("def network_surface", read(ROOT, "magnemo", "doctor.py"))     # the scan the sentence names
+        self.assertIn("def _git_push", read(ROOT, "magnemo", "chest.py"))            # and the push it admits
 
     def test_what_the_mcp_door_does_prove_is_still_said(self):
         self.assertIn("Agents get four MCP tools. Promotion is not one of them.", read(ROOT, "README.md"))
@@ -47,7 +56,7 @@ class TestOneTruthInEveryPlace(unittest.TestCase):
     def test_one_python_number(self):
         floor = re.search(r'requires-python\s*=\s*">=(\d+\.\d+)"', read(ROOT, "pyproject.toml")).group(1)
         for name in ("README.md", "CONTRIBUTING.md", "KNOWN_LIMITS.md", "llms-install.md", os.path.join("docs", "MCP.md")):
-            said = set(re.findall(r"Python\s*(?:≥\s*)?(\d\.\d+)\s*(?:\+|or newer)?", read(ROOT, name)))
+            said = set(re.findall(r"[Pp]ython\s*(?:>=|≥)?\s*(\d\.\d+)", read(ROOT, name)))
             said -= {"3.9", "3.12"} if name == "README.md" else set()          # the README also names the CI's three Pythons
             self.assertLessEqual(said, {floor}, f"{name} names Python {sorted(said)}; pyproject says {floor}")
 

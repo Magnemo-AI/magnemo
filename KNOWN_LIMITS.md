@@ -6,7 +6,8 @@ of them is a roadmap item, not a surprise left for you to find.
 - **The yes is not checked yet.** Promotion is not an MCP tool, and that is
   the wall today. `magnemo yes` itself takes no credential: anything that can
   run a command in your shell, your agent included if you gave it one, can
-  promote a note, and the ledger records the name it was given. A keyholder
+  promote a note, and the ledger records the name it was given, or the first
+  keyholder's name when none is given. A keyholder
   check on the CLI is the next engine work.
 - **Beta software.** The engine runs its maker's company daily, but you are
   early. Expect rough edges in exactly the places this file names.

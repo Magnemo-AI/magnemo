@@ -1,6 +1,6 @@
 # Installing Magnemo (for an agent doing the install)
 
-Magnemo is an MCP server for memory. It runs on this machine only, with zero network calls, and keeps memory as plain
+Magnemo is an MCP server for memory. It runs on this machine, imports no network module, and keeps memory as plain
 markdown files in a folder the user owns. Needs Python 3.11 or newer.
 
 1. Install the engine: `pip install magnemo` (or `uv tool install magnemo` if pip cannot find it). This gives the

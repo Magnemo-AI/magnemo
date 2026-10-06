@@ -46,7 +46,7 @@ Diagnostics go to stderr; stdout is pure JSON-RPC.
 ## The tools
 
 ### `retrieve(query, scope?, budget?, k?)`
-Canonical memory only — staged notes are invisible until you promote them.
+Canonical memory only: `retrieve` does not search staged notes.
 Returns a JSON payload, never a raw dump:
 
 ```json
