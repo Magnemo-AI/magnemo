@@ -2,8 +2,7 @@
 
 **Tools gave your agent hands. MCP gave it a nervous system. Magnemo gives it a brain.**
 
-Governed memory for AI agents. Every entry with a receipt. Your agent writes the
-draft; promotion is a separate step, and it is not an MCP tool.
+Magnemo is a memory for your AI, kept on your computer in plain files. Your AI writes down what it learns as it works; nothing becomes memory until you approve it, and every memory shows who wrote it and who approved it.
 
 [![tests](https://github.com/Magnemo-AI/magnemo/actions/workflows/test.yml/badge.svg)](https://github.com/Magnemo-AI/magnemo/actions/workflows/test.yml)
 
@@ -194,8 +193,8 @@ Every note is markdown with provenance frontmatter (author, written, source,
 status, reviewed_by, supersedes, strength). **Provenance is the file format.**
 
 ## Privacy
-Your memory lives on your computer, in plain files you can open. The package imports no network module, and
-`magnemo doctor` scans for one every time it runs. If you add a backup destination, the engine runs `git push` to it. The full page: https://magnemo.ai/privacy
+Your memory lives on your computer, in plain files you can open. No network calls of its own. Add a backup remote and it pushes there, nowhere else.
+The precise version: the package imports no network module, and `magnemo doctor` scans for one every time it runs. If you add a backup destination, the engine runs `git push` to it. The full page: https://magnemo.ai/privacy
 
 ## Guarantees (Phase 1 — Governed Recall)
 - Through the MCP server, agent writes NEVER reach canonical stores directly — staging only, always.
