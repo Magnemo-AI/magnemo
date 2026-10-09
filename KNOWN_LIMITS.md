@@ -3,12 +3,16 @@
 Honesty is the product. These are the current edges, stated plainly. Every one
 of them is a roadmap item, not a surprise left for you to find.
 
-- **The yes is not checked yet.** Promotion is not an MCP tool, and that is
-  the wall today. `magnemo yes` itself takes no credential: anything that can
-  run a command in your shell, your agent included if you gave it one, can
-  promote a note, and the ledger records the name it was given, or the first
-  keyholder's name when none is given. A keyholder
-  check on the CLI is the next engine work.
+- **The yes is yours, and the engine now checks for it.** Promotion is not an
+  MCP tool. `magnemo yes` (and `no`, `clear`, `promote`) requires an
+  interactive terminal (a TTY on stdin) and a name in `trust.humans` — a
+  keyholder: the vault's list of people whose yes counts; a name, not a
+  password. It refuses with no TTY (an agent's tool call, a script, a pipe),
+  with `MAGNEMO_AGENT` set, from inside an MCP session, or for a name not on
+  the list; each refusal is a line in the ledger. It is a check on the hand,
+  not a credential: a process that allocates its own TTY, clears
+  `MAGNEMO_AGENT` and names a listed person passes — an agent with your shell
+  and your terminal is still you.
 - **Beta software.** The engine runs its maker's company daily, but you are
   early. Expect rough edges in exactly the places this file names.
 - **One client is tested.** Claude Code. Every other client's block in the

@@ -32,12 +32,12 @@ class TestTheYesIsSaidAsItIs(unittest.TestCase):
 
     def test_the_limit_is_written_down_where_the_limits_are(self):
         limits = " ".join(read(ROOT, "KNOWN_LIMITS.md").split())
-        self.assertIn("**The yes is not checked yet.**", limits)
-        self.assertIn("`magnemo yes` itself takes no credential", limits)
+        self.assertIn("**The yes is yours, and the engine now checks for it.**", limits)
+        self.assertIn("It is a check on the hand, not a", limits); self.assertNotIn("not checked yet", limits)
         self.assertIn("Promotion is not an MCP tool", limits)
         self.assertIn("KNOWN_LIMITS.md", read(ROOT, "README.md").split("Agents get four MCP tools. Promotion is not one of them.")[1][:400])
-        self.assertIn("An agent that has a shell running `magnemo yes` itself", read(ROOT, "SECURITY.md"))
-        self.assertIn("or the first keyholder's name when none is given", limits)
+        self.assertIn("the yes check is a check on the hand, not a credential", read(ROOT, "SECURITY.md"))
+        self.assertIn("names a listed person passes — an agent with your shell and your terminal is still you", limits)   # the honest hole, last
 
     def test_the_network_sentence_says_what_doctor_checks_and_names_the_push(self):
         readme = " ".join(read(ROOT, "README.md").split())

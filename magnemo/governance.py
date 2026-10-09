@@ -185,14 +185,14 @@ class Governance:
         chest.notify(self.vault, "receipt")    # THE CHEST (#129): a receipt resolved with an outcome
         return touched
 
-    def clear_taint(self, note_id: str, reviewer: str, reason: str) -> Note:
+    def clear_taint(self, note_id: str, reviewer: str, reason: str, ran_by: str | None = None) -> Note:
         """Keyholder-only: clear taint on a note after verification."""
         n = self.vault.read(note_id)
         old = n.taint
         n.taint = ""
         n.body += f"\n\n> taint '{old}' CLEARED by {reviewer} on {now_iso()}: {reason}"
         self.vault.rewrite(n)
-        self.ledger.record("memory.cleartaint", "approved", reviewer, note_id, reason)
+        self.ledger.record("memory.cleartaint", "approved", reviewer, note_id, reason, **({"ran_by": ran_by} if ran_by else {}))
         return n
 
     # ---------------- keyholder-facing (CLI only; never an MCP tool) ----------------

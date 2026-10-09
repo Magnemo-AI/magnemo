@@ -116,16 +116,18 @@ def cmd_review(a):
             except EOFError:
                 print("\n  input closed — nothing more was changed.")
                 return
+            if ans in ("p", "r"):                  # an answer in review is a yes or a no, and passes the same check
+                who, ran_by = _yes_check(g, who, "review", n.id)
             if ans == "p":
                 try:
-                    g.promote(n.id, who, "approved in review", ran_by=_ran_by())
+                    g.promote(n.id, who, "approved in review", ran_by=ran_by)
                 except ValueError as e:
                     print(f"  {e}")                # tainted or held: read it, clear it, then yes
                     break
                 print(f"  ✓ PROMOTED — canonical in {n.partition}/{n.store}")
                 break
             if ans == "r":
-                g.reject(n.id, who, why, ran_by=_ran_by())
+                g.reject(n.id, who, why, ran_by=ran_by)
                 print("  ✗ REJECTED — recorded to ledger")
                 break
             if ans == "s":
@@ -194,6 +196,18 @@ def _by_default(g, by):
     humans = (load_config(g.vault.root).get("trust") or {}).get("humans") or []
     return humans[0] if humans else "founder"
 
+def _yes_check(g, by, verb, target="-"):
+    """THE YES CHECK: (by, ran_by) when this is a person's terminal and `by` is a keyholder; otherwise the one line
+    (the gate and the route: the command to type yourself), the ledger's catch line, and exit 3."""
+    from . import yescheck
+    try:
+        return yescheck.check(g.vault.root, by or "")
+    except yescheck.Refused as r:
+        yescheck.catch(g, verb, target, by or "", r)
+        print(r.line(verb, sys.argv[1:]))
+        sys.exit(3)
+
+
 def _ran_by():
     """The hand that ran the command: the agent seat if one is set, else the terminal."""
     return env("AGENT") or "terminal"
@@ -206,9 +220,9 @@ def cmd_yes(a):
     if a.fragment and a.vault == DEF and os.path.isdir(a.fragment):
         a.vault, a.fragment = a.fragment, ""
     g = _gov(a.vault)
-    by = _by_default(g, a.by)
+    one = _pick(g, a.fragment) if (a.fragment and not a.all) else None
+    by, ran_by = _yes_check(g, a.by, "yes", one.id if one else ("the whole queue" if a.all else "the top of the queue"))
     reason = a.reason or "approved in chat"
-    ran_by = _ran_by()
     skipped, alerts = [], []
     if a.all:
         q = _queue(g)
@@ -216,7 +230,7 @@ def cmd_yes(a):
         alerts = [n for n in q if _alert(n)]
         targets = [n for n in q if not _held(n) and not _alert(n)]
     elif a.fragment:
-        targets = [_pick(g, a.fragment)]
+        targets = [one]
     else:
         q = _queue(g)                               # no id named: the top note that is neither held nor a notice
         skipped = [n for n in q if _held(n)]
@@ -242,22 +256,23 @@ def cmd_no(a):
     """`no <fragment> --reason TXT`: rejects one staged note. The reason stays required — rejections teach."""
     g = _gov(a.vault)
     n = _pick(g, a.fragment)
-    by = _by_default(g, a.by)
-    ran_by = _ran_by()
+    by, ran_by = _yes_check(g, a.by, "no", n.id)
     g.reject(n.id, by, a.reason, ran_by=ran_by)
     print(f"✗ REJECTED {n.id} — recorded to ledger · by {by} · ran_by {ran_by}")
 
 
 def cmd_promote(a):
     g = _gov(a.vault)
-    n = g.promote(a.note_id, a.by, a.reason or "")
-    print(f"PROMOTED {n.id} → {n.partition}/{n.store}")
+    by, ran_by = _yes_check(g, a.by, "promote", a.note_id)
+    n = g.promote(a.note_id, by, a.reason or "", ran_by=ran_by)
+    print(f"PROMOTED {n.id} → {n.partition}/{n.store} · by {by} · ran_by {ran_by}")
 
 
 def cmd_reject(a):
     g = _gov(a.vault)
-    g.reject(a.note_id, a.by, a.reason)
-    print(f"REJECTED {a.note_id} (reason recorded)")
+    by, ran_by = _yes_check(g, a.by, "reject", a.note_id)
+    g.reject(a.note_id, by, a.reason, ran_by=ran_by)
+    print(f"REJECTED {a.note_id} (reason recorded) · by {by} · ran_by {ran_by}")
 
 
 def cmd_outcome(a):
@@ -708,15 +723,15 @@ def cmd_handoff(a):
 
 def cmd_clear(a):
     """P-74: `magnemo clear <id> --reason` — the same verb as cleartaint; --by defaults to the first keyholder."""
-    g = _gov(a.vault)
-    a.by = _by_default(g, a.by)
-    return cmd_cleartaint(a)
+    return cmd_cleartaint(a, verb="clear")
 
 
-def cmd_cleartaint(a):
+def cmd_cleartaint(a, verb="cleartaint"):
     g = _gov(a.vault)
-    n = g.clear_taint(_find(g, a.note_id).id, a.by, a.reason)
-    print(f"taint cleared on {n.id} — lineage trusted again")
+    nid = _find(g, a.note_id).id
+    by, ran_by = _yes_check(g, a.by, verb, nid)
+    n = g.clear_taint(nid, by, a.reason, ran_by=ran_by)
+    print(f"taint cleared on {n.id} — lineage trusted again · by {by} · ran_by {ran_by}")
 
 
 def cmd_autonomy(a):

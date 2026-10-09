@@ -15,8 +15,9 @@ credit you in the release notes if you want that.
 ## Out of scope
 - Bugs in the agents or clients that talk to the server (Claude Code, Cursor, Windsurf, Claude Desktop).
 - Anything that needs the keyholder's own hand to go wrong (`magnemo yes` on a bad note is a review problem, not a hole).
-- An agent that has a shell running `magnemo yes` itself. That is known and written down in `KNOWN_LIMITS.md`: the CLI does
-  not yet check who runs it. Promotion is not an MCP tool; the keyholder check on the CLI is the next engine work.
+- A process that allocates its own TTY, clears `MAGNEMO_AGENT` and names a listed person to run `magnemo yes`. That is known
+  and written down in `KNOWN_LIMITS.md`: the yes check is a check on the hand, not a credential. Promotion is not an MCP tool,
+  and `magnemo yes` with no TTY (an agent's tool call, a script, a pipe) is refused, with a line in the ledger.
 
 ## What we promise about the software
 Zero network calls, zero telemetry, plain files you own — `magnemo doctor` checks the first on every run. If you

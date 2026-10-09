@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.6.8 — THE YES CHECK
+- **Breaking, and on purpose: a `magnemo yes` that an agent or a script ran in 0.6.7 is refused in 0.6.8 (exit 3).**
+  If a pipeline, a hook or an agent's shell runs `magnemo yes`, `no`, `clear` or `promote` for you, it now stops with
+  one line and writes nothing to memory. The yes is yours: type it in a terminal.
+- **What the engine checks.** `magnemo yes` (and `no`, `clear`, `promote`, their long forms `reject` and `cleartaint`,
+  and the answers inside `review`) requires an interactive terminal (a TTY on stdin) and a name in the vault's
+  `trust.humans`. It refuses with no TTY (an agent's tool call, a script, a pipe), with `MAGNEMO_AGENT` set, from inside
+  an MCP server session, or for a `--by` that is not on the list (never defaulted). With no `--by`, the first listed
+  name is used.
+- **A refusal names its gate and the route.** With no terminal: `This yes is yours. Type it yourself in a terminal:
+  magnemo yes <id>`. The other refusals say which gate (a seat named, an unlisted name, an MCP session) and end with
+  the same route. Each refusal is one line in the trust ledger (`judgment.refused`, `catch: yes-check`,
+  `ran_by: refused:<reason>`). Every yes, no and clear that goes through carries `ran_by: terminal`.
+- **One override, for a relayed word:** `MAGNEMO_YES_RELAY=<listed name>`, on a terminal only and for that name only;
+  the ledger says `ran_by: relay:<who ran it>`, so a relay is never read as the person's own hand.
+- **What it is not.** A check on the hand, not a credential: a process that allocates its own TTY, clears
+  `MAGNEMO_AGENT` and names a listed person passes. KNOWN_LIMITS.md says so first. Promotion is still not an MCP tool.
+- The registry description no longer says "zero network calls": "Governed memory for AI agents, in plain local files.
+  No network calls of its own."
+
 ## 0.6.7 — THE POLISH, SECOND PASS
 - **`magnemo review` says HELD and TAINTED.** A note Sentinel is holding is labelled before its text, the text of a
   flagged note is shown quoted, and there is no `[p]` for it: "held by Sentinel — `magnemo clear <id>` first". The

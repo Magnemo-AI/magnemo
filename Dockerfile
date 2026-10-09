@@ -4,7 +4,7 @@
 # An empty folder is fine: the server makes the vault on first start. Plain markdown files you own.
 FROM python:3.12-slim
 ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
-RUN pip install --no-cache-dir magnemo-mcp==0.6.7
+RUN pip install --no-cache-dir magnemo-mcp==0.6.8
 ENV MAGNEMO_VAULT=/vault MAGNEMO_AGENT=agent
 VOLUME ["/vault"]
 ENTRYPOINT ["magnemo-mcp"]

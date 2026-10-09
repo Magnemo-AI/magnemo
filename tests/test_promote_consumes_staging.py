@@ -2,6 +2,7 @@
 CONSUMED — the id must not appear as an active staged candidate anywhere (review
 queue, bootpack top-N, rescore, the filesystem), and exactly one file carries it."""
 import os, sys, json, shutil, tempfile, unittest, subprocess
+import sys as _sys, os as _os; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); import _tty   # P-97: the keyholder's verbs need a terminal
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from magnemo.vault import Vault
@@ -62,9 +63,9 @@ class TestPromoteConsumesStaging(unittest.TestCase):
         self.assertEqual(all_paths_for(self.d, self.n.id), [f"shared/changelog/{self.n.id}.md"])
 
     def test_cli_promote_consumes_staging(self):
-        p = subprocess.run([sys.executable, "-m", "magnemo.cli", "promote", self.n.id,
-                            "--by", "The Founder", "--reason", "Canonical Memory #1", self.d],
-                           capture_output=True, text=True, cwd=ROOT)
+        p = _tty.run([sys.executable, "-m", "magnemo.cli", "promote", self.n.id,
+                      "--by", "The Founder", "--reason", "Canonical Memory #1", self.d], cwd=ROOT,
+                     env={k: v for k, v in os.environ.items() if k not in ("MAGNEMO_AGENT", "MEMOS_AGENT")})
         self.assertEqual(p.returncode, 0, p.stderr)
         self.assertIn("PROMOTED", p.stdout)
         self._assert_consumed(self.n.id)

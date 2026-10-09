@@ -55,7 +55,7 @@ Only have the desktop app? `claude` may not be a command in your shell. On a Mac
 `~/Library/Application Support/Claude/claude-code/<version>/claude.app/Contents/MacOS/claude`; run that in place of `claude`.
 
 **Claude Desktop** — untested end to end here. Download the extension from the latest release —
-[magnemo-0.6.7.mcpb](https://github.com/Magnemo-AI/magnemo/releases/latest) — and open it; Claude Desktop asks for the
+[magnemo-0.6.8.mcpb](https://github.com/Magnemo-AI/magnemo/releases/latest) — and open it; Claude Desktop asks for the
 vault folder and does the rest. (The connectors directory listing follows once it is accepted.)
 
 **Cursor** — untested here (not installed on this Mac); the link and the block follow Cursor's docs.
@@ -172,7 +172,7 @@ Anything that speaks MCP over stdio mounts the same way. The remote door (ChatGP
 
 ## Agents draft, people keep — the one rule
 Agents get four MCP tools. Promotion is not one of them.
-The CLI is the other door, and `magnemo yes` does not yet check who runs it: read [KNOWN_LIMITS.md](KNOWN_LIMITS.md) first.
+The CLI is the other door: a yes there comes from an interactive terminal and a name the vault lists, and an agent's command is refused. Not a credential; [KNOWN_LIMITS.md](KNOWN_LIMITS.md) says what that does not stop.
 
 | Actor  | Door                | Can do |
 |--------|---------------------|--------|
