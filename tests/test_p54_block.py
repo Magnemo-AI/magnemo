@@ -2,6 +2,7 @@
 the gate lift is a word, the record tells the truth about itself, the operator flag is
 deterministic. Provenance enforced; promotion still never an MCP tool."""
 import os, sys, io, json, shutil, tempfile, unittest, subprocess, contextlib
+import sys as _sys, os as _os; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); import _tty   # P-97: the keyholder's verbs need a terminal
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from magnemo.vault import Vault
@@ -46,7 +47,7 @@ class TestTheDoor(unittest.TestCase):
 
 def run_cli(argv, env=None):
     e = dict(os.environ); e.pop("MAGNEMO_AGENT", None); e.update(env or {})
-    p = subprocess.run([sys.executable, "-m", "magnemo.cli"] + argv, capture_output=True, text=True, env=e, cwd=ROOT)
+    p = _tty.run([sys.executable, "-m", "magnemo.cli"] + argv, env=e, cwd=ROOT)
     return p.returncode, p.stdout + p.stderr
 
 
@@ -64,10 +65,13 @@ class TestTheWord(unittest.TestCase):
         return [e for e in Governance(Vault(self.tmp)).ledger.entries("memory.promote")]
     def test_yes_promotes_the_top_with_the_seat_on_the_record(self):
         rc, out = run_cli(["yes", self.tmp], env={"MAGNEMO_AGENT": "agent"})
+        self.assertEqual(rc, 3, out); self.assertIn("This yes is yours. Type it yourself in a terminal: magnemo yes", out)   # P-97: a seat's yes is refused
+        self.assertEqual(self._promotions(), [])
+        rc, out = run_cli(["yes", self.tmp], env={"MAGNEMO_AGENT": "agent", "MAGNEMO_YES_RELAY": "founder"})        # the one override: a relay, said as a relay
         self.assertEqual(rc, 0, out); self.assertIn("PROMOTED", out)
         e = self._promotions()[-1]
         self.assertEqual(e["verdict"], "approved"); self.assertEqual(e["actor"], "founder")
-        self.assertEqual(e["detail"], "approved in chat"); self.assertEqual(e["ran_by"], "agent")
+        self.assertEqual(e["detail"], "approved in chat"); self.assertEqual(e["ran_by"], "relay:agent")
         top = [n for n in Vault(self.tmp).staged() if n.status == "staged"]
         self.assertEqual(len(top), 1)
     def test_yes_from_a_terminal_records_terminal(self):
@@ -88,14 +92,16 @@ class TestTheWord(unittest.TestCase):
         rc, out = run_cli(["no", "alpha-one", self.tmp])
         self.assertNotEqual(rc, 0); self.assertIn("--reason", out)
         rc, out = run_cli(["no", "alpha-one", "--reason", "not true", self.tmp], env={"MAGNEMO_AGENT": "agent"})
+        self.assertEqual(rc, 3, out)                                                                              # P-97: a seat's no is refused too
+        rc, out = run_cli(["no", "alpha-one", "--reason", "not true", self.tmp])
         self.assertEqual(rc, 0, out)
         e = self._promotions()[-1]
-        self.assertEqual(e["verdict"], "rejected"); self.assertEqual(e["detail"], "not true"); self.assertEqual(e["ran_by"], "agent")
+        self.assertEqual(e["verdict"], "rejected"); self.assertEqual(e["detail"], "not true"); self.assertEqual(e["ran_by"], "terminal")
     def test_promote_long_form_is_unchanged(self):
         rc, out = run_cli(["promote", self.a.id, self.tmp])
         self.assertNotEqual(rc, 0); self.assertIn("--by", out)
         rc, out = run_cli(["promote", self.a.id, "--by", "founder", self.tmp])
-        self.assertEqual(rc, 0, out); self.assertNotIn("ran_by", self._promotions()[-1])
+        self.assertEqual(rc, 0, out); self.assertEqual(self._promotions()[-1]["ran_by"], "terminal")                 # P-97: the long form passes the same check and says whose hand
 
 
 class TestTheCount(unittest.TestCase):

@@ -1,6 +1,7 @@
 """P-39b · THE POLISH (0.6.6): what the stranger drill bruised on 0.6.5. No traceback ever reaches a person; the short
 id the CLI prints works on every verb that takes an id; `stage --help` shows one real example."""
 import os, sys, json, shutil, subprocess, tempfile, unittest
+import sys as _sys, os as _os; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); import _tty   # P-97: the keyholder's verbs need a terminal
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from magnemo.vault import Vault
@@ -18,8 +19,9 @@ class Polish(unittest.TestCase):
 
     def cli(self, *args, stdin=None, vault=True, env=None):
         e = dict(os.environ); e.pop("MAGNEMO_AGENT", None); e.pop("MAGNEMO_DEBUG", None); e.update(env or {})
-        p = subprocess.run([sys.executable, "-m", "magnemo.cli", *args, *([self.d] if vault else [])],
-                           capture_output=True, text=True, cwd=ROOT, env=e, input=stdin if stdin is not None else "")
+        cmd = [sys.executable, "-m", "magnemo.cli", *args, *([self.d] if vault else [])]
+        p = (_tty.run(cmd, cwd=ROOT, env=e) if stdin is None                       # P-97: a person's terminal, unless the drill pipes text in
+             else subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT, env=e, input=stdin))
         return p.returncode, p.stdout + p.stderr
 
     def stage(self, title="Port", body="The API gateway runs on port 8080.", store="knowledge", partition="ops"):

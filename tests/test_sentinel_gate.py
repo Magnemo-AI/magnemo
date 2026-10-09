@@ -1,6 +1,7 @@
 """P-74 · SENTINEL AT THE GATE — the MCP stage door and the CLI stage door are swept; retrieve withholds a tainted note
 until a keyholder clears it; doctor checks the network sentence and says whether the server ever connected."""
 import json, os, shutil, subprocess, sys, tempfile, unittest
+import sys as _sys, os as _os; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); import _tty   # P-97: the keyholder's verbs need a terminal
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "tests"))
@@ -53,8 +54,7 @@ class TestTheMcpDoor(unittest.TestCase):
         self.assertNotIn(r["staged"], [h["id"] for h in hits])
         self.assertIn("a tainted note, withheld", bootpack.generate(self.v))       # the wake withholds its line too
         e = dict(os.environ); e.pop("MAGNEMO_AGENT", None)
-        p = subprocess.run([sys.executable, "-m", "magnemo.cli", "clear", r["staged"][-8:], "--reason", "read it; a test phrase", self.d],
-                           capture_output=True, text=True, cwd=ROOT, env=e)
+        p = _tty.run([sys.executable, "-m", "magnemo.cli", "clear", r["staged"][-8:], "--reason", "read it; a test phrase", self.d], cwd=ROOT, env=e)
         self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
         hits = json.loads(call(self.s, "retrieve", query="gateway port")[0])["results"]
         self.assertIn(r["staged"], [h["id"] for h in hits])
@@ -120,7 +120,7 @@ class TestOneVerbOneRule(unittest.TestCase):
         shutil.rmtree(self.d, ignore_errors=True)
     def cli(self, *args):
         e = dict(os.environ); e.pop("MAGNEMO_AGENT", None)
-        p = subprocess.run([sys.executable, "-m", "magnemo.cli", *args, self.d], capture_output=True, text=True, cwd=ROOT, env=e)
+        p = _tty.run([sys.executable, "-m", "magnemo.cli", *args, self.d], cwd=ROOT, env=e)
         return p.returncode, p.stdout + p.stderr
     def test_the_drill(self):
         sec = json.loads(stage(self.s, "deploy", SECRET)[0]); inj = json.loads(stage(self.s, "queue", INJECTION)[0])

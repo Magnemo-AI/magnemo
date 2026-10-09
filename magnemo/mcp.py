@@ -413,6 +413,7 @@ def select_rendition(results: list, budget: int) -> tuple:
 
 
 def main():
+    os.environ["MAGNEMO_MCP_SESSION"] = str(os.getpid())      # a command started from inside this session is not a person's yes
     MemoryServer().run()
 
 
