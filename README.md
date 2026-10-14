@@ -1,5 +1,5 @@
 # Magnemo
-**Governed Memory for AI Agents. Sessions die. The Memory doesn't.**
+**The Memory MCP. Your AI remembers. You keep what matters.**
 
 Magnemo is a Memory for your AI, kept on your computer in plain files. Your AI writes down what it learns as it works; nothing becomes Memory until you approve it, and every Memory shows who wrote it and who approved it.
 
@@ -12,7 +12,7 @@ When your agent writes something down, Magnemo asks you in the chat. One click.
 [![stars](https://img.shields.io/github/stars/Magnemo-AI/magnemo)](https://github.com/Magnemo-AI/magnemo/stargazers)
 [![MCP registry](https://img.shields.io/badge/MCP_registry-ai.magnemo%2Fmagnemo-blue)](https://registry.modelcontextprotocol.io/?q=magnemo)
 
-[Site](https://magnemo.ai) · [Manual](docs/MCP.md) · [Changelog](CHANGELOG.md) · [Known limits](KNOWN_LIMITS.md)
+[Site](https://magnemo.ai) · [Manual](docs/MCP.md) · [Changelog](CHANGELOG.md) · [X @Magnemo_AI](https://x.com/Magnemo_AI) · [Known limits](KNOWN_LIMITS.md)
 
 ## Install in one paste
 In three lines:
@@ -54,7 +54,32 @@ One server, the same in every client. Tested where it says so; the rest follow e
 | Codex CLI | untested | `~/.codex/config.toml` |
 | Zed | untested | `settings.json` → `context_servers` |
 
-Each client's exact block is under "Install in your client". Listed on the official MCP registry (`ai.magnemo/magnemo`), PyPI, Glama, mcpservers.org and awesome-mcp-servers.
+Each client's exact block is under "Install in your client".
+
+## How it compares
+Five questions, answered from each project's own docs (read Oct 12, 2026; the pages are linked under the table).
+
+| | Magnemo | Mem0 | Zep | Letta | Basic Memory |
+|---|---|---|---|---|---|
+| **Where the memory lives** | Plain markdown files in a folder on your computer | A hosted platform run by Mem0; open source: a local Qdrant store and a SQLite history file | Zep: a managed cloud service, or in your own VPC. Graphiti, its open-source engine: a graph database you run | Markdown files in a git repository that belongs to the agent: hosted by Letta, or on your device in local mode | Markdown files on your disk with a local SQLite index; an optional cloud |
+| **Who approves a write** | You. An agent's write waits in staging until your yes | An LLM extracts facts from the messages and stores them; their docs describe no approval step | Messages are ingested into the graph as they arrive; their docs describe no approval step | The agent updates its own memory; the background review "does not ask you for approval" | The assistant writes notes directly; the cloud has suggested edits that can be accepted or rejected |
+| **Author and approver on every entry** | Both, in each file's header (`author`, `reviewed_by`) and in an append-only ledger | User, agent, app and run ids, timestamps, and a change history per memory; their docs name no approver field | When a fact was true and when it stopped, traced to its source episode; their docs name no approver field | Every memory edit is a git commit; their docs do not say what the commit records | Title, type, tags and dates; `author` is a field you may add; their docs name no approver field |
+| **Network calls of its own** | None. No model call and no embedding call; `git push` to a backup, if you add one | OpenAI by default for the model and the embeddings; other providers are listed, Ollama among them | Zep is a cloud API. Graphiti defaults to OpenAI; local model servers are documented | Local mode keeps state on your device; inference goes to the provider you choose, which can be a local one | Runs locally; the default embeddings run on your machine with no API key |
+| **What you can take back** | A no is kept with its reason; a replaced note is archived with a forward link; nothing deletes; the files are yours to edit | Delete, update, and a history per memory; export is on the hosted platform | Delete nodes, edges and episodes; a replaced fact is invalidated, not deleted | The git history of every memory edit; the files can be read and edited | Plain files you edit and can track with git; a delete tool; the cloud keeps every saved version |
+
+**Where each of them is ahead.** Mem0 extracts memories for you, searches them by meaning, and has Python and JavaScript SDKs, a REST API and a hosted platform. Zep keeps a knowledge graph that knows when each fact was true, as a managed service with SDKs in three languages. Letta is a whole agent platform, with an SDK, a CLI and background agents that tend the memory. Basic Memory searches by keyword and by meaning with embeddings that run on your machine, links notes into a graph, and syncs through its cloud. Magnemo has none of that: its search is keyword search ([KNOWN_LIMITS.md](KNOWN_LIMITS.md)), there is no graph and no hosted service. What it has is the approval and the record.
+
+Their pages: Mem0 [overview](https://docs.mem0.ai/open-source/overview), [platform and open source](https://docs.mem0.ai/platform/platform-vs-oss), [add](https://docs.mem0.ai/core-concepts/memory-operations/add), [history](https://docs.mem0.ai/api-reference/memory/history-memory), [quickstart](https://docs.mem0.ai/open-source/python-quickstart), [delete](https://docs.mem0.ai/core-concepts/memory-operations/delete), [export](https://docs.mem0.ai/platform/features/memory-export) · Zep [concepts](https://help.getzep.com/concepts), [facts](https://help.getzep.com/v3/facts.md), [security](https://help.getzep.com/v3/security-compliance.md), [deleting data](https://help.getzep.com/deleting-data-from-the-graph), [Graphiti](https://github.com/getzep/graphiti) · Letta [MemFS](https://docs.letta.com/concepts/memfs), [memory settings](https://docs.letta.com/configuration/memory), [local mode](https://docs.letta.com/self-hosting) · Basic Memory [README](https://github.com/basicmachines-co/basic-memory), [what it is](https://docs.basicmemory.com/start-here/what-is-basic-memory), [tools](https://docs.basicmemory.com/reference/mcp-tools-reference), [note format](https://docs.basicmemory.com/concepts/knowledge-format), [semantic search](https://docs.basicmemory.com/raw/concepts/semantic-search.md), [suggestions](https://docs.basicmemory.com/raw/cloud/comments-and-suggestions.md), [file history](https://docs.basicmemory.com/raw/cloud/file-history.md). A cell that is wrong or out of date: open an issue and it is fixed.
+
+**Listed on** the [official MCP registry](https://registry.modelcontextprotocol.io/?q=magnemo) (`ai.magnemo/magnemo`) · [PyPI](https://pypi.org/project/magnemo/) · [mcpservers.org](https://mcpservers.org/servers/magnemo-ai/magnemo) · [Glama](https://glama.ai/mcp/servers/Magnemo-AI/magnemo) · [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers).
+**Tested on** every push, on Python 3.9, 3.11 and 3.12: 300 tests, as of Oct 12, 2026 ([the runs](https://github.com/Magnemo-AI/magnemo/actions/workflows/test.yml)).
+
+## What's new
+- **0.6.8** · Oct 13, 2026 · The yes is asked in the chat, one click. A yes that an agent or a script runs is refused.
+- **0.6.7** · Oct 2, 2026 · `magnemo review` labels held and flagged notes. A note Sentinel caught earns its author no trust.
+- **0.6.6** · Oct 1, 2026 · No traceback reaches a person. The short id works on every command. `yes` waits for `clear`.
+
+Every release: [CHANGELOG.md](CHANGELOG.md).
 
 **For builders.** Magnemo is an MCP server with four tools — `retrieve`, `stage`,
 `bootpack`, `handoff` — and a CLI for your side: review, promote, reject.
